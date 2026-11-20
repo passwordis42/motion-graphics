@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="在浏览器里播放动效，下载可用于剪辑的 MP4 成片。">
-  <title>动效合集</title>
+  <meta name="description" content="按原片时间戳查找修改片段，在线播放或下载 MP4。">
+  <title>修改合集</title>
   <style>
     :root {
       color-scheme: light;
@@ -80,6 +80,8 @@
     }
 
     .description { line-height: 1.75; color: var(--muted); }
+    .timestamp { justify-self: start; padding: 0.28rem 0.6rem; border-radius: 0.3rem; background: #ece8fc; color: var(--accent-dark); font-size: 0.875rem; font-weight: 700; }
+    .timestamp time { margin-inline-start: 0.35em; font-variant-numeric: tabular-nums; }
     .spec { font-size: 0.875rem; color: var(--muted); }
     .actions { display: flex; flex-wrap: wrap; gap: 0.5rem 1.1rem; align-items: center; margin-top: 0.25rem; }
     .actions a {
@@ -110,17 +112,18 @@
     <header>
       <h1>
         <span class="mark" aria-hidden="true"><span></span><span></span><span></span></span>
-        动效合集
+        修改合集
       </h1>
     </header>
 
-    <section class="gallery" aria-label="全部动效">
+    <section class="gallery" aria-label="修改片段">
       <article class="animation" aria-labelledby="neural-network-title">
         <div class="artwork">
           <img src="./animations/neural-network/preview.webp" width="960" height="540"
                alt="蓝紫色背景上的五层神经网络，左侧九个输入按猫、会、抓分组">
         </div>
         <div class="detail">
+          <p class="timestamp">原片 <time datetime="PT16M16S">16:16</time></p>
           <h2 id="neural-network-title">神经网络的层与神经元</h2>
           <p class="description">从「猫、会、抓」的九维输入出发，先增加隐藏层，再增加每个隐藏层里的神经元。</p>
           <p class="spec">8.8 秒 · 1080p · 30 fps</p>
