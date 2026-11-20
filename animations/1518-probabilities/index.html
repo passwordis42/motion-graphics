@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>给出下一个词的概率 · 修改合集</title>
+  <link rel="stylesheet" href="../shared/player.css">
+</head>
+<body>
+  <main id="player"></main>
+  <script src="../shared/player.js"></script>
+  <script src="../shared/nnlm.js"></script>
+  <script>
+    mountRevisionClip({
+      title: '给出下一个词的概率',
+      description: '预测概率依次为猫 23.8%，会 13.9%，抓 19.9%，老 16.0%，鼠 26.4%。',
+      marker: '15:18',
+      range: '15:17.3–15:19.4',
+      duration: 2.1,
+      previewTime: 1.4,
+      draw(ctx, t) {
+        const { words, easing, line, box, pill, label, background, subtitle } = nnlm;
+        background(ctx);
+
+        const column = ctx.createLinearGradient(0, 150, 0, 888);
+        column.addColorStop(0, 'rgba(127, 118, 235, .44)');
+        column.addColorStop(0.5, 'rgba(34, 140, 185, .17)');
+        column.addColorStop(1, 'rgba(121, 106, 229, .46)');
+        box(ctx, 1010, 154, 615, 732, 28, column, 'rgba(186, 174, 255, .29)');
+        label(ctx, '候选词的向量', 555, 109, { size: 36 });
+        label(ctx, '得分', 878, 109, { size: 36 });
+        label(ctx, '预测概率', 1318, 109, { size: 38, weight: 700, color: '#f6f1ff' });
+
+        words.forEach((word, index) => {
+          const y = 230 + index * 145;
+          const enter = easing(t, index * 0.07, 0.44 + index * 0.07);
+          line(ctx, 330, 520, 397, y, 'rgba(214, 158, 91, .68)', 1.65);
+          line(ctx, 733, y, 809, y, 'rgba(223, 172, 115, .57)', 1.65);
+          line(ctx, 947, y, 1010, y, 'rgba(223, 172, 115, .57)', 1.65);
+
+          pill(ctx, '', 564, y, 336, 52);
+          label(ctx, word.name, 426, y, { size: 31, weight: 700 });
+          line(ctx, 454, y - 15, 454, y + 15, 'rgba(196, 188, 239, .38)', 1.3);
+          label(ctx, word.vector, 585, y, { size: 28, numeric: true });
+          pill(ctx, word.score, 878, y, 138, 53, { size: 31, color: '#f7e878', numeric: true });
+
+          box(ctx, 1067, y - 8, 390, 16, 8, 'rgba(18, 16, 74, .52)');
+          const barWidth = 390 * (word.probability / 30) * enter;
+          if (barWidth > 0) {
+            const bar = ctx.createLinearGradient(1067, 0, 1067 + barWidth, 0);
+            bar.addColorStop(0, '#6c6ff4');
+            bar.addColorStop(1, '#aeb3ff');
+            box(ctx, 1067, y - 8, barWidth, 16, Math.min(8, barWidth / 2), bar);
+          }
+          label(ctx, `${word.probability.toFixed(1)}%`, 1540, y, { size: 36, weight: 700, color: '#f6ef82', numeric: true });
+        });
+
+        label(ctx, '计算结果', 202, 471, { size: 28, color: '#c0bce8' });
+        pill(ctx, '0.600  −0.300  0.500', 202, 520, 256, 48, { size: 20, numeric: true });
+        subtitle(ctx, '最后给出不同词出现的概率');
+      },
+    });
+  </script>
+</body>
+</html>

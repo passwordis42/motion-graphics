@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>放大「猫会抓老鼠」的词元</title>
+  <link rel="stylesheet" href="../shared/player.css">
+</head>
+<body>
+  <main id="player"></main>
+  <script src="../shared/player.js"></script>
+  <script>
+    const font = '"Microsoft YaHei", "PingFang SC", sans-serif';
+    const tokens = ['猫', '会', '抓', '老', '鼠'];
+    const clamp = (p) => Math.max(0, Math.min(1, p));
+    const ease = (p) => 1 - (1 - clamp(p)) ** 3;
+    const mix = (from, to, p) => from + (to - from) * p;
+    const exitPositions = [[539, 296], [572, 386], [671, 514], [969, 514], [1090, 500]];
+
+    function draw(ctx, t) {
+      ctx.fillStyle = '#090c29';
+      ctx.fillRect(0, 0, 1920, 1080);
+      const lights = [
+        [720, 253, 990, '#172cab', '#172cab00'], [1815, -30, 790, '#7065c4', '#7065c400'],
+        [-135, 121, 780, '#582a72', '#582a7200'], [-130, 735, 700, '#72331f', '#72331f00'],
+      ];
+      for (const [x, y, radius, bright, dark] of lights) {
+        const halo = ctx.createRadialGradient(x, y, 0, x, y, radius);
+        halo.addColorStop(0, bright);
+        halo.addColorStop(1, dark);
+        ctx.fillStyle = halo;
+        ctx.fillRect(0, 0, 1920, 1080);
+      }
+
+      ctx.strokeStyle = 'rgba(188,197,255,.15)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      const columns = [260, 610, 960, 1310, 1660];
+      const rows = [154, 498, 847];
+      for (const x of columns) {
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, 1080);
+      }
+      for (const y of rows) {
+        ctx.moveTo(0, y);
+        ctx.lineTo(1920, y);
+      }
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(210,215,255,.36)';
+      for (const x of columns) {
+        for (const y of rows) ctx.fillRect(x - 2, y - 2, 5, 5);
+      }
+
+      const squares = [[465, 124, '#6770eb'], [483, 142, '#181b4c'], [501, 160, '#aad3a0'],
+        [1350, 74, '#8c73dc'], [1368, 74, '#d49c69'], [1642, 867, '#9885f5'],
+        [1662, 850, '#7da7df'], [1682, 867, '#5549b8']];
+      for (const [x, y, color] of squares) {
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, 15, 15);
+      }
+      for (const x of [148, 1772]) {
+        ctx.fillStyle = '#5d66ee';
+        ctx.fillRect(x - 17, 646, 34, 6);
+        ctx.fillRect(x - 3, 632, 6, 34);
+      }
+
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      const zoom = ease(t / 0.44);
+      const release = clamp((t - 3.12) / 0.58);
+      const departure = release * release * (3 - 2 * release);
+      for (const [index, token] of tokens.entries()) {
+        const [exitX, exitY] = exitPositions[index];
+        const appearance = index < 4 ? 1 : mix(0.45, 1, zoom);
+        const x = mix(960 + (index - 2) * mix(65, 256, zoom), exitX, departure);
+        const y = mix(500, exitY, departure);
+        const size = mix(mix(65, 224, zoom), 65, departure) * appearance;
+        ctx.globalAlpha = appearance;
+        const glass = ctx.createLinearGradient(x, y - size / 2, x, y + size / 2);
+        glass.addColorStop(0, '#373b83');
+        glass.addColorStop(1, '#171945');
+        ctx.fillStyle = glass;
+        ctx.strokeStyle = '#a3b2f2';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(x - size / 2, y - size / 2, size, size, size * 0.067);
+        ctx.shadowColor = '#5e7cf5';
+        ctx.shadowBlur = size * 0.15;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.stroke();
+        ctx.fillStyle = '#f4f5ff';
+        ctx.font = `700 ${size * 0.57}px ${font}`;
+        ctx.fillText(token, x, y + size * 0.018);
+      }
+
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = '#fff';
+      ctx.font = `700 51px ${font}`;
+      const subtitle = t < 0.42 ? '猫会抓老鼠'
+        : t < 3 ? '我们既然不知道每个 Token 的词向量' : '就先给它们随机分配一个';
+      ctx.fillText(subtitle, 960, 1001);
+    }
+
+    mountRevisionClip({
+      title: '放大「猫会抓老鼠」的词元', marker: '14:16', range: '14:14.5–14:18.2',
+      duration: 3.7, previewTime: 1.6, draw,
+    });
+  </script>
+</body>
+</html>

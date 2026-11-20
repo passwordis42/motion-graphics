@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>05:14 正方形变成涂鸦</title>
+  <link rel="stylesheet" href="../shared/player.css">
+</head>
+<body>
+  <main id="player"></main>
+  <script src="../shared/player.js"></script>
+  <script src="../shared/nnlm.js"></script>
+  <script>
+    const square = new Set([6, 7, 8, 11, 13, 16, 17, 18]);
+    const scribble = new Set([0, 2, 7, 8, 9, 10, 11, 13, 15, 18, 20]);
+    const important = new Set([7, 8, 11, 13, 18]);
+
+    function pixelPower(pixel, t, ease) {
+      if (square.has(pixel) && scribble.has(pixel)) return 1;
+      const offset = (pixel % 5 + Math.floor(pixel / 5)) * 0.046;
+      if (square.has(pixel)) return 1 - ease((t - 0.67 - offset) / 0.32);
+      if (scribble.has(pixel)) return ease((t - 0.83 - offset) / 0.30);
+      return 0;
+    }
+
+    mountRevisionClip({
+      title: '正方形变成涂鸦',
+      marker: '05:14',
+      range: '05:13.7–05:18.4',
+      duration: 4.7,
+      previewTime: 3.85,
+      description: '五乘五画布先显示正方形，再逐像素变为涂鸦。相同的高权重位置依旧点亮，网络因此把涂鸦也判成正方形。',
+      draw(ctx, t) {
+        const { background, label: text, subtitle: caption, box: panel, line, easing } = nnlm;
+        const ease = (amount) => easing(amount, 0, 1);
+        background(ctx);
+        const emphasis = ease((t - 1.62) / 0.52);
+        const gridX = 257;
+        const gridY = 282;
+        const cell = 94;
+        const gridSize = cell * 5;
+        const inputX = 1000;
+        const outputX = 1530;
+        const outputY = 390;
+
+        text(ctx, '5×5 画布', gridX, 228, { size: 42, weight: 700, align: 'left' });
+        text(ctx, '输入层', inputX, 230, { size: 29 });
+        text(ctx, '权重', 1230, 230, { size: 27, color: '#ebee91' });
+        text(ctx, '输出层', outputX, 230, { size: 29 });
+        panel(ctx, gridX - 17, gridY - 16, gridSize + 34, gridSize + 32, 24,
+          'rgba(156,164,240,.11)', 'rgba(200,199,255,.35)');
+        panel(ctx, inputX - 62, gridY - 16, 124, 536, 21,
+          'rgba(136,152,219,.11)', 'rgba(196,195,246,.29)');
+
+        for (let pixel = 0; pixel < 25; pixel++) {
+          const x = gridX + (pixel % 5) * cell;
+          const y = gridY + Math.floor(pixel / 5) * cell;
+          const rowY = gridY + 6 + pixel * 20;
+          const power = pixelPower(pixel, t, ease);
+          const match = important.has(pixel);
+          const litColor = match && emphasis > 0 ? '#c5c5ff' : '#a2b4ef';
+
+          ctx.fillStyle = 'rgba(14,15,45,.49)';
+          ctx.fillRect(x, y, cell, cell);
+          ctx.save();
+          ctx.globalAlpha = power * 0.78;
+          ctx.fillStyle = litColor;
+          ctx.fillRect(x + 1, y + 1, cell - 2, cell - 2);
+          ctx.restore();
+
+          ctx.strokeStyle = 'rgba(170,177,228,.44)';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(x + 0.5, y + 0.5, cell, cell);
+          if (match && emphasis > 0) {
+            ctx.strokeStyle = `rgba(254,226,141,${0.86 * emphasis})`;
+            ctx.lineWidth = 3;
+            ctx.strokeRect(x + 2, y + 2, cell - 4, cell - 4);
+          }
+          if (power > 0.62) {
+            text(ctx, '1.00', x + cell / 2, y + cell / 2, { size: 23, numeric: true, color: '#e9eaff' });
+          }
+
+          panel(ctx, inputX - 47, rowY - 8, 94, 16, 3,
+            power > 0.62 ? 'rgba(151,158,232,.56)' : 'rgba(20,20,67,.61)', 'rgba(176,183,223,.34)');
+          text(ctx, power > 0.62 ? '1.00' : '0.00', inputX, rowY, { size: 13, numeric: true, color: '#e3e5ff' });
+
+          const edge = match && emphasis > 0
+            ? `rgba(255,212,126,${0.215 + 0.67 * emphasis})`
+            : pixel % 3 === 0 ? 'rgba(236,163,105,.28)' : 'rgba(104,220,228,.25)';
+          line(ctx, inputX + 49, rowY, outputX - 77, outputY, edge, match ? 1.55 : 1);
+        }
+
+        panel(ctx, outputX - 77, outputY - 27, 154, 54, 27, '#313366', '#b4b1ec');
+        text(ctx, '1.70', outputX, outputY, { size: 31, numeric: true, color: '#f2eb8c' });
+
+        const verdict = ease((t - 3.20) / 0.35);
+        panel(ctx, gridX - 17, gridY + gridSize + 36, gridSize + 34, 74, 16,
+          'rgba(143,156,221,.11)', 'rgba(188,196,231,.3)');
+        text(ctx, '网络判断', gridX + 4, gridY + gridSize + 72, { size: 23, align: 'left', color: '#d8dafa' });
+        ctx.save();
+        ctx.globalAlpha = verdict;
+        panel(ctx, gridX + 180, gridY + gridSize + 48, gridSize - 180, 49, 7, '#f57c4e');
+        text(ctx, '是正方形', gridX + (gridSize + 180) / 2, gridY + gridSize + 72, {
+          size: 25, weight: 700, color: '#202042'
+        });
+        ctx.restore();
+
+        const cue = t < 1.57 ? '一些乱涂的图案'
+          : t < 3.24 ? '可能恰好在这些位置上' : '让它判断成正方形';
+        caption(ctx, cue);
+      }
+    });
+  </script>
+</body>
+</html>

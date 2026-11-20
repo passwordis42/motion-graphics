@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>在坐标轴上标注更新后的概率 · 修改合集</title>
+  <link rel="stylesheet" href="../shared/player.css">
+</head>
+<body>
+  <main id="player"></main>
+  <script src="../shared/player.js"></script>
+  <script src="../shared/nnlm.js"></script>
+  <script>
+    const vectors = [
+      { x: 1397, y: 494, lx: 1441, ly: 468, vx: 1544, hue: '#cf77d3' },
+      { x: 1328, y: 310, lx: 1367, ly: 282, vx: 1468, hue: '#78b5f1' },
+      { x: 469, y: 401, lx: 458, ly: 365, vx: 352, hue: '#e9d890' },
+      { x: 1189, y: 646, lx: 1240, ly: 624, vx: 1360, hue: '#c3f89b' },
+      { x: 887, y: 870, lx: 925, ly: 868, vx: 1026, hue: '#a6a4f7' },
+    ];
+
+    mountRevisionClip({
+      title: '在坐标轴上标注更新后的概率',
+      description: '在原坐标轴上的词向量旁标注更新后的概率。猫 18.9%，会 17.1%，抓 16.8%，老 25.2%，鼠 22.0%。',
+      marker: '16:07',
+      range: '16:05.5–16:07.8',
+      duration: 2.3,
+      previewTime: 1.6,
+      draw(ctx, t) {
+        const { words, easing, line, box, pill, label, background, subtitle, arrow } = nnlm;
+        background(ctx, true);
+
+        const origin = { x: 958, y: 539 };
+        line(ctx, origin.x, 73, origin.x, 936, 'rgba(94, 190, 150, .38)', 2);
+        arrow(ctx, 144, 487, 1800, 610, 'rgba(88, 112, 179, .46)', 2.4, 26);
+        arrow(ctx, 1264, 420, 544, 734, 'rgba(174, 101, 114, .64)', 2.25, 23);
+
+        vectors.forEach(({ x, y, hue }, index) => {
+          ctx.save();
+          ctx.shadowBlur = index === 3 ? 24 : 9;
+          ctx.shadowColor = hue;
+          arrow(ctx, origin.x, origin.y, x, y, hue, index === 3 ? 8 : 5.5, 29);
+          ctx.restore();
+        });
+
+        const target = { x: 1300, y: 717 };
+        arrow(ctx, origin.x, origin.y, target.x, target.y, '#e1ed9e', 5, 28);
+        label(ctx, '计算结果', 1340, 733, { size: 37, color: '#e0efac', align: 'left' });
+        const firstAngle = Math.atan2(vectors[3].y - origin.y, vectors[3].x - origin.x);
+        const secondAngle = Math.atan2(target.y - origin.y, target.x - origin.x);
+        ctx.beginPath();
+        ctx.arc(origin.x, origin.y, 155, firstAngle, secondAngle);
+        ctx.lineWidth = 2.25;
+        ctx.strokeStyle = '#e2fbc6';
+        ctx.stroke();
+        label(ctx, '3.07°', 1135, 585, { size: 26, color: '#d8e9cb', numeric: true });
+
+        ctx.beginPath();
+        ctx.arc(origin.x, origin.y, 11, 0, 2 * Math.PI);
+        ctx.fillStyle = '#d7dfc7';
+        ctx.fill();
+
+        vectors.forEach(({ lx, ly, vx, hue }, index) => {
+          const word = words[index];
+          const correct = word.name === '老';
+          const reveal = easing(t, 0.18 + index * 0.055, 0.66 + index * 0.055);
+
+          if (correct) {
+            ctx.save();
+            ctx.globalAlpha = reveal;
+            box(ctx, 1209, ly - 37, 237, 74, 18, 'rgba(75, 119, 77, .3)', 'rgba(188, 236, 148, .75)');
+            ctx.restore();
+          }
+
+          label(ctx, word.name, lx, ly, { size: 38, color: hue, weight: correct ? 700 : 500 });
+          ctx.save();
+          ctx.globalAlpha = reveal;
+          pill(ctx, `${word.trained.toFixed(1)}%`, vx, ly + 6 * (1 - reveal), 143, 51, {
+            size: 32, color: hue, weight: 700, numeric: true,
+          });
+          ctx.restore();
+        });
+
+        subtitle(ctx, '更新后，「老」的出现概率升到 25.2%');
+      },
+    });
+  </script>
+</body>
+</html>

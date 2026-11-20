@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>三个词元编号同步停止</title>
+  <link rel="stylesheet" href="../shared/player.css">
+</head>
+<body>
+  <main id="player"></main>
+  <script src="../shared/player.js"></script>
+  <script>
+    const cjk = '"Microsoft YaHei", "PingFang SC", sans-serif';
+    const entries = [
+      { token: '猫', value: 48091, color: '#f5df75', x: 432, y: 554 },
+      { token: '狗', value: 35182, color: '#7e9bf4', x: 959, y: 532 },
+      { token: '吃', value: 39276, color: '#ef70e4', x: 1486, y: 511 },
+    ];
+    const countIn = 0.56;
+    const countOut = 2.53;
+    const clamp = (p) => Math.max(0, Math.min(p, 1));
+
+    function glow(ctx, x, y, radius, colors) {
+      const fill = ctx.createRadialGradient(x, y, 0, x, y, radius);
+      fill.addColorStop(0, colors[0]);
+      fill.addColorStop(1, colors[1]);
+      ctx.fillStyle = fill;
+      ctx.fillRect(0, 0, 1920, 1080);
+    }
+
+    function draw(ctx, t) {
+      ctx.fillStyle = '#120739';
+      ctx.fillRect(0, 0, 1920, 1080);
+      glow(ctx, 385, 220, 1110, ['#2518c3', '#2518c300']);
+      glow(ctx, 1390, 970, 900, ['#3e1024', '#3e102400']);
+      glow(ctx, 1870, 35, 780, ['#372081', '#37208100']);
+
+      ctx.save();
+      ctx.translate(960, 540);
+      ctx.rotate(-0.047);
+      ctx.translate(-960, -540);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(192,183,255,.19)';
+      ctx.beginPath();
+      for (const x of [340, 865, 1390]) {
+        ctx.moveTo(x, -80);
+        ctx.lineTo(x, 1160);
+      }
+      for (const y of [154, 914]) {
+        ctx.moveTo(-80, y);
+        ctx.lineTo(2000, y);
+      }
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(210,201,255,.44)';
+      for (const x of [340, 865, 1390]) {
+        for (const y of [154, 914]) ctx.fillRect(x - 2, y - 2, 4, 4);
+      }
+      ctx.restore();
+
+      for (const [x, y] of [[149, 336], [580, 161], [1085, 780], [1650, 227]]) {
+        ctx.fillStyle = '#171344';
+        ctx.fillRect(x, y, 15, 15);
+      }
+      for (const [index, color] of ['#b7d4f0', '#7884e8', '#fbe19b', '#a7aad3'].entries()) {
+        ctx.fillStyle = color;
+        ctx.fillRect(1731 + 21 * index, 732, 22, 11);
+        ctx.fillRect(1723 + 21 * index, 755, 22, 11);
+      }
+      ctx.fillStyle = '#b9a4fb';
+      ctx.fillRect(1245, 706, 37, 6);
+      ctx.fillRect(1260, 691, 7, 36);
+
+      const elapsed = clamp((t - countIn) / (countOut - countIn));
+      const rolling = elapsed * elapsed * (3 - 2 * elapsed);
+      const transition = clamp((t - countIn) / 0.19);
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      for (const { token, value, color, x, y } of entries) {
+        ctx.fillStyle = color;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 13;
+        if (transition < 1) {
+          ctx.globalAlpha = 1 - transition;
+          ctx.font = `700 131px ${cjk}`;
+          ctx.fillText(token, x, y - transition * 25);
+        }
+        if (transition > 0) {
+          // Clamp all counters before their shared last frame so none can settle early.
+          const number = elapsed === 1 ? value : Math.min(value - 1, Math.floor(value * rolling));
+          ctx.globalAlpha = transition;
+          ctx.font = '700 119px "Segoe UI", Arial, sans-serif';
+          ctx.fillText(String(number), x, y + 22 * (1 - transition));
+        }
+      }
+      ctx.globalAlpha = 1;
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = '#fff';
+      ctx.font = `700 49px ${cjk}`;
+      const subtitle = t < 0.55 ? '对于计算机来说'
+        : t < 2.42 ? '这些字都是独立的数字而已' : '没办法看出来它们有什么关系';
+      ctx.fillText(subtitle, 960, 1001);
+    }
+
+    mountRevisionClip({
+      title: '三个词元编号同步停止', marker: '12:29', range: '12:27.5–12:31.5',
+      duration: 4, previewTime: 3, draw,
+    });
+  </script>
+</body>
+</html>

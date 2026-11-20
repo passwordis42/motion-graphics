@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>概率差与交叉熵损失 · 修改合集</title>
+  <link rel="stylesheet" href="../shared/player.css">
+</head>
+<body>
+  <main id="player"></main>
+  <script src="../shared/player.js"></script>
+  <script src="../shared/nnlm.js"></script>
+  <script>
+    mountRevisionClip({
+      title: '概率差与交叉熵损失',
+      description: '老的目标概率为百分之百，预测概率为百分之十六，概率差为八十四个百分点。交叉熵取预测概率的负自然对数，约等于 1.833。',
+      marker: '15:46',
+      range: '15:43.7–15:46.8',
+      duration: 3.1,
+      previewTime: 2.0,
+      draw(ctx, t) {
+        const { words, easing, line, box, pill, label, background, subtitle } = nnlm;
+        background(ctx);
+
+        const revealDifference = easing(t, 0.08, 0.44);
+        const revealLoss = easing(t, 0.56, 0.97);
+        const glow = ctx.createLinearGradient(0, 181, 0, 829);
+        glow.addColorStop(0, 'rgba(135, 124, 245, .44)');
+        glow.addColorStop(0.52, 'rgba(34, 140, 185, .15)');
+        glow.addColorStop(1, 'rgba(121, 106, 229, .49)');
+        box(ctx, 440, 187, 178, 638, 31, glow);
+        label(ctx, '候选词', 314, 132, { size: 34 });
+        label(ctx, '预测概率', 529, 132, { size: 34 });
+        label(ctx, '目标概率', 747, 132, { size: 34 });
+        label(ctx, '损失项', 953, 132, { size: 34 });
+
+        words.forEach((word, index) => {
+          const y = 238 + index * 134;
+          const correct = word.name === '老';
+          if (correct) {
+            box(ctx, 209, y - 45, 826, 90, 18, 'rgba(244, 217, 79, .09)', '#fae477');
+            line(ctx, 1035, y, 1075, y, 'rgba(246, 218, 117, .7)', 2);
+          }
+          const hue = correct ? '#ffed7e' : '#d9d6ff';
+          pill(ctx, word.name, 314, y, 112, 53, { size: 35, color: hue, active: correct });
+          label(ctx, `${word.probability.toFixed(1)}%`, 529, y, { size: 35, numeric: true, color: hue, weight: correct ? 700 : 500 });
+          pill(ctx, correct ? '100%' : '0%', 747, y, 152, 53, { size: 31, color: hue, numeric: true, active: correct });
+          pill(ctx, correct ? '1.833' : '0', 953, y, 142, 53, { size: 31, color: hue, numeric: true, active: correct });
+        });
+
+        box(ctx, 1075, 181, 629, 644, 35, 'rgba(16, 18, 54, .67)', '#7c77ac');
+        ctx.save();
+        ctx.globalAlpha = revealDifference;
+        label(ctx, '「老」的概率差', 1128, 246, { size: 34, align: 'left', color: '#ebe8ff' });
+        label(ctx, '100% − 16.0%', 1128, 320, { size: 45, align: 'left', numeric: true });
+        label(ctx, '= 84 个百分点', 1128, 387, { size: 47, align: 'left', weight: 700, color: '#ffed7e' });
+        ctx.restore();
+
+        line(ctx, 1128, 449, 1650, 449, 'rgba(202, 191, 246, .36)', 1.5);
+        ctx.save();
+        ctx.globalAlpha = revealLoss;
+        label(ctx, '交叉熵损失', 1128, 505, { size: 34, align: 'left', color: '#ebe8ff' });
+        label(ctx, 'L = −Σ yᵢ ln pᵢ', 1128, 578, { size: 44, align: 'left' });
+        label(ctx, '「老」的标签为 1，其余为 0', 1128, 640, { size: 29, align: 'left', color: '#bfc2ed' });
+        label(ctx, '= −ln(0.16) ≈ 1.833', 1128, 729, { size: 46, align: 'left', weight: 700, color: '#ffed7e' });
+        ctx.restore();
+
+        subtitle(ctx, '84 个百分点是概率差，1.833 是交叉熵损失');
+      },
+    });
+  </script>
+</body>
+</html>

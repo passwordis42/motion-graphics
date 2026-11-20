@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>12:05 常见字组合并成一个 Token</title>
+  <link rel="stylesheet" href="../shared/player.css">
+</head>
+<body>
+  <main id="player"></main>
+  <script src="../shared/player.js"></script>
+  <script src="../shared/nnlm.js"></script>
+  <script>
+    function token(ctx, label, id, centerX, centerY, width, alpha = 1) {
+      const { label: text, box: panel } = nnlm;
+      if (alpha <= 0) return;
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      panel(ctx, centerX - width / 2, centerY - 55, width, 110, 4, '#514e9a', '#aaaaf4');
+      text(ctx, id, centerX, centerY - 90, { size: 31, numeric: true, color: '#e5e5ff' });
+      text(ctx, label, centerX, centerY + 2, { size: 62, weight: 700, color: '#f3f284' });
+      ctx.restore();
+    }
+
+    mountRevisionClip({
+      title: '常见字组合并成一个 Token',
+      marker: '12:05',
+      range: '12:04.7–12:08.0',
+      duration: 3.3,
+      previewTime: 2.6,
+      description: '左边的分词算法把老鼠拆成两个 Token。右边的算法把老鼠合成一个 Token。',
+      draw(ctx, t) {
+        const { background, label: text, subtitle: caption, easing } = nnlm;
+        const ease = (amount) => easing(amount, 0, 1);
+        background(ctx);
+        const split = ease((t - 0.31) / 0.81);
+        const merge = ease((t - 1.13) / 0.64);
+        const left = 960 - 434 * split;
+        const right = 960 + 434 * split;
+        const y = 577;
+        const pairGap = 75;
+
+        ctx.save();
+        ctx.globalAlpha = split;
+        text(ctx, 'GPT 分词示例', 526, 385, { size: 38, weight: 700, color: '#efed94' });
+        text(ctx, 'DeepSeek 分词示例', 1394, 385, { size: 38, weight: 700, color: '#efed94' });
+        ctx.restore();
+
+        token(ctx, '老', '10679', left - pairGap, y, 112);
+        token(ctx, '鼠', '156205', left + pairGap, y, 112);
+        const separation = pairGap * (1 - merge);
+        const separateAlpha = split * (1 - merge ** 2);
+        token(ctx, '老', '', right - separation, y, 112, separateAlpha);
+        token(ctx, '鼠', '', right + separation, y, 112, separateAlpha);
+        token(ctx, '老鼠', '46628', right, y, 130 + 93 * merge, merge);
+
+        caption(ctx, t < 1.68 ? '有些算法把有些频繁一起出现的字' : '合并成一个 Token');
+      }
+    });
+  </script>
+</body>
+</html>
