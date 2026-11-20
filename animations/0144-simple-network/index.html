@@ -3,91 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>01:44 最简单的神经网络</title>
-  <link rel="stylesheet" href="../shared/player.css?v=3">
+  <title>01:44 简单的神经网络</title>
+  <link rel="stylesheet" href="../shared/player.css?v=4">
 </head>
 <body>
   <main id="player"></main>
-  <script src="../shared/player.js?v=3"></script>
-  <script src="../shared/nnlm.js"></script>
+  <script src="../shared/player.js?v=4"></script>
   <script>
-    const inputs = [
-      { y: 368, value: '1.00', weight: '+0.620', color: '#70f4de', active: true },
-      { y: 520, value: '0.00', weight: '−0.180', color: '#eaa770', active: false },
-      { y: 672, value: '1.00', weight: '+0.310', color: '#70f4de', active: true }
-    ];
-
     mountRevisionClip({
-      title: '最简单的神经网络',
+      title: '简单的神经网络',
       marker: '01:44',
       range: '01:43.0–01:47.1',
       duration: 4.1,
-      previewTime: 3.0,
-      description: '三个输入各经过一条权重连线，直接汇入一个输出。没有隐藏层。',
-      draw(ctx, t) {
-        const { background, label: text, subtitle: caption, box: panel, line, easing } = nnlm;
-        const ease = (amount) => easing(amount, 0, 1);
-        background(ctx);
-
-        const left = 432;
-        const right = 1440;
-        const center = 520;
-        const sourceWidth = 164;
-        const destinationWidth = 222;
-        const from = left + sourceWidth / 2;
-        const to = right - destinationWidth / 2;
-
-        text(ctx, '输入', left, 250, { size: 32, color: '#d7d9f5' });
-        text(ctx, '一层权重', 923, 250, { size: 36, color: '#f1ec86', weight: 700 });
-        text(ctx, '输出', right, 250, { size: 32, color: '#d7d9f5' });
-
-        inputs.forEach((input, index) => {
-          const reveal = ease((t - 0.14 - index * 0.14) / 0.58);
-          const x = from + (to - from) * reveal;
-          const y = input.y + (center - input.y) * reveal;
-          ctx.save();
-          ctx.globalAlpha = 0.66;
-          line(ctx, from, input.y, x, y, input.color, 2);
-          ctx.restore();
-
-          const pulse = (t - 1.2 - index * 0.24) / 0.96;
-          if (input.active && pulse > 0 && pulse < 1) {
-            const xAt = (amount) => from + (to - from) * amount;
-            const yAt = (amount) => input.y + (center - input.y) * amount;
-            const behind = Math.max(0, pulse - 0.10);
-            ctx.save();
-            ctx.shadowColor = input.color;
-            ctx.shadowBlur = 18;
-            line(ctx, xAt(behind), yAt(behind), xAt(pulse), yAt(pulse), '#cbfff3', 4);
-            ctx.restore();
-          }
-
-          const labelX = 915;
-          const labelY = input.y + (center - input.y) * ((labelX - from) / (to - from));
-          ctx.save();
-          ctx.globalAlpha = ease((t - 0.34 - index * 0.14) / 0.45);
-          panel(ctx, labelX - 73, labelY - 23, 146, 46, 8, '#131743', 'rgba(160,168,238,.17)');
-          text(ctx, input.weight, labelX, labelY, { size: 28, color: input.color, numeric: true });
-          ctx.restore();
-        });
-
-        for (const input of inputs) {
-          panel(ctx, left - sourceWidth / 2, input.y - 36, sourceWidth, 72, 36, '#34376c', '#a3a8de');
-          text(ctx, input.value, left, input.y, { size: 34, numeric: true });
-        }
-
-        const outputReady = ease((t - 2.48) / 0.28);
-        ctx.save();
-        ctx.shadowColor = '#a69fec';
-        ctx.shadowBlur = 11 + 21 * Math.sin(Math.PI * outputReady);
-        panel(ctx, right - destinationWidth / 2, center - 46, destinationWidth, 92, 46, '#34366a', '#b6b5ed');
-        ctx.restore();
-        text(ctx, t < 2.52 ? '—' : '0.930', right, center, {
-          size: 42, color: t < 2.52 ? '#a5a7d7' : '#f2ef97', numeric: true
-        });
-
-        caption(ctx, t < 2.36 ? '我们从一个最简单的神经网络讲起' : '看看它是如何工作的');
-      }
+      previewTime: 2.24,
+      description: '保留原画面，开头字幕改为“我们从一个简单的神经网络讲起”。',
+      modifiedVideo: './modified.mp4'
     });
   </script>
 </body>

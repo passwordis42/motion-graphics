@@ -4,156 +4,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>输入值逐个乘以对应权重</title>
-  <link rel="stylesheet" href="../shared/player.css?v=3">
+  <link rel="stylesheet" href="../shared/player.css?v=4">
 </head>
 <body>
   <main id="player"></main>
-  <script src="../shared/player.js?v=3"></script>
+  <script src="../shared/player.js?v=4"></script>
   <script>
-    const font = '"Microsoft YaHei", "PingFang SC", sans-serif';
-    const mono = 'Consolas, "Cascadia Mono", monospace';
-    const tokens = [
-      ['猫', ['0.2', '−0.1', '0.4']], ['会', ['−0.3', '0.2', '0.1']],
-      ['抓', ['0.5', '0.1', '−0.2']], ['老', ['−0.1', '0.3', '0.2']],
-      ['鼠', ['0.4', '−0.2', '0.3']],
-    ];
-    const inputs = tokens.slice(0, 3).flatMap(([, values]) => values);
-    const inputRows = inputs.map((_, i) => 240 + i * 72);
-    const destinations = [240, 528, 816];
-    const weightNames = ['w₁', 'w₂', 'w₃', 'w₄', 'w₅', 'w₆', 'w₇', 'w₈', 'w₉'];
-    const gold = '#ffda75';
-    const clamp = (p) => Math.max(0, Math.min(1, p));
-
-    function path(ctx, points, color, width = 1) {
-      ctx.strokeStyle = color;
-      ctx.lineWidth = width;
-      ctx.beginPath();
-      points.forEach(([x, y], i) => i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y));
-      ctx.stroke();
-    }
-
-    function chip(ctx, x, y, width, height, fill, stroke) {
-      ctx.beginPath();
-      ctx.roundRect(x - width / 2, y - height / 2, width, height, height / 2);
-      ctx.fillStyle = fill;
-      ctx.fill();
-      ctx.strokeStyle = stroke;
-      ctx.lineWidth = 1.75;
-      ctx.stroke();
-    }
-
-    function background(ctx) {
-      ctx.fillStyle = '#080c27';
-      ctx.fillRect(0, 0, 1920, 1080);
-      for (const [x, y, radius, color] of [[875, 183, 1020, '35,54,179'], [1840, 14, 775, '108,94,192'],
-        [-105, 190, 740, '89,44,116'], [-185, 814, 735, '113,46,29']]) {
-        const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
-        gradient.addColorStop(0, `rgba(${color},.92)`);
-        gradient.addColorStop(1, `rgba(${color},0)`);
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, 1920, 1080);
-      }
-      const gridColor = 'rgba(191,201,251,.16)';
-      for (const x of [238, 608, 1055, 1603]) path(ctx, [[x, 0], [x, 1080]], gridColor);
-      for (const y of [122, 525, 898]) path(ctx, [[0, y], [1920, y]], gridColor);
-      for (const [x, y] of [[117, 628], [1785, 628]]) {
-        ctx.fillStyle = '#6e74f0';
-        ctx.fillRect(x - 14, y - 3, 28, 6);
-        ctx.fillRect(x - 3, y - 14, 6, 28);
-      }
-      for (const [x, y, color] of [[430, 70, '#949cd5'], [445, 85, '#6969d5'],
-        [460, 100, '#abb988'], [1340, 82, '#c18a74'], [1676, 875, '#5e6bed'], [1694, 866, '#8798df']]) {
-        ctx.fillStyle = color;
-        ctx.fillRect(x, y, 14, 14);
-      }
-    }
-
-    function draw(ctx, t) {
-      background(ctx);
-      ctx.textBaseline = 'middle';
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#f1f2ff';
-      ctx.font = `600 31px ${font}`;
-      ctx.fillText('输入层', 874, 157);
-      ctx.fillText('隐藏层 1', 1525, 157);
-      ctx.fillStyle = '#b2bee9';
-      ctx.font = `500 25px ${font}`;
-      ctx.fillText('9 个输入', 874, 196);
-      ctx.fillText('3 个神经元 · tanh', 1525, 196);
-
-      const tableY = tokens.map((_, index) => 331 + index * 100);
-      for (const [index, [token, values]] of tokens.entries()) {
-        const y = tableY[index];
-        ctx.fillStyle = '#363860';
-        ctx.fillRect(226, y - 28, 57, 57);
-        ctx.strokeStyle = '#a4afe9';
-        ctx.lineWidth = 1.2;
-        ctx.strokeRect(226, y - 28, 57, 57);
-        ctx.fillStyle = '#f5f4ff';
-        ctx.font = `600 35px ${font}`;
-        ctx.fillText(token, 254, y + 2);
-        for (const [column, value] of values.entries()) {
-          ctx.fillStyle = index < 3 ? gold : '#b3a283';
-          ctx.font = `500 38px ${mono}`;
-          ctx.fillText(value, 353 + column * 104, y + 1);
-        }
-        if (index < 3) {
-          path(ctx, [[600, y], [654, y], [700, tableY[1]]], 'rgba(255,218,117,.44)', 2);
-        }
-      }
-
-      for (const [index, y] of inputRows.entries()) {
-        path(ctx, [[700, tableY[1]], [804, y]], 'rgba(255,218,117,.23)', 1.6);
-        for (const [i, outputY] of destinations.entries()) {
-          const edge = (index + i) % 2 === 0 ? 'rgba(119,221,235,.38)' : 'rgba(187,139,244,.33)';
-          const points = i === 0 ? [[944, y], [1253, y], [1463, outputY]] : [[944, y], [1463, outputY]];
-          path(ctx, points, edge, 1.55);
-        }
-      }
-
-      for (const [index, y] of inputRows.entries()) {
-        const elapsed = t - index * 0.18;
-        const arrival = clamp((elapsed - 0.07) / 0.37);
-        const accent = clamp(elapsed / 0.15) * (0.56 + 0.44 * Math.cos(arrival * Math.PI / 2));
-        if (elapsed > 0) {
-          path(ctx, [[944, y], [1253, y], [1463, 240]], `rgba(255,218,117,${0.22 + 0.47 * accent})`, 2.4);
-          if (arrival > 0 && arrival < 1) {
-            const pulseX = 944 + arrival * 519;
-            const branchProgress = clamp((pulseX - 1253) / 210);
-            ctx.fillStyle = gold;
-            ctx.beginPath();
-            ctx.arc(pulseX, y + branchProgress * (240 - y), 4, 0, Math.PI * 2);
-            ctx.fill();
-          }
-        }
-      }
-
-      for (const [index, value] of inputs.entries()) {
-        const y = inputRows[index];
-        const active = t >= index * 0.18;
-        chip(ctx, 874, y, 138, 46, '#202755', active ? '#dbc381' : '#7889c9');
-        ctx.fillStyle = active ? '#ffe5a2' : '#f1f3ff';
-        ctx.font = `500 32px ${mono}`;
-        ctx.fillText(value, 874, y + 1);
-        chip(ctx, 1155, y, 130, 42, '#15203e', '#6c6274');
-        ctx.globalAlpha = 0.34 + 0.66 * clamp((t - index * 0.18) / 0.15);
-        ctx.fillStyle = gold;
-        ctx.font = `600 31px ${font}`;
-        ctx.fillText(`× ${weightNames[index]}`, 1155, y + 1);
-        ctx.globalAlpha = 1;
-      }
-
-      for (const [index, y] of destinations.entries()) {
-        chip(ctx, 1525, y, 124, 44, '#262956', index === 0 ? '#d6b969' : '#747bac');
-      }
-      ctx.fillStyle = '#fff';
-      ctx.font = `700 50px ${font}`;
-      ctx.fillText('输入层的数字也会乘以每条线上的权重', 960, 1001);
-    }
-
     mountRevisionClip({
-      title: '输入值逐个乘以对应权重', marker: '14:38', range: '14:37.9–14:40.5',
-      duration: 2.6, previewTime: 2.2, draw,
+      title: '输入值逐个乘以对应权重',
+      marker: '14:38',
+      range: '14:37.9–14:40.5',
+      duration: 2.6,
+      previewTime: 0.68,
+      description: '输入层的高亮边框对齐到各自的神经元，逐个点亮后仍按原片显示连线。',
+      modifiedVideo: './modified.mp4',
     });
   </script>
 </body>

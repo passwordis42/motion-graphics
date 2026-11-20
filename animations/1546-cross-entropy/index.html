@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>概率差与交叉熵损失 · 修改合集</title>
-  <link rel="stylesheet" href="../shared/player.css?v=3">
+  <link rel="stylesheet" href="../shared/player.css?v=4">
 </head>
 <body>
   <main id="player"></main>
-  <script src="../shared/player.js?v=3"></script>
+  <script src="../shared/player.js?v=4"></script>
   <script src="../shared/nnlm.js"></script>
   <script>
     mountRevisionClip({
@@ -33,6 +33,12 @@
         label(ctx, '预测概率', 529, 132, { size: 34 });
         label(ctx, '目标概率', 747, 132, { size: 34 });
         label(ctx, '损失项', 953, 132, { size: 34 });
+        ctx.save();
+        ctx.globalAlpha = revealLoss;
+        label(ctx, 'L = −Σ yᵢ ln pᵢ = −ln(0.16) ≈ 1.833', 1075, 132, {
+          size: 27, align: 'left', color: '#d7dbff',
+        });
+        ctx.restore();
 
         words.forEach((word, index) => {
           const y = 238 + index * 134;
@@ -48,7 +54,7 @@
           pill(ctx, correct ? '1.833' : '0', 953, y, 142, 53, { size: 31, color: hue, numeric: true, active: correct });
         });
 
-        box(ctx, 1075, 181, 629, 644, 35, 'rgba(16, 18, 54, .67)', '#7c77ac');
+        box(ctx, 1075, 181, 629, 450, 35, 'rgba(16, 18, 54, .67)', '#7c77ac');
         ctx.save();
         ctx.globalAlpha = revealDifference;
         label(ctx, '「老」的概率差', 1128, 246, { size: 34, align: 'left', color: '#ebe8ff' });
@@ -60,9 +66,7 @@
         ctx.save();
         ctx.globalAlpha = revealLoss;
         label(ctx, '交叉熵损失', 1128, 505, { size: 34, align: 'left', color: '#ebe8ff' });
-        label(ctx, 'L = −Σ yᵢ ln pᵢ', 1128, 578, { size: 44, align: 'left' });
-        label(ctx, '「老」的标签为 1，其余为 0', 1128, 640, { size: 29, align: 'left', color: '#bfc2ed' });
-        label(ctx, '= −ln(0.16) ≈ 1.833', 1128, 729, { size: 46, align: 'left', weight: 700, color: '#ffed7e' });
+        label(ctx, '「老」的标签为 1，其余为 0', 1128, 564, { size: 29, align: 'left', color: '#bfc2ed' });
         ctx.restore();
 
         subtitle(ctx, '84 个百分点是概率差，1.833 是交叉熵损失');

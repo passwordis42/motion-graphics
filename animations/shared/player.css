@@ -12,13 +12,21 @@ main { width: min(86rem, 100% - 2rem); margin-inline: auto; }
 .clip-header a { color: #bdc4ff; text-underline-offset: 0.23em; }
 .clip-header h1 { margin: 0.55rem 0 0.15rem; font-size: clamp(1.35rem, 3vw, 2rem); }
 .clip-header p { margin: 0; color: #b7bdd5; font-size: 0.9rem; font-variant-numeric: tabular-nums; }
-.stage { display: block; width: 100%; height: auto; background: #080b21; }
+.comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; align-items: start; }
+.comparison.single { grid-template-columns: minmax(0, 1fr); }
+.comparison-pane h2 { margin: 0 0 0.4rem; color: #dbdef1; font-size: 0.95rem; font-weight: 600; }
+.stage { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: contain; background: #080b21; }
+.clip-status { margin: 0.6rem 0 0; color: #b7bdd5; font-size: 0.9rem; }
 .transport { display: flex; gap: 0.75rem; align-items: center; min-height: 3.75rem; }
 .transport button { color: inherit; font: inherit; font-size: 0.875rem; background: #202442; border: 1px solid #454969; border-radius: 0.4rem; padding: 0.4rem 0.75rem; min-height: 2.5rem; min-width: 3.75rem; cursor: pointer; }
 .transport button:hover { background: #343961; }
 .transport input { flex: 1; min-width: 2rem; accent-color: #adb2ff; cursor: pointer; }
 .transport output { font: 0.82rem/1.5 ui-monospace, monospace; color: #b7bdd5; white-space: nowrap; }
 :is(button, a, input):focus-visible { outline: 2px solid #babfff; outline-offset: 4px; }
+
+@media (max-width: 740px) {
+  .comparison { grid-template-columns: minmax(0, 1fr); gap: 0.8rem; }
+}
 
 @media (max-width: 500px) {
   main { width: min(100% - 1rem, 86rem); }
@@ -28,4 +36,4 @@ main { width: min(86rem, 100% - 2rem); margin-inline: auto; }
 }
 
 .render-only main { width: 100%; }
-.render-only [hidden] { display: none; }
+[hidden] { display: none; }

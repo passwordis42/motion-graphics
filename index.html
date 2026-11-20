@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="按原片时间戳查看片段的问题和修改方案，在线播放。">
+  <meta name="description" content="按原片时间戳查看问题和修改方案，对比原片与修改后画面。">
   <title>修改合集</title>
   <style>
     :root {
@@ -105,7 +105,6 @@
     .actions a:focus-visible { outline: 2px solid var(--accent); outline-offset: 0.25rem; }
     .actions .play { padding-inline: 1.1rem; background: var(--accent); color: #fff; text-decoration: none; }
     .actions .play:hover { background: var(--accent-dark); }
-    .actions .download:hover { color: var(--accent-dark); }
 
     @media (max-width: 960px) {
       .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -128,23 +127,23 @@
     <section class="gallery" aria-label="修改片段">
       <article class="animation" id="t0144" aria-labelledby="t0144-title">
         <div class="artwork">
-          <img src="./animations/0144-simple-network/preview.webp" width="960" height="540" alt="输入直接连接输出的单层神经网络" loading="lazy">
+          <img src="./animations/0144-simple-network/preview.webp" width="960" height="540" alt="原画面配上“简单的神经网络”的字幕" loading="lazy">
         </div>
         <div class="detail">
           <div class="metadata">
             <span class="number">01</span>
             <p class="timestamp">原片 <time datetime="PT1M44S">01:44</time></p>
           </div>
-          <h2 id="t0144-title">最简单的神经网络</h2>
+          <h2 id="t0144-title">简单的神经网络</h2>
           <dl class="revision">
             <div><dt>问题</dt><dd>文案称“最简单的神经网络”，但当前配图并非最简单的神经网络，图文不匹配。</dd></div>
             <div><dt>修改方案</dt><dd>二选一：
 ① 将画面替换为单层神经网络抽象概念图。
 ② 去掉文案“最简单”中的“最”字，改为“简单的神经网络”。</dd></div>
           </dl>
-          <p class="spec">替换 01:43.0–01:47.1 · 4.1 秒</p>
+          <p class="spec">采用方案② · 替换 01:43.0–01:47.1 · 4.1 秒</p>
           <div class="actions">
-            <a class="play" href="./animations/0144-simple-network/" aria-label="播放 01:44 最简单的神经网络">播放片段</a>
+            <a class="play" href="./animations/0144-simple-network/" aria-label="对比 01:44 简单的神经网络">对比片段</a>
           </div>
         </div>
       </article>
@@ -165,7 +164,7 @@
           </dl>
           <p class="spec">替换 05:13.7–05:18.4 · 4.7 秒</p>
           <div class="actions">
-            <a class="play" href="./animations/0514-scribble/" aria-label="播放 05:14 正方形变成涂鸦">播放片段</a>
+            <a class="play" href="./animations/0514-scribble/" aria-label="对比 05:14 正方形变成涂鸦">对比片段</a>
           </div>
         </div>
       </article>
@@ -186,7 +185,7 @@
           </dl>
           <p class="spec">替换 12:04.7–12:08.0 · 3.3 秒</p>
           <div class="actions">
-            <a class="play" href="./animations/1205-tokenization/" aria-label="播放 12:05 常见字组合并成一个 Token">播放片段</a>
+            <a class="play" href="./animations/1205-tokenization/" aria-label="对比 12:05 常见字组合并成一个 Token">对比片段</a>
           </div>
         </div>
       </article>
@@ -207,7 +206,7 @@
           </dl>
           <p class="spec">替换 12:27.5–12:31.5 · 4 秒</p>
           <div class="actions">
-            <a class="play" href="./animations/1229-vector-animation/" aria-label="播放 12:29 三个词元编号同步停止">播放片段</a>
+            <a class="play" href="./animations/1229-vector-animation/" aria-label="对比 12:29 三个词元编号同步停止">对比片段</a>
           </div>
         </div>
       </article>
@@ -228,28 +227,28 @@
           </dl>
           <p class="spec">替换 14:14.5–14:18.2 · 3.7 秒</p>
           <div class="actions">
-            <a class="play" href="./animations/1416-word-vectors/" aria-label="播放 14:16 放大「猫会抓老鼠」的词元">播放片段</a>
+            <a class="play" href="./animations/1416-word-vectors/" aria-label="对比 14:16 放大「猫会抓老鼠」的词元">对比片段</a>
           </div>
         </div>
       </article>
 
       <article class="animation" id="t1438" aria-labelledby="t1438-title">
         <div class="artwork">
-          <img src="./animations/1438-input-weights/preview.webp" width="960" height="540" alt="分开排列的输入数值和权重" loading="lazy">
+          <img src="./animations/1438-input-weights/preview.webp" width="960" height="540" alt="输入层中高亮与底框对齐的神经元" loading="lazy">
         </div>
         <div class="detail">
           <div class="metadata">
             <span class="number">06</span>
             <p class="timestamp">原片 <time datetime="PT14M38S">14:38</time></p>
           </div>
-          <h2 id="t1438-title">输入值逐个乘以对应权重</h2>
+          <h2 id="t1438-title">输入层方框避免重叠</h2>
           <dl class="revision">
             <div><dt>问题</dt><dd>念到“输入层的数字也会乘以每条线上的权重”时，对应画面中输入层的动效图标重叠。</dd></div>
             <div><dt>修改方案</dt><dd>调整避免重叠。</dd></div>
           </dl>
           <p class="spec">替换 14:37.9–14:40.5 · 2.6 秒</p>
           <div class="actions">
-            <a class="play" href="./animations/1438-input-weights/" aria-label="播放 14:38 输入值逐个乘以对应权重">播放片段</a>
+            <a class="play" href="./animations/1438-input-weights/" aria-label="对比 14:38 输入层方框避免重叠">对比片段</a>
           </div>
         </div>
       </article>
@@ -270,7 +269,7 @@
           </dl>
           <p class="spec">替换 15:17.3–15:19.4 · 2.1 秒</p>
           <div class="actions">
-            <a class="play" href="./animations/1518-probabilities/" aria-label="播放 15:18 给出下一个词的概率">播放片段</a>
+            <a class="play" href="./animations/1518-probabilities/" aria-label="对比 15:18 给出下一个词的概率">对比片段</a>
           </div>
         </div>
       </article>
@@ -291,7 +290,7 @@
           </dl>
           <p class="spec">替换 15:43.7–15:46.8 · 3.1 秒</p>
           <div class="actions">
-            <a class="play" href="./animations/1546-cross-entropy/" aria-label="播放 15:46 概率差与交叉熵损失">播放片段</a>
+            <a class="play" href="./animations/1546-cross-entropy/" aria-label="对比 15:46 概率差与交叉熵损失">对比片段</a>
           </div>
         </div>
       </article>
@@ -312,15 +311,14 @@
           </dl>
           <p class="spec">替换 16:05.5–16:07.8 · 2.3 秒</p>
           <div class="actions">
-            <a class="play" href="./animations/1607-probability-axis/" aria-label="播放 16:07 在坐标轴上标注更新后的概率">播放片段</a>
+            <a class="play" href="./animations/1607-probability-axis/" aria-label="对比 16:07 在坐标轴上标注更新后的概率">对比片段</a>
           </div>
         </div>
       </article>
 
       <article class="animation" id="t1616" aria-labelledby="neural-network-title">
         <div class="artwork">
-          <img src="./animations/neural-network/preview.webp" width="960" height="540"
-               alt="蓝紫色背景上的五层神经网络，左侧九个输入按猫、会、抓分组">
+          <img src="./animations/neural-network/preview.webp" width="960" height="540" alt="五层神经网络的动效" loading="lazy">
         </div>
         <div class="detail">
           <div class="metadata">
@@ -329,13 +327,56 @@
           </div>
           <h2 id="neural-network-title">神经网络的层与神经元</h2>
           <dl class="revision">
-            <div><dt>问题</dt><dd>—</dd></div>
+            <div><dt>问题</dt><dd>和口播的节奏没有对上。</dd></div>
             <div><dt>修改方案</dt><dd>内容先展示层数，然后再出现更多神经元。</dd></div>
           </dl>
-          <p class="spec">8.8 秒 · 1080p · 30 fps</p>
+          <p class="spec">原片 16:13.7–16:17.2 · 3.5 秒 · 修改后 8.8 秒</p>
           <div class="actions">
-            <a class="play" href="./animations/neural-network/">播放动效</a>
-            <a class="download" href="./animations/neural-network/neural-network-animation.mp4?v=3" download>下载 MP4</a>
+            <a class="play" href="./animations/neural-network/compare.html" aria-label="对比 16:16 神经网络的层与神经元">对比片段</a>
+            <a href="./animations/neural-network/neural-network-animation.mp4?v=3" download>下载 MP4</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="animation" id="t1620" aria-labelledby="training-title">
+        <div class="artwork">
+          <img src="./animations/1620-training-a/preview.webp" width="960" height="540" alt="高亮的三个 Token 从训练语料输入神经网络" loading="lazy">
+        </div>
+        <div class="detail">
+          <div class="metadata">
+            <span class="number">11</span>
+            <p class="timestamp">原片 <time datetime="PT16M20S">16:20</time></p>
+          </div>
+          <h2 id="training-title">训练流程逐句对齐</h2>
+          <dl class="revision">
+            <div><dt>问题</dt><dd>口播与画面卡点未对齐；提到寻找训练语料时应出现语料，提到将开头三个token输入网络时应展示输入动效；各句对应步骤展示不直观，缺少视觉提示，观看时难以判断关注位置。</dd></div>
+            <div><dt>修改方案</dt><dd>按以下新文案重新调整动效节奏，逐句对齐操作和画面，重新设定各步骤视觉中心并明确提示。
+训练过程也是差不多，我们从训练语料里找到一段文本，把最开头的三个token输入神经网络，接下来神经网络会前向传播预测下一个词是什么，预测出的结果会和语料库中的实际结果做对比，然后计算损失值，反向传播调整参数和词向量。算完这一步，输入的窗口会往右滑一格，去预测下一个字“鼠”，预测完再调整一次参数，接着再往右滑一格，再预测一次...经过无数次的训练后，一开始随机的词向量，就慢慢的有了规律，经常出现在相似语境里的词，向量方向就被拽到了一块，意思越接近，在空间里的距离也就越近。</dd></div>
+          </dl>
+          <p class="spec">16:17.8–16:39.9 · 5 个短片段</p>
+          <div class="actions">
+            <a class="play" href="./animations/1620-training-a/">对比训练流程</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="animation" id="t1640" aria-labelledby="inference-title">
+        <div class="artwork">
+          <img src="./animations/1640-inference-cut/preview.webp" width="960" height="540" alt="提前切到词向量和神经网络的推理场景" loading="lazy">
+        </div>
+        <div class="detail">
+          <div class="metadata">
+            <span class="number">12</span>
+            <p class="timestamp">原片 <time datetime="PT16M40S">16:40</time></p>
+          </div>
+          <h2 id="inference-title">提前切到推理场景</h2>
+          <dl class="revision">
+            <div><dt>问题</dt><dd>说到“得到的这套词向量和神经网络”时，画面尚未切到后面的推理场景。</dd></div>
+            <div><dt>修改方案</dt><dd>说到“得到的这套词向量和神经网络”时，将画面切到后面的推理场景。</dd></div>
+          </dl>
+          <p class="spec">替换 16:40.08–16:44.48 · 4.4 秒</p>
+          <div class="actions">
+            <a class="play" href="./animations/1640-inference-cut/" aria-label="对比 16:40 提前切到推理场景">对比片段</a>
           </div>
         </div>
       </article>
