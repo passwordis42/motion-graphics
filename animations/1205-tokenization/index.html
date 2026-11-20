@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>12:05 常见字组合并成一个 Token</title>
-  <link rel="stylesheet" href="../shared/player.css">
+  <link rel="stylesheet" href="../shared/player.css?v=2">
 </head>
 <body>
   <main id="player"></main>
-  <script src="../shared/player.js"></script>
+  <script src="../shared/player.js?v=2"></script>
   <script src="../shared/nnlm.js"></script>
   <script>
     function token(ctx, label, id, centerX, centerY, width, alpha = 1) {
@@ -34,7 +34,7 @@
         const ease = (amount) => easing(amount, 0, 1);
         background(ctx);
         const split = ease((t - 0.31) / 0.81);
-        const merge = ease((t - 1.13) / 0.64);
+        const merge = ease((t - 1.82) / 0.62);
         const left = 960 - 434 * split;
         const right = 960 + 434 * split;
         const y = 577;
@@ -54,7 +54,7 @@
         token(ctx, '鼠', '', right + separation, y, 112, separateAlpha);
         token(ctx, '老鼠', '46628', right, y, 130 + 93 * merge, merge);
 
-        caption(ctx, t < 1.68 ? '有些算法把有些频繁一起出现的字' : '合并成一个 Token');
+        caption(ctx, t < 2.11 ? '有些算法把有些频繁一起出现的字' : '合并成一个 Token');
       }
     });
   </script>

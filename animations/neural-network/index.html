@@ -4,32 +4,22 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>神经网络也会有更多层和更多神经元</title>
+  <link rel="stylesheet" href="../shared/player.css?v=2">
   <style>
     :root { color-scheme: dark; font-family: "Microsoft YaHei", system-ui, sans-serif; }
-    * { box-sizing: border-box; }
     body { margin: 0; min-height: 100dvh; display: grid; place-items: center; background: #080916; color: #f0f2ff; }
     main { width: min(100%, calc((100dvh - 72px) * 16 / 9)); }
     canvas { display: block; width: 100%; height: auto; background: #080c28; }
-    .controls { display: flex; gap: 16px; align-items: center; min-height: 56px; padding: 8px 16px; }
-    .controls[hidden] { display: none; }
-    button { min-width: 68px; min-height: 36px; padding: 4px 12px; border: 1px solid #393c59; border-radius: 6px; background: #181b34; color: inherit; cursor: pointer; font: inherit; font-size: 13px; }
-    button:hover { background: #272c50; }
-    button:focus-visible, input:focus-visible { outline: 2px solid #a2aaff; outline-offset: 4px; }
-    input { flex: 1; min-width: 24px; accent-color: #9b9fff; cursor: pointer; }
-    output { font: 12px ui-monospace, monospace; color: #b3b8d6; white-space: nowrap; }
-    @media (max-width: 500px) { .controls { gap: 8px; padding-inline: 8px; } button { min-width: 56px; } }
+    .transport-shell { padding-inline: 1rem; }
+    @media (max-width: 500px) { .transport-shell { padding-inline: 0.5rem; } }
   </style>
 </head>
 <body>
   <main>
     <canvas id="scene" width="1920" height="1080" role="img" aria-label="猫、会、抓的三个三维词向量按顺序拼接，形成九个输入。起始网络有一个隐藏层，包含三个神经元，输出层提供五个分数。网络先从三层增加到五层，然后每个隐藏层的神经元从三个增加到九个。"></canvas>
-    <div class="controls" id="controls">
-      <button id="play" type="button">暂停</button>
-      <button id="replay" type="button">重播</button>
-      <input id="progress" type="range" min="0" step="0.01" value="0" aria-label="播放进度">
-      <output id="time" aria-hidden="true"></output>
-    </div>
+    <div id="controls" class="transport-shell"></div>
   </main>
+  <script src="../shared/player.js?v=2"></script>
   <script>
     const canvas = document.querySelector('#scene');
     const ctx = canvas.getContext('2d', { alpha: false });
@@ -477,71 +467,14 @@
       drawCaption(time, focus);
     }
 
-    const controls = document.querySelector('#controls');
-    const playButton = document.querySelector('#play');
-    const replayButton = document.querySelector('#replay');
-    const progress = document.querySelector('#progress');
-    const timeOutput = document.querySelector('#time');
     const renderOnly = new URLSearchParams(location.search).has('render');
-    progress.max = timing.duration;
-
-    let currentTime = 0;
-    let start = 0;
-    let animation = 0;
-    function seek(seconds) {
-      currentTime = clamp(seconds / timing.duration) * timing.duration;
-      drawFrame(currentTime);
-      progress.value = currentTime;
-      const label = `${currentTime.toFixed(1)} / ${timing.duration.toFixed(1)} 秒`;
-      if (timeOutput.value !== label) {
-        timeOutput.value = label;
-        progress.setAttribute('aria-valuetext', label);
-      }
-    }
-
-    function pause() {
-      cancelAnimationFrame(animation);
-      animation = 0;
-      playButton.textContent = currentTime >= timing.duration ? '播放' : '继续';
-    }
-
-    function tick(now) {
-      seek((now - start) / 1000);
-      if (currentTime >= timing.duration) pause();
-      else animation = requestAnimationFrame(tick);
-    }
-
-    function play() {
-      if (currentTime >= timing.duration) seek(0);
-      start = performance.now() - currentTime * 1000;
-      playButton.textContent = '暂停';
-      animation = requestAnimationFrame(tick);
-    }
-
-    playButton.addEventListener('click', () => {
-      if (animation) pause();
-      else play();
+    document.documentElement.classList.toggle('render-only', renderOnly);
+    const seek = mountClipTransport(document.querySelector('#controls'), {
+      duration: timing.duration,
+      renderOnly,
+      draw: drawFrame,
     });
-    replayButton.addEventListener('click', () => {
-      pause();
-      seek(0);
-      play();
-    });
-    progress.addEventListener('input', () => {
-      pause();
-      seek(progress.valueAsNumber);
-      if (currentTime >= timing.duration) playButton.textContent = '播放';
-    });
-
-    // 导出与浏览器预览共用同一套逐帧绘制逻辑。
     window.neuralAnimation = { duration: timing.duration, seek };
-    seek(0);
-    controls.hidden = renderOnly;
-    if (renderOnly || matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      playButton.textContent = '播放';
-    } else {
-      play();
-    }
   </script>
 </body>
 </html>
