@@ -4,12 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>16:20 训练流程 · 修改合集</title>
-  <link rel="stylesheet" href="../shared/player.css?v=5">
 </head>
 <body>
-  <main id="player"></main>
-  <script src="../shared/player.js?v=5"></script>
-  <script src="../shared/nnlm.js"></script>
-  <script src="../shared/training.js?v=2" data-part="c"></script>
+  <p><a href="../1620-training-a/?step=c">打开完整训练流程</a></p>
+  <script>
+    const query = new URLSearchParams(location.search);
+    query.set('step', 'c');
+    location.replace('../1620-training-a/?' + query);
+  </script>
 </body>
 </html>

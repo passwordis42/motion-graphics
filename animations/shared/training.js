@@ -1,19 +1,18 @@
 'use strict';
 
 (() => {
-  const id = document.currentScript.dataset.part;
   const params = new URLSearchParams(location.search);
   const renderOnly = params.has('render');
   const segments = [
     {
-      id: 'a', name: '语料与输入', range: '16:17.8–16:22.1', duration: 4.3, previewTime: 3.5,
+      id: 'a', name: '语料与输入', duration: 4.3,
       cues: [
         [0, 'corpus', '训练过程也是差不多'],
         [0.95, 'text', '我们从训练语料里找到一段文本'],
         [2.2, 'input', '把最开头的三个 token 输入神经网络'],
       ],
     }, {
-      id: 'b', name: '前向预测与损失', range: '16:22.1–16:27.0', duration: 4.9, previewTime: 3.4,
+      id: 'b', name: '前向预测与损失', duration: 4.9,
       cues: [
         [0, 'forward', '接下来神经网络会前向传播'],
         [1.3, 'predict', '预测下一个词是什么'],
@@ -21,10 +20,10 @@
         [3.85, 'loss', '然后计算损失值'],
       ],
     }, {
-      id: 'c', name: '反向传播与更新', range: '16:27.0–16:29.3', duration: 2.3, previewTime: 1.5,
+      id: 'c', name: '反向传播与更新', duration: 2.3,
       cues: [[0, 'backward', '反向传播调整参数和词向量。']],
     }, {
-      id: 'd', name: '滑动窗口并继续预测', range: '16:29.3–16:35.8', duration: 6.5, previewTime: 2.3,
+      id: 'd', name: '滑动窗口并继续预测', duration: 6.5,
       cues: [
         [0, 'slide-first', '算完这一步，输入的窗口会往右滑一格'],
         [1.35, 'predict-first', '去预测下一个字“鼠”'],
@@ -33,7 +32,7 @@
         [5.02, 'predict-again', '再预测一次...'],
       ],
     }, {
-      id: 'e', name: '相似词向量靠近', range: '16:35.8–16:39.9', duration: 4.1, previewTime: 3.4,
+      id: 'e', name: '相似词向量靠近', duration: 4.1,
       cues: [
         [0, 'vectors', '经过无数次的训练后'],
         [0.85, 'vectors', '一开始随机的词向量，就慢慢的有了规律'],
@@ -42,12 +41,15 @@
       ],
     },
   ];
-  const index = segments.findIndex((part) => part.id === id);
-  const segment = segments[index];
-  const next = segments[index + 1];
-  let continuous = !params.has('manual') && !matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!renderOnly && sessionStorage.getItem('training-autoplay') === 'off') continuous = false;
-  const stepUrl = (part) => '../1620-training-' + part.id + '/';
+  let duration = 0;
+  for (const part of segments) {
+    part.start = duration;
+    duration = Math.round((duration + part.duration) * 100) / 100;
+  }
+  const startTime = segments.find((part) => part.id === params.get('step'))?.start ?? 0;
+  let stepButtons = [];
+  let stepStatus;
+  let visibleStep = -1;
   const { background, box, label, line, pill, arrow, easing, subtitle } = nnlm;
   const mix = (from, to, t) => from + (to - from) * t;
   const gold = '#f7e086';
@@ -65,6 +67,7 @@
       value: layer === 0 ? sampleValues[row] : ((Math.sin(row * 2.17 + layer * 3.01) * 0.8)).toFixed(3),
     }));
   });
+  let networkPlate;
 
   function setOpacity(ctx, amount, paint) {
     ctx.save();
@@ -100,26 +103,84 @@
     }
   }
 
-  function drawNetwork(ctx, t, phase) {
-    const backward = phase === 'backward' || phase === 'adjust';
-    const active = backward || ['input', 'forward', 'predict', 'predict-first', 'predict-again'].includes(phase);
-    const wave = active ? (t * 0.83) % 1 : -2;
-    const color = backward ? red : cyan;
+  function paintNetwork(ctx) {
     box(ctx, 530, 391, 832, 492, 27, 'rgba(12, 23, 74, .58)', 'rgba(182, 190, 247, .4)');
-    label(ctx, '神经网络', 947, 440, { size: 33, weight: 700, color: active ? color : '#c5caee' });
     for (let index = 0; index < layerNodes.length - 1; index++) {
-      const glow = active && Math.abs(wave - (backward ? (3 - index) / 4 : index / 4)) < 0.23;
       for (const [i, from] of layerNodes[index].entries()) {
         for (const [j, to] of layerNodes[index + 1].entries()) {
-          const beam = glow && (i + j + index) % 4 === 1;
-          const tint = beam ? color : (i + j) % 2 ? 'rgba(111, 184, 234, .27)' : 'rgba(229, 171, 103, .25)';
-          line(ctx, from.x + 33, from.y, to.x - 33, to.y, tint, beam ? 1.65 : 0.8);
+          const tint = (i + j) % 2 ? 'rgba(111, 184, 234, .30)' : 'rgba(229, 171, 103, .28)';
+          line(ctx, from.x + 35, from.y, to.x - 35, to.y, tint, 0.86);
         }
       }
     }
     layerNodes.forEach((nodes) => nodes.forEach(({ x, y, value }) => {
       pill(ctx, value, x, y, 72, 26, { size: 15, numeric: true });
     }));
+  }
+
+  function routeSignal(ctx, points, color, t, rate = 0.8) {
+    const spans = points.slice(1).map(([x,y], index) => Math.hypot(x - points[index][0], y - points[index][1]));
+    const total = spans.reduce((sum, value) => sum + value, 0);
+    const head = (t * rate % 1) * total;
+    let covered = 0;
+    ctx.save();
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.7;
+    ctx.globalAlpha = 0.46;
+    ctx.beginPath();
+    points.forEach(([x,y], index) => index === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y));
+    ctx.stroke();
+    for (const [index,length] of spans.entries()) {
+      const [x1,y1] = points[index];
+      const [x2,y2] = points[index + 1];
+      if (length && head >= covered && head <= covered + length) {
+        const progress = (head - covered) / length;
+        const tail = Math.max(0, progress - 45 / length);
+        const endX = mix(x1,x2,progress);
+        const endY = mix(y1,y2,progress);
+        const tailX = mix(x1,x2,tail);
+        const tailY = mix(y1,y2,tail);
+        ctx.globalAlpha = 0.94;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 14;
+        line(ctx, tailX, tailY, endX, endY, color, 2.6);
+        ctx.fillStyle = '#fff9dd';
+        ctx.beginPath();
+        ctx.arc(endX, endY, 3.1, 0, Math.PI * 2);
+        ctx.fill();
+        break;
+      }
+      covered += length;
+    }
+    ctx.restore();
+  }
+
+  function drawNetwork(ctx, t, phase) {
+    if (!networkPlate) {
+      networkPlate = document.createElement('canvas');
+      networkPlate.width = 1920;
+      networkPlate.height = 1080;
+      paintNetwork(networkPlate.getContext('2d'));
+    }
+    ctx.drawImage(networkPlate, 0, 0);
+    const backward = phase === 'backward' || phase === 'adjust';
+    const forward = ['input', 'forward', 'predict', 'predict-first', 'predict-again'].includes(phase);
+    const light = backward ? '#ffe4ef' : gold;
+    label(ctx, '神经网络', 947, 440, { size: 33, weight: 700, color: forward || backward ? light : '#c5caee' });
+    if (!forward && !backward) return;
+    for (let strand = 0; strand < 5; strand++) {
+      const wave = ((t * 0.72 + strand * 0.168) % 1) * 4;
+      const column = backward ? 3 - Math.floor(wave) : Math.floor(wave);
+      const left = layerNodes[column];
+      const right = layerNodes[column + 1];
+      const from = left[(strand * 2 + column) % left.length];
+      const to = right[(strand + column * 2) % right.length];
+      const points = [[from.x + 36, from.y], [to.x - 36, to.y]];
+      if (backward) points.reverse();
+      routeSignal(ctx, points, light, wave % 1, 1);
+    }
   }
 
   function drawInput(ctx, start, phase, t) {
@@ -134,9 +195,8 @@
       arrow(ctx, 530, 621, 484, 621, red, 2.5);
       label(ctx, '更新词向量', 356, 700, { size: 25, color: red });
     } else {
-      const mid = 503 + 14 * Math.sin(t * 7);
       arrow(ctx, 480, 621, 529, 621, active ? gold : '#646ea7', 2.4);
-      if (active) box(ctx, mid - 4, 618, 8, 8, 4, gold);
+      if (active) routeSignal(ctx, [[480,621],[526,621]], gold, t, 1.35);
     }
   }
 
@@ -211,15 +271,24 @@
   }
 
   function draw(ctx, t) {
-    const cue = segment.cues.findLast(([start]) => start <= t) || segment.cues[0];
-    const [start, phase, caption] = cue;
+    const step = segments.findLastIndex((part) => part.start <= t);
+    const segment = segments[step];
+    const local = t - segment.start;
+    if (step !== visibleStep && stepStatus) {
+      if (visibleStep >= 0) stepButtons[visibleStep].removeAttribute('aria-current');
+      stepButtons[step].setAttribute('aria-current', 'step');
+      stepStatus.textContent = '第 ' + (step + 1) + ' 步，共 ' + segments.length + ' 步';
+      visibleStep = step;
+    }
+    const cue = segment.cues.findLast(([start]) => start <= local) || segment.cues[0];
+    const [, phase, caption] = cue;
     if (phase === 'vectors') {
-      drawVectors(ctx, t, cue);
+      drawVectors(ctx, local, cue);
       return;
     }
     background(ctx);
-    const firstWindow = id === 'd' ? easing(t, 0.08, 0.83) : 0;
-    const secondWindow = id === 'd' ? easing(t, 3.78, 4.68) : 0;
+    const firstWindow = segment.id === 'd' ? easing(local, 0.08, 0.83) : 0;
+    const secondWindow = segment.id === 'd' ? easing(local, 3.78, 4.68) : 0;
     const windowIndex = firstWindow + secondWindow;
     const windowVisible = !['corpus', 'text'].includes(phase);
     const expected = ['compare', 'loss', 'backward', 'predict-first', 'adjust', 'predict-again'].includes(phase)
@@ -228,61 +297,50 @@
     drawCorpus(ctx, phase !== 'corpus', windowVisible ? windowIndex : null, !windowVisible, expected);
     const context = phase === 'corpus' ? 0.13 : phase === 'text' ? 0.28 : 1;
     setOpacity(ctx, context, () => {
-      drawNetwork(ctx, t - start, phase);
-      drawInput(ctx, Math.round(windowIndex), phase, t - start);
+      drawNetwork(ctx, t, phase);
+      drawInput(ctx, Math.round(windowIndex), phase, t);
       if (windowVisible) drawResult(ctx, phase);
     });
-    if (phase === 'input') {
-      const reveal = easing(t - start, 0, 0.72);
-      const x = tokenStart + tokenStep;
-      const y = mix(313, 488, reveal);
-      ctx.save();
-      ctx.globalAlpha = reveal;
-      arrow(ctx, x, 313, 356, y, gold, 3, 19);
-      ctx.restore();
+    if (windowVisible) {
+      const x = tokenStart + tokenStep * (windowIndex + 1);
+      routeSignal(ctx, [[x,314],[x,374],[176,374],[176,620],[233,620]], gold, t, 0.68);
+    }
+    if (expected > -1) {
+      const x = tokenStart + tokenStep * expected;
+      routeSignal(ctx, [[x,308],[x,354],[1735,354],[1735,721],[1689,721]], red, t, 0.62);
     }
     subtitle(ctx, caption);
   }
 
   mountRevisionClip({
-    title: '训练流程 · ' + segment.name,
+    title: '训练流程逐句对齐',
     marker: '16:20',
-    range: segment.range,
-    duration: segment.duration,
-    previewTime: segment.previewTime,
-    description: segment.cues.map((cue) => cue[2]).join('。'),
-    autoplay: continuous,
-    onEnd() {
-      if (continuous && next) location.replace(stepUrl(next));
-    },
+    range: '16:17.8–16:39.9',
+    duration,
+    startTime,
+    previewTime: 3.45,
+    description: '连续展示训练语料、前三个 token 输入、前向传播、损失、反向传播、滑动窗口和词向量变化。',
+    autoplay: !params.has('manual') && !matchMedia('(prefers-reduced-motion: reduce)').matches,
     draw,
   });
 
   if (!renderOnly) {
     const controls = document.createElement('div');
     controls.className = 'training-steps';
-    const title = document.createElement('p');
-    title.textContent = '第 ' + (index + 1) + ' 步，共 ' + segments.length + ' 步';
-    const setting = document.createElement('label');
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.checked = continuous;
-    checkbox.addEventListener('change', () => {
-      continuous = checkbox.checked;
-      sessionStorage.setItem('training-autoplay', continuous ? 'on' : 'off');
-    });
-    setting.append(checkbox, '自动连播');
+    stepStatus = document.createElement('p');
     const nav = document.createElement('nav');
     nav.className = 'training-nav';
     nav.setAttribute('aria-label', '训练流程片段');
-    segments.forEach((part, position) => {
-      const link = document.createElement('a');
-      link.href = stepUrl(part);
-      link.textContent = (position + 1) + ' ' + part.name;
-      if (part.id === id) link.setAttribute('aria-current', 'page');
-      nav.append(link);
+    stepButtons = segments.map((part, position) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = (position + 1) + ' ' + part.name;
+      button.addEventListener('click', () => window.revisionClip.seek(part.start));
+      nav.append(button);
+      return button;
     });
-    controls.append(title, setting, nav);
+    controls.append(stepStatus, nav);
     document.querySelector('#player .clip-header').after(controls);
+    window.revisionClip.seek(startTime);
   }
 })();

@@ -104,108 +104,143 @@ const rnnRevisions = (() => {
     subtitles(ctx,t<2.14 ? '它新增了一个记忆向量' : '还是这句话');
   }
 
-  function raiseMemory(ctx,t) {
-    background(ctx);
-    const reveal = easing(t,.5,1.05);
-    label(ctx,'我养的这只猫已经五岁了，它会抓…',960,106,{size:54,color:colors.muted});
-    panel(ctx,450,190,1020,309,colors.cyan);
-    label(ctx,'记忆向量',960,248,{size:56,weight:700,color:colors.cyan});
-    ctx.save();
-    ctx.shadowColor=colors.yellow;
-    ctx.shadowBlur=24*reveal;
-    label(ctx,t<.59 ? '我' : '我养',960,348,{size:align(92,142,reveal),color:colors.yellow,weight:700});
-    ctx.restore();
-    tags(ctx,t<.59 ? ['0.0868','−0.0420','0.0460'] : ['0.0211','0.1375','−0.0708'],730,444,230,{
-      size:48,width:212,height:64,
+
+  const sourceWords = ['我','吃','了','一','个'];
+  // 三维示例保留原片中“苹果”相对各词的相关度顺序。
+  const sourceVectors = [
+    [-.507,.089,.217], [.901,-.879,-.684], [.007,.437,.575],
+    [.345,.374,.753], [.448,-.432,-.367],
+  ];
+  const appleVector = [1.168,0,0];
+  const scores = sourceVectors.map(vector => vector.reduce((sum,n,index)=>sum+n*appleVector[index],0));
+  const denominator = scores.reduce((sum,score) => sum + Math.exp(score),0);
+  const relevanceWeights = scores.map(score => Math.exp(score)/denominator);
+  const resultVector = appleVector.map((n,i)=>n+sourceVectors.reduce((sum,vector,j)=>sum+vector[i]*relevanceWeights[j],0));
+  const rowPositions = [271,543,815,1087,1359];
+  const appleX = 1632;
+  const vectorNumber = (n) => n.toFixed(3).replace('-','−');
+
+  function verticalVector(ctx, word, vector, x, y, color, typography = 32) {
+    const compact = typography < 32;
+    const columnWidth = compact ? 156 : 178;
+    const rowHeight = compact ? 35 : 43;
+    const columnHeight = 3*rowHeight+18;
+    const gradient = ctx.createLinearGradient(x-columnWidth/2,y,x+columnWidth/2,y);
+    gradient.addColorStop(0,'#303164');
+    gradient.addColorStop(.45,'#282054');
+    gradient.addColorStop(1,'#534687');
+    box(ctx,x-columnWidth/2,y+44,columnWidth,columnHeight,25,gradient,color);
+    pill(ctx,word,x,y+13,word==='苹果' ? 120 : 66,47,{
+      size:compact ? 30 : 36,color,weight:700,
     });
-    network(ctx,641,624,638,232,easing(t,.04,1.15));
-    arrow(ctx,960,617,960,518,colors.cyan,3);
-    label(ctx,'同一个神经网络',960,908,{size:48,color:colors.muted});
-    subtitles(ctx,t<.72 ? '同一个神经网络' : t<2.48 ? '输出的记忆向量就编码着“我养”' : '就这样一个词一个词地滚下去');
+    vector.forEach((value,i)=>{
+      pill(ctx,vectorNumber(value),x,y+44+rowHeight/2+9+i*rowHeight,columnWidth-28,rowHeight-5,{
+        size:typography,numeric:true,color:colors.white,
+      });
+    });
   }
 
-  const oldMemory = [0.0211,0.1375,-0.0708];
-  const weightedMemory = oldMemory.map(n=>n*.5);
-  const digits = (n, count) => Object.is(n,-0) ? (0).toFixed(count) : n.toFixed(count).replace('-','−');
-
-  function memoryWeight(ctx,t) {
-    background(ctx);
-    const showMultiplier = easing(t,1.38,1.85);
-    const showResult = easing(t,1.85,2.35);
-    label(ctx,'记忆向量 t₂',960,138,{size:80,weight:700,color:colors.yellow});
-    panel(ctx,183,216,1554,321,colors.frame);
-    label(ctx,'原数值',430,279,{size:52,color:colors.muted,weight:700});
-    label(ctx,'乘以权重',960,279,{size:52,color:colors.muted,weight:700});
-    label(ctx,'保留的信息',1490,279,{size:52,color:colors.muted,weight:700});
-    oldMemory.forEach((n,i) => label(ctx,digits(n,4),430,355+i*63,{size:52,numeric:true}));
+  function contribution(ctx,x, endX, color, weight, sweep) {
+    const y=793;
+    const drop=171;
+    const width=endX-x;
     ctx.save();
-    ctx.globalAlpha=showMultiplier;
-    pill(ctx,'× 0.5',960,420,292,109,{size:70,numeric:true,active:true,color:colors.yellow});
-    arrow(ctx,681,421,791,421,colors.yellow,3);
-    arrow(ctx,1139,421,1251,421,colors.yellow,3);
+    ctx.strokeStyle=color;
+    ctx.globalAlpha=.6;
+    ctx.lineWidth=1.5+8*weight;
+    ctx.setLineDash([7,10]);
+    ctx.beginPath();
+    ctx.moveTo(x,y);
+    ctx.bezierCurveTo(x,y+drop,endX,y+drop,endX,y+8);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    const q=1-sweep;
+    const pX=x+(3*q*sweep*sweep+sweep*sweep*sweep)*width;
+    const pY=y+3*drop*sweep*q+8*sweep*sweep*sweep;
+    ctx.globalAlpha=1;
+    ctx.fillStyle=color;
+    ctx.beginPath();
+    ctx.arc(pX,pY,4+6*weight,0,Math.PI*2);
+    ctx.fill();
     ctx.restore();
-    ctx.save();
-    ctx.globalAlpha=showResult;
-    weightedMemory.forEach((n,i) => label(ctx,digits(n,5),1490,355+i*63,{size:52,numeric:true,color:colors.yellow,weight:700}));
-    ctx.restore();
-
-    panel(ctx,254,609,1368,280,showResult>.5 ? colors.cyan : colors.frame);
-    label(ctx,'下方输入 · 向量拼接',960,668,{size:53,color:colors.white,weight:700});
-    label(ctx,'当前词',553,735,{size:48,color:colors.muted});
-    label(ctx,'保留的旧记忆',1281,735,{size:48,color:showResult>.5 ? colors.cyan : colors.muted});
-    tags(ctx,['0.20','0.11','−0.08'],374,817,178,{size:50,width:160});
-    label(ctx,'+',901,817,{size:67,color:colors.cyan});
-    const updated = oldMemory.map((n,i)=>digits(align(n,weightedMemory[i],showResult),5));
-    tags(ctx,updated,1071,817,210,{size:48,width:205,active:showResult>.5});
-    arrow(ctx,1490,542,1490,598,showResult>.1 ? colors.cyan : '#818aca',2);
-    subtitles(ctx,t<1.38 ? '旧的信息都要乘一次权重才能保留下来' : '假设这个权重是 0.5');
   }
-
-  const wordLabels = ['我','吃','了','一','个'];
-  const relevance = [-.76128,1.0515,.0082,.4019,.5223];
-  const z = relevance.reduce((sum,score)=>sum+Math.exp(score),0);
-  const weights = relevance.map(score=>Math.exp(score)/z);
 
   function attention(ctx,t) {
     background(ctx);
-    const compared = easing(t,.67,2.18);
-    const combined = easing(t,3.47,5.61);
-    label(ctx,'我吃了一个',755,161,{size:68,weight:700,color:colors.white});
-    pill(ctx,'苹果',1129,162,208,93,{size:66,weight:700,active:true,color:colors.yellow});
-    label(ctx,'词向量',960,263,{size:50,color:colors.muted});
-    for (const [i,word] of wordLabels.entries()) {
-      const cx=311+i*318;
-      const stroke=stackColor[i];
-      panel(ctx,cx-130,324,260,350,stroke);
-      label(ctx,word,cx,373,{size:65,weight:700});
-      pill(ctx,'v'+(i+1),cx,473,184,79,{size:52,numeric:true,color:stroke});
-      box(ctx,cx-101,567,202,24,12,'#26294f');
-      box(ctx,cx-101,567,Math.max(3,202*weights[i]*compared),24,12,stroke);
-      label(ctx,(compared*100*weights[i]).toFixed(1)+'%',cx,627,{size:52,numeric:true,color:stroke,weight:700});
-      if (combined>0) {
+    const comparing = t < 2.62;
+    const weightsVisible = easing(t,2.30,2.9);
+    const grouped = easing(t,3.92,5.00);
+    const combined = easing(t,4.6,5.82);
+    const yellow = colors.yellow;
+    const stepLabels = [
+      ['1','逐个比较'],
+      ['2','相关度转成权重'],
+      ['3','按权重叠加'],
+    ];
+    const selected = t < 2.62 ? 0 : t < 4.48 ? 1 : 2;
+    for (const [i,[step,stage]] of stepLabels.entries()) {
+      const x=258+i*465;
+      pill(ctx,step,x,93,45,45,{size:25,color:i===selected ? yellow : colors.muted,active:i===selected,weight:700});
+      label(ctx,stage,x+43,93,{size:32,color:i===selected ? yellow : colors.muted,align:'left',weight:i===selected ? 700 : 500});
+    }
+
+    const sourceY=align(564,449,grouped);
+    const appleY=align(180,449,grouped);
+    const currentWord= t >= .42 && t < 2.38 ? Math.min(4,Math.floor((t-.42)/.38)) : -1;
+    for (const [i,x] of rowPositions.entries()) {
+      const col = stackColor[i];
+      const clone = easing(t,.21+i*.12,1.04+i*.14);
+      const leaving = easing(t,2.02+i*.045,2.79+i*.05);
+      const cloneX = align(align(appleX,x,clone),appleX,leaving);
+      const darkened = Math.max(0,.76*clone*(1-leaving));
+      const hit = currentWord===i;
+      if (darkened > .025) {
         ctx.save();
-        ctx.globalAlpha=combined*.68;
-        arrow(ctx,cx,680,960+(cx-960)*.52,770,stroke,2.4);
+        ctx.globalAlpha=hit ? Math.min(1,darkened*1.6) : darkened*.8;
+        verticalVector(ctx,'苹果',appleVector,cloneX,190,hit ? yellow : '#8d87c4',28);
         ctx.restore();
       }
+      verticalVector(ctx,sourceWords[i],sourceVectors[i],x,sourceY,hit ? yellow : col);
+      if (hit && comparing) {
+        const progress=easing(t,.51+i*.38,.78+i*.38);
+        const a=399;
+        const b=sourceY-12;
+        arrow(ctx,x,a,x,align(a,b,progress),col,3.5,13);
+      }
+
+      const weight = relevanceWeights[i];
+      if (weightsVisible>.015) {
+        ctx.save();
+        ctx.globalAlpha=weightsVisible;
+        const barY=sourceY+218;
+        box(ctx,x-93,barY,186,13,6,'#28294f');
+        box(ctx,x-93,barY,Math.max(2,186*weight),13,6,col);
+        label(ctx,(100*weight).toFixed(1)+'%',x,barY+39,{
+          size:39,numeric:true,color:col,weight:700,
+        });
+        ctx.restore();
+      }
+
+      if (combined > .015) {
+        const sweep=easing(t,4.65+i*.07,5.56+i*.05);
+        if (sweep > 0) contribution(ctx,x,appleX,col,weight,sweep);
+      }
     }
-    label(ctx,combined>0 ? '按相关度加权叠加' : '归一化相关度',960,799,{
-      size:51,color:combined>0 ? colors.yellow : colors.muted,weight:700,
-    });
-    if (combined>0) {
-      const full=1120;
-      let x=400;
-      box(ctx,400,848,full,35,16,'#20244e');
-      weights.forEach((w,i) => {
-        const width=full*w;
-        box(ctx,x,848,Math.max(2,width*combined-4),35,9,stackColor[i]);
-        x+=width;
-      });
-      label(ctx,'更新后的“苹果”向量',960,924,{size:48,color:colors.white,weight:700});
+
+    const updated = appleVector.map((n,i)=>align(n,resultVector[i],combined));
+    verticalVector(ctx,'苹果',updated,appleX,appleY,combined>.02 ? yellow : '#b6abd7');
+    let explanation = '用“苹果”的词向量逐个比较';
+    if (selected===1) explanation='把相关度归一化成权重';
+    if (selected===2) explanation='各词的词向量 × 权重，再叠加到“苹果”';
+    if (t >= 3.05) {
+      label(ctx,explanation,960,245,{size:47,weight:700,color:selected===2 ? yellow : colors.white});
+    } else {
+      label(ctx,explanation,947,139,{size:34,color:colors.muted});
     }
     subtitles(ctx,t<.58 ? '我们可以让“苹果”的词向量'
-      : t<3.48 ? '和句子里的其他所有词向量挨个计算相关度'
-      : '再按照这个相关度的大小');
+      : t<3.93 ? '和句子里的其他所有词向量挨个计算相关度'
+      : t<5.30 ? '再按照这个相关度的大小'
+      : '成比例地把其他词的语义加在苹果身上');
   }
 
   const qkv = [
@@ -232,5 +267,5 @@ const rnnRevisions = (() => {
     subtitles(ctx,cue);
   }
 
-  return {windowFit,memoryVector,raiseMemory,memoryWeight,attention,qkvFlow};
+  return {windowFit,memoryVector,attention,qkvFlow};
 })();

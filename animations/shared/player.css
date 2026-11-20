@@ -40,7 +40,8 @@ main { width: min(86rem, 100% - 2rem); margin-inline: auto; }
 
 .training-steps { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 1.15rem; margin-bottom: 1rem; }
 .training-steps p { margin: 0; font-weight: 700; }
-.training-steps label { display: inline-flex; align-items: center; gap: 0.35rem; }
 .training-nav { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 0.35rem 1.1rem; }
 .training-nav a { color: #b9c5ff; padding: 0.25rem 0; text-underline-offset: 0.25em; }
 .training-nav a[aria-current="page"] { color: #fff; text-decoration: none; font-weight: 700; }
+.training-nav button { background: #191d3a; color: #b9c5ff; font: inherit; cursor: pointer; border: 1px solid #535784; border-radius: 0.4rem; padding: 0.3rem 0.65rem; }
+.training-nav button[aria-current="step"] { color: #fff; border-color: #c1caff; background: #373e78; }
