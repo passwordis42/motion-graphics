@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>放大「猫会抓老鼠」的词元</title>
-  <link rel="stylesheet" href="../shared/player.css?v=2">
+  <link rel="stylesheet" href="../shared/player.css?v=3">
 </head>
 <body>
   <main id="player"></main>
-  <script src="../shared/player.js?v=2"></script>
+  <script src="../shared/player.js?v=3"></script>
   <script>
     const font = '"Microsoft YaHei", "PingFang SC", sans-serif';
     const tokens = ['猫', '会', '抓', '老', '鼠'];
@@ -97,8 +97,8 @@
       ctx.globalAlpha = 1;
       ctx.fillStyle = '#fff';
       ctx.font = `700 51px ${font}`;
-      const subtitle = t < 0.69 ? '猫会抓老鼠'
-        : t < 2.39 ? '我们既然不知道每个 Token 的词向量' : '就先给它们随机分配一个';
+      const subtitle = t < 0.42 ? '猫会抓老鼠'
+        : t < 3 ? '我们既然不知道每个 Token 的词向量' : '就先给它们随机分配一个';
       ctx.fillText(subtitle, 960, 1001);
     }
 

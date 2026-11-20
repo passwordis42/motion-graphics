@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>三个词元编号同步停止</title>
-  <link rel="stylesheet" href="../shared/player.css?v=2">
+  <link rel="stylesheet" href="../shared/player.css?v=3">
 </head>
 <body>
   <main id="player"></main>
-  <script src="../shared/player.js?v=2"></script>
+  <script src="../shared/player.js?v=3"></script>
   <script>
     const cjk = '"Microsoft YaHei", "PingFang SC", sans-serif';
     const entries = [
@@ -96,8 +96,8 @@
       ctx.shadowBlur = 0;
       ctx.fillStyle = '#fff';
       ctx.font = `700 49px ${cjk}`;
-      const subtitle = t < 0.90 ? '对于计算机来说'
-        : t < 2.29 ? '这些字都是独立的数字而已' : '没办法看出来它们有什么关系';
+      const subtitle = t < 0.55 ? '对于计算机来说'
+        : t < 2.42 ? '这些字都是独立的数字而已' : '没办法看出来它们有什么关系';
       ctx.fillText(subtitle, 960, 1001);
     }
 
