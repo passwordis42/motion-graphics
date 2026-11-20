@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>18:20 展示旧记忆乘以 0.5 · 修改合集</title>
+  <link rel="stylesheet" href="../shared/player.css?v=4">
+</head>
+<body>
+  <main id="player"></main>
+  <script src="../shared/player.js?v=4"></script>
+  <script src="../shared/nnlm.js"></script>
+  <script src="../shared/rnn-revisions.js"></script>
+  <script>
+    mountRevisionClip({
+      title: '展示旧记忆乘以 0.5',
+      marker: '18:20',
+      range: '18:19.4–18:24.5',
+      duration: 5.1,
+      previewTime: 3.4,
+      description: '上方对记忆向量三个原值逐项乘以 0.5，下方同步显示新值。',
+      draw: rnnRevisions.memoryWeight,
+    });
+  </script>
+</body>
+</html>

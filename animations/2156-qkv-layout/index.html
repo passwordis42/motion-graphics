@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>21:56 统一 Q、K、V 的三维排版 · 修改合集</title>
+  <link rel="stylesheet" href="../shared/player.css?v=4">
+</head>
+<body>
+  <main id="player"></main>
+  <script src="../shared/player.js?v=4"></script>
+  <script src="../shared/nnlm.js"></script>
+  <script src="../shared/rnn-revisions.js"></script>
+  <script>
+    mountRevisionClip({
+      title: '统一 Q、K、V 的三维排版',
+      marker: '21:56',
+      range: '21:55.1–22:00.2',
+      duration: 5.1,
+      previewTime: 3.66,
+      description: '“猫”的三维词向量分别生成 Q、K、V 三个三维向量，所有分量沿相同方向排列。',
+      draw: rnnRevisions.qkvFlow,
+    });
+  </script>
+</body>
+</html>

@@ -37,3 +37,10 @@ main { width: min(86rem, 100% - 2rem); margin-inline: auto; }
 
 .render-only main { width: 100%; }
 [hidden] { display: none; }
+
+.training-steps { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 1.15rem; margin-bottom: 1rem; }
+.training-steps p { margin: 0; font-weight: 700; }
+.training-steps label { display: inline-flex; align-items: center; gap: 0.35rem; }
+.training-nav { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 0.35rem 1.1rem; }
+.training-nav a { color: #b9c5ff; padding: 0.25rem 0; text-underline-offset: 0.25em; }
+.training-nav a[aria-current="page"] { color: #fff; text-decoration: none; font-weight: 700; }

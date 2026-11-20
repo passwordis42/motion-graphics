@@ -146,6 +146,7 @@ function mountRevisionClip(clip) {
     if (active?.ended || seconds >= clip.duration) {
       seek(clip.duration);
       pause();
+      clip.onEnd?.();
       return;
     }
     if (!active?.seeking) {
@@ -206,4 +207,5 @@ function mountRevisionClip(clip) {
     seek,
   });
   seek(0);
+  if (!renderOnly && clip.autoplay) play();
 }

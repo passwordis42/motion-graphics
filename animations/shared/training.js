@@ -2,6 +2,8 @@
 
 (() => {
   const id = document.currentScript.dataset.part;
+  const params = new URLSearchParams(location.search);
+  const renderOnly = params.has('render');
   const segments = [
     {
       id: 'a', name: '语料与输入', range: '16:17.8–16:22.1', duration: 4.3, previewTime: 3.5,
@@ -40,7 +42,12 @@
       ],
     },
   ];
-  const segment = segments.find((part) => part.id === id);
+  const index = segments.findIndex((part) => part.id === id);
+  const segment = segments[index];
+  const next = segments[index + 1];
+  let continuous = !params.has('manual') && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!renderOnly && sessionStorage.getItem('training-autoplay') === 'off') continuous = false;
+  const stepUrl = (part) => '../1620-training-' + part.id + '/';
   const { background, box, label, line, pill, arrow, easing, subtitle } = nnlm;
   const mix = (from, to, t) => from + (to - from) * t;
   const gold = '#f7e086';
@@ -244,20 +251,38 @@
     duration: segment.duration,
     previewTime: segment.previewTime,
     description: segment.cues.map((cue) => cue[2]).join('。'),
+    autoplay: continuous,
+    onEnd() {
+      if (continuous && next) location.replace(stepUrl(next));
+    },
     draw,
   });
 
-  if (!new URLSearchParams(location.search).has('render')) {
+  if (!renderOnly) {
+    const controls = document.createElement('div');
+    controls.className = 'training-steps';
+    const title = document.createElement('p');
+    title.textContent = '第 ' + (index + 1) + ' 步，共 ' + segments.length + ' 步';
+    const setting = document.createElement('label');
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = continuous;
+    checkbox.addEventListener('change', () => {
+      continuous = checkbox.checked;
+      sessionStorage.setItem('training-autoplay', continuous ? 'on' : 'off');
+    });
+    setting.append(checkbox, '自动连播');
     const nav = document.createElement('nav');
     nav.className = 'training-nav';
     nav.setAttribute('aria-label', '训练流程片段');
-    segments.forEach((part, index) => {
+    segments.forEach((part, position) => {
       const link = document.createElement('a');
-      link.href = '../1620-training-' + part.id + '/';
-      link.textContent = (index + 1) + ' ' + part.name;
+      link.href = stepUrl(part);
+      link.textContent = (position + 1) + ' ' + part.name;
       if (part.id === id) link.setAttribute('aria-current', 'page');
       nav.append(link);
     });
-    document.querySelector('#player').append(nav);
+    controls.append(title, setting, nav);
+    document.querySelector('#player .clip-header').after(controls);
   }
 })();

@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>20:15 用比例展示并叠加相关信息 · 修改合集</title>
+  <link rel="stylesheet" href="../shared/player.css?v=4">
+</head>
+<body>
+  <main id="player"></main>
+  <script src="../shared/player.js?v=4"></script>
+  <script src="../shared/nnlm.js"></script>
+  <script src="../shared/rnn-revisions.js"></script>
+  <script>
+    mountRevisionClip({
+      title: '用比例展示并叠加相关信息',
+      marker: '20:15',
+      range: '20:14.3–20:20.3',
+      duration: 6,
+      previewTime: 5.62,
+      description: '用符号展示词向量，以百分比条展示归一化权重，再把这些权重可视化叠加。',
+      draw: rnnRevisions.attention,
+    });
+  </script>
+</body>
+</html>

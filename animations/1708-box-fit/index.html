@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>17:08 调整上下文窗口的方框 · 修改合集</title>
+  <link rel="stylesheet" href="../shared/player.css?v=4">
+</head>
+<body>
+  <main id="player"></main>
+  <script src="../shared/player.js?v=4"></script>
+  <script src="../shared/nnlm.js"></script>
+  <script src="../shared/rnn-revisions.js"></script>
+  <script>
+    mountRevisionClip({
+      title: '调整上下文窗口的方框',
+      marker: '17:08',
+      range: '17:06.8–17:10.0',
+      duration: 3.2,
+      previewTime: 1.7,
+      description: '“猫”在窗口之外，“它很会抓”在窗口内。每个字的边框留有间隙，不与其中文字重叠。',
+      draw: rnnRevisions.windowFit,
+    });
+  </script>
+</body>
+</html>
