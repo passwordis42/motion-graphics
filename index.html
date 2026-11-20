@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="按原片时间戳查看片段的问题和修改方法，在线播放。">
+  <meta name="description" content="按原片时间戳查看片段的问题和修改方案，在线播放。">
   <title>修改合集</title>
   <style>
     :root {
@@ -84,7 +84,7 @@
     .revision { display: grid; flex: 1; align-content: start; gap: 0.55rem; margin: 0; line-height: 1.6; }
     .revision div { display: grid; grid-template-columns: 4em minmax(0, 1fr); gap: 0.5rem; }
     .revision dt { font-weight: 700; color: var(--ink); }
-    .revision dd { margin: 0; color: var(--muted); }
+    .revision dd { margin: 0; color: var(--muted); white-space: pre-line; }
     .metadata { display: flex; flex-wrap: wrap; align-items: center; gap: 0.45rem; }
     .number { padding: 0.28rem 0.5rem; border-radius: 0.3rem; background: var(--accent-dark); color: white; font-size: 0.875rem; font-weight: 700; font-variant-numeric: tabular-nums; text-align: center; min-width: 2rem; }
     .timestamp { padding: 0.28rem 0.6rem; border-radius: 0.3rem; background: #ece8fc; color: var(--accent-dark); font-size: 0.875rem; font-weight: 700; }
@@ -137,8 +137,10 @@
           </div>
           <h2 id="t0144-title">最简单的神经网络</h2>
           <dl class="revision">
-            <div><dt>问题</dt><dd>原配图没有展示旁白所说的「最简单的神经网络」。</dd></div>
-            <div><dt>修改方法</dt><dd>保留原词，改为输入直连输出的单层权重图。</dd></div>
+            <div><dt>问题</dt><dd>文案称“最简单的神经网络”，但当前配图并非最简单的神经网络，图文不匹配。</dd></div>
+            <div><dt>修改方案</dt><dd>二选一：
+① 将画面替换为单层神经网络抽象概念图。
+② 去掉文案“最简单”中的“最”字，改为“简单的神经网络”。</dd></div>
           </dl>
           <p class="spec">替换 01:43.0–01:47.1 · 4.1 秒</p>
           <div class="actions">
@@ -158,8 +160,8 @@
           </div>
           <h2 id="t0514-title">正方形变成涂鸦</h2>
           <dl class="revision">
-            <div><dt>问题</dt><dd>画面没先交代正方形，变成涂鸦的过程不清楚。</dd></div>
-            <div><dt>修改方法</dt><dd>先显示正方形，再把它变成涂鸦。</dd></div>
+            <div><dt>问题</dt><dd>画面不准确</dd></div>
+            <div><dt>修改方案</dt><dd>念到“一些乱涂的图案”时，画面应先呈现正方形，然后再变成乱涂的形状。</dd></div>
           </dl>
           <p class="spec">替换 05:13.7–05:18.4 · 4.7 秒</p>
           <div class="actions">
@@ -179,8 +181,8 @@
           </div>
           <h2 id="t1205-title">常见字组合并成一个 Token</h2>
           <dl class="revision">
-            <div><dt>问题</dt><dd>原来的说法容易让人以为所有算法都按同一种方式分词。</dd></div>
-            <div><dt>修改方法</dt><dd>补上「有些算法把」，对照「老」「鼠」拆分与合并两种结果。</dd></div>
+            <div><dt>问题</dt><dd>内容描述不准确</dd></div>
+            <div><dt>修改方案</dt><dd>在“有些频繁一起出现的字”这处前面加一句“有些算法把”。</dd></div>
           </dl>
           <p class="spec">替换 12:04.7–12:08.0 · 3.3 秒</p>
           <div class="actions">
@@ -200,8 +202,8 @@
           </div>
           <h2 id="t1229-title">三个词元编号同步停止</h2>
           <dl class="revision">
-            <div><dt>问题</dt><dd>三个编号的滚动时长不一致。</dd></div>
-            <div><dt>修改方法</dt><dd>让三个编号同一时刻开始滚动和定格。</dd></div>
+            <div><dt>问题</dt><dd>三个数字因为数字大小不一样，所以它们的动画不一样。</dd></div>
+            <div><dt>修改方案</dt><dd>把它们的动画时长都调整到一致。</dd></div>
           </dl>
           <p class="spec">替换 12:27.5–12:31.5 · 4 秒</p>
           <div class="actions">
@@ -221,8 +223,8 @@
           </div>
           <h2 id="t1416-title">放大「猫会抓老鼠」的词元</h2>
           <dl class="revision">
-            <div><dt>问题</dt><dd>字太小，周围留白太多，手机上难以看清。</dd></div>
-            <div><dt>修改方法</dt><dd>放大「猫会抓老鼠」五个字及其卡片。</dd></div>
+            <div><dt>问题</dt><dd>文字太小、画面偏空，手机端不易看清。</dd></div>
+            <div><dt>修改方案</dt><dd>把文字放大一点。</dd></div>
           </dl>
           <p class="spec">替换 14:14.5–14:18.2 · 3.7 秒</p>
           <div class="actions">
@@ -242,8 +244,8 @@
           </div>
           <h2 id="t1438-title">输入值逐个乘以对应权重</h2>
           <dl class="revision">
-            <div><dt>问题</dt><dd>输入层动效中的图标互相重叠。</dd></div>
-            <div><dt>修改方法</dt><dd>给输入值、乘号和权重标签分别留出位置。</dd></div>
+            <div><dt>问题</dt><dd>念到“输入层的数字也会乘以每条线上的权重”时，对应画面中输入层的动效图标重叠。</dd></div>
+            <div><dt>修改方案</dt><dd>调整避免重叠。</dd></div>
           </dl>
           <p class="spec">替换 14:37.9–14:40.5 · 2.6 秒</p>
           <div class="actions">
@@ -263,8 +265,8 @@
           </div>
           <h2 id="t1518-title">给出下一个词的概率</h2>
           <dl class="revision">
-            <div><dt>问题</dt><dd>原旁白把预测结果说成了一个确定的词。</dd></div>
-            <div><dt>修改方法</dt><dd>展示五项概率，字幕改成「最后给出不同词出现的概率」。</dd></div>
+            <div><dt>问题</dt><dd>文案“这个就是我们预测的下一个词”表述不准确。</dd></div>
+            <div><dt>修改方案</dt><dd>将文案改为“最后给出不同词出现的概率”。</dd></div>
           </dl>
           <p class="spec">替换 15:17.3–15:19.4 · 2.1 秒</p>
           <div class="actions">
@@ -284,8 +286,8 @@
           </div>
           <h2 id="t1546-title">概率差与交叉熵损失</h2>
           <dl class="revision">
-            <div><dt>问题</dt><dd>原片没解释为什么预测概率 16% 对应的损失是 1.833。</dd></div>
-            <div><dt>修改方法</dt><dd>先标出 84 个百分点的概率差，再用交叉熵公式算出 −ln(0.16) ≈ 1.833。</dd></div>
+            <div><dt>问题</dt><dd>预测概率16%、正确概率100%为何得到损失值1.833，缺少计算过程和解释。</dd></div>
+            <div><dt>修改方案</dt><dd>增加解释，16%和100%相差84%，使用损失函数计算出损失值得到1.833 （然后画面上在交叉熵标志那展现一下公式吧）</dd></div>
           </dl>
           <p class="spec">替换 15:43.7–15:46.8 · 3.1 秒</p>
           <div class="actions">
@@ -305,8 +307,8 @@
           </div>
           <h2 id="t1607-title">在坐标轴上标注更新后的概率</h2>
           <dl class="revision">
-            <div><dt>问题</dt><dd>画面从坐标轴突然切到神经网络，打断了讲解。</dd></div>
-            <div><dt>修改方法</dt><dd>保留原坐标轴，直接在同一画面标出更新后的概率。</dd></div>
+            <div><dt>问题</dt><dd>画面从坐标轴突然切到神经网络，镜头切换突兀。</dd></div>
+            <div><dt>修改方案</dt><dd>不切镜头；如需展示概率，直接在原坐标轴上标出不同的概率。</dd></div>
           </dl>
           <p class="spec">替换 16:05.5–16:07.8 · 2.3 秒</p>
           <div class="actions">
@@ -327,8 +329,8 @@
           </div>
           <h2 id="neural-network-title">神经网络的层与神经元</h2>
           <dl class="revision">
-            <div><dt>问题</dt><dd>原画面难以看出加层与增加神经元的先后顺序。</dd></div>
-            <div><dt>修改方法</dt><dd>先横向增加隐藏层，再增加每个隐藏层里的神经元。</dd></div>
+            <div><dt>问题</dt><dd>—</dd></div>
+            <div><dt>修改方案</dt><dd>内容先展示层数，然后再出现更多神经元。</dd></div>
           </dl>
           <p class="spec">8.8 秒 · 1080p · 30 fps</p>
           <div class="actions">
