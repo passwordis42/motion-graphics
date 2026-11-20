@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>神经网络也会有更多层和更多神经元</title>
+  <style>
+    :root { color-scheme: dark; font-family: "Microsoft YaHei", system-ui, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100dvh; display: grid; place-items: center; background: #080916; color: #f0f2ff; }
+    main { width: min(100%, calc((100dvh - 72px) * 16 / 9)); }
+    canvas { display: block; width: 100%; height: auto; background: #080c28; }
+    .controls { display: flex; gap: 16px; align-items: center; min-height: 56px; padding: 8px 16px; }
+    .controls[hidden] { display: none; }
+    button { min-width: 68px; min-height: 36px; padding: 4px 12px; border: 1px solid #393c59; border-radius: 6px; background: #181b34; color: inherit; cursor: pointer; font: inherit; font-size: 13px; }
+    button:hover { background: #272c50; }
+    button:focus-visible, input:focus-visible { outline: 2px solid #a2aaff; outline-offset: 4px; }
+    input { flex: 1; min-width: 24px; accent-color: #9b9fff; cursor: pointer; }
+    output { font: 12px ui-monospace, monospace; color: #b3b8d6; white-space: nowrap; }
+    @media (max-width: 500px) { .controls { gap: 8px; padding-inline: 8px; } button { min-width: 56px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <canvas id="scene" width="1920" height="1080" role="img" aria-label="猫、会、抓的三个三维词向量按顺序拼接，形成九个输入。起始网络有一个隐藏层，包含三个神经元，输出层提供五个分数。网络先从三层增加到五层，然后每个隐藏层的神经元从三个增加到九个。"></canvas>
+    <div class="controls" id="controls">
+      <button id="play" type="button">暂停</button>
+      <button id="replay" type="button">重播</button>
+      <input id="progress" type="range" min="0" step="0.01" value="0" aria-label="播放进度">
+      <output id="time" aria-hidden="true"></output>
+    </div>
+  </main>
+  <script>
+    const canvas = document.querySelector('#scene');
+    const ctx = canvas.getContext('2d', { alpha: false });
+    const width = canvas.width;
+    const height = canvas.height;
+    const cjk = '"Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif';
+    const mono = '"Consolas", "SFMono-Regular", monospace';
+
+    // 时间单位为秒。加层结束后留出停顿，再逐对增加隐藏层神经元。
+    const timing = {
+      duration: 8.8,
+      addLayers: [1.02, 2.23],
+      layerMotion: 0.78,
+      switchFocus: 3.68,
+      addNeurons: [4.10, 4.71, 5.32],
+      neuronMotion: 0.56,
+      firstSignal: 6.36,
+    };
+
+    const centerY = 531;
+    const rowGap = 67;
+    const openRowGap = 122;
+    const halfChip = 52;
+    const left = 280;
+    const right = 1640;
+    const middle = (left + right) / 2;
+    const third = left + (right - left) / 3;
+    const twoThirds = right - (right - left) / 3;
+    const quarter = left + (right - left) / 4;
+    const threeQuarters = right - (right - left) / 4;
+    // 三组示例词向量按「猫」「会」「抓」的顺序拼接。
+    const tokens = ['猫', '会', '抓'];
+    const inputValues = [
+      '0.2000', '−0.1000', '0.4000',
+      '−0.3000', '0.2000', '0.1000',
+      '0.5000', '0.1000', '−0.2000',
+    ];
+    const outputValues = ['0.4234', '−0.1375', '0.0710', '0.4558', '−0.2631'];
+    const layerSpecs = [
+      {
+        name: '输入层 · 9', values: inputValues, positions: [left, left, left],
+        offsets: [-254, -199, -144, -55, 0, 55, 144, 199, 254],
+      },
+      { name: '隐藏层', positions: [middle, third, quarter] },
+      { name: '隐藏层', positions: [middle, twoThirds, middle], birth: 0 },
+      { name: '隐藏层', positions: [middle, twoThirds, threeQuarters], birth: 1 },
+      {
+        name: '输出层 · 5', values: outputValues, positions: [right, right, right],
+        offsets: [-198, -99, 0, 99, 198],
+      },
+    ];
+
+    const clamp = (value) => Math.max(0, Math.min(1, value));
+    const lerp = (from, to, amount) => from + (to - from) * amount;
+    const ease = (value) => 1 - (1 - clamp(value)) ** 3;
+    const smooth = (value) => {
+      const t = clamp(value);
+      return t * t * (3 - 2 * t);
+    };
+    const progressAt = (time, start, duration) => clamp((time - start) / duration);
+    const random = (seed) => {
+      const n = Math.sin(seed * 12.9898 + 78.233) * 43758.5453;
+      return n - Math.floor(n);
+    };
+
+    function makeBackground() {
+      const plate = document.createElement('canvas');
+      plate.width = width;
+      plate.height = height;
+      const paint = plate.getContext('2d', { alpha: false });
+      const base = paint.createLinearGradient(0, 0, width * 0.31, height);
+      base.addColorStop(0, '#22205c');
+      base.addColorStop(0.52, '#0b1646');
+      base.addColorStop(1, '#070a1e');
+      paint.fillStyle = base;
+      paint.fillRect(0, 0, width, height);
+
+      function light(x, y, radiusX, radiusY, rgb, strength) {
+        paint.save();
+        paint.translate(x, y);
+        paint.scale(radiusX, radiusY);
+        const halo = paint.createRadialGradient(0, 0, 0, 0, 0, 1);
+        halo.addColorStop(0, `rgba(${rgb}, ${strength})`);
+        halo.addColorStop(0.42, `rgba(${rgb}, ${strength * 0.55})`);
+        halo.addColorStop(1, `rgba(${rgb}, 0)`);
+        paint.fillStyle = halo;
+        paint.fillRect(-1, -1, 2, 2);
+        paint.restore();
+      }
+
+      light(986, 136, 1410, 1110, '30, 48, 237', 0.78);
+      light(795, 661, 1100, 799, '5, 61, 201', 0.44);
+      light(1850, -24, 1090, 735, '147, 137, 255', 0.77);
+      light(-105, 56, 848, 768, '112, 50, 151', 0.73);
+      light(-153, 807, 660, 750, '145, 54, 32', 0.69);
+      light(1182, 1115, 583, 358, '23, 113, 147', 0.31);
+      light(1780, 895, 723, 633, '8, 3, 23', 0.78);
+
+      const grain = paint.getImageData(0, 0, width, height);
+      let seed = 21453;
+      for (let i = 0; i < grain.data.length; i += 4) {
+        seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+        const noise = (seed >>> 29) - 3;
+        grain.data[i] += noise;
+        grain.data[i + 1] += noise;
+        grain.data[i + 2] += noise;
+      }
+      paint.putImageData(grain, 0, 0);
+      return plate;
+    }
+
+    const background = makeBackground();
+
+    function line(x1, y1, x2, y2) {
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
+
+    function dot(x, y, radius) {
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function drawGrid(time) {
+      const columns = [180, 620, 960, 1300, 1740];
+      const rows = [192, 386, 672, 872];
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(169, 186, 255, .13)';
+      columns.forEach((x) => line(x + 0.5, 0, x + 0.5, height));
+      rows.forEach((y) => line(0, y + 0.5, width, y + 0.5));
+      ctx.fillStyle = 'rgba(199, 204, 255, .37)';
+      for (const x of columns) {
+        for (const y of rows) ctx.fillRect(x - 2, y - 2, 5, 5);
+      }
+
+      const pixels = [
+        [525, 100, 14, '#6255ed'], [541, 100, 14, '#302568'], [557, 116, 14, '#5366ed'],
+        [573, 132, 14, '#9cc99b'], [1421, 79, 16, '#655df2'], [1437, 79, 16, '#dfa57e'],
+        [199, 902, 15, '#6957c7'], [214, 887, 15, '#6d86d5'], [184, 917, 15, '#758a80'],
+        [1630, 910, 19, '#7d94ea'], [1649, 910, 35, '#564aee'], [1694, 910, 15, '#302a89'],
+        [1709, 925, 13, '#6655c4'],
+      ];
+      pixels.forEach(([x, y, size, color], index) => {
+        ctx.globalAlpha = 0.67 + 0.17 * Math.sin(time * 2.1 + index * 1.56);
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, size, Math.min(size, 15));
+      });
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = 'rgba(99, 110, 255, .83)';
+      for (const x of [102, 1786]) {
+        ctx.fillRect(x - 17, 553, 34, 6);
+        ctx.fillRect(x - 3, 539, 6, 34);
+      }
+    }
+
+    function networkAt(time) {
+      const layerProgress = timing.addLayers.map((start) => progressAt(time, start, timing.layerMotion));
+      const neuronProgress = timing.addNeurons.map((start) => progressAt(time, start, timing.neuronMotion));
+      const innerRowGap = lerp(openRowGap, rowGap, ease(neuronProgress[0]));
+
+      const layers = layerSpecs.map(({ name, values, offsets, positions, birth }, index) => {
+        const alpha = birth === undefined ? 1 : smooth(layerProgress[birth] * 1.6);
+        const xBefore = lerp(positions[0], positions[1], ease(layerProgress[0]));
+        const x = lerp(xBefore, positions[2], ease(layerProgress[1]));
+        const layerGlow = birth === undefined ? 0 : 0.85 * (1 - layerProgress[birth]) * alpha;
+        const rows = values ? (values.length - 1) / 2 : 4;
+        const nodes = [];
+
+        for (let row = -rows; row <= rows; row++) {
+          const distance = Math.abs(row);
+          const growth = values || distance < 2 ? 1 : neuronProgress[distance - 2];
+          const from = centerY + Math.sign(row) * innerRowGap;
+          const target = centerY + row * (distance < 2 ? innerRowGap : rowGap);
+          const y = offsets ? centerY + offsets[row + rows] : lerp(from, target, ease(growth));
+          const number = (random(37 + index * 127 + row * 13) * 1.7 - 0.75).toFixed(4);
+          nodes.push({
+            row, y,
+            value: values ? values[row + rows] : number.replace('-', '−'),
+            alpha: alpha * smooth(growth),
+            glow: Math.max(layerGlow, values || distance < 2 || growth === 1 ? 0 : Math.sin(Math.PI * growth) * 0.9),
+            scale: lerp(0.84, 1, ease(growth)),
+          });
+        }
+
+        return { index, name, x, alpha, nodes };
+      });
+
+      return { layers, layerProgress, neuronProgress };
+    }
+
+    function colorForEdge(index, from, to) {
+      return random(215 + index * 81 + from * 31 + to * 47) < 0.49 ? '103, 227, 230' : '255, 177, 112';
+    }
+
+    function drawEdges(layers, time) {
+      const present = layers.filter((layer) => layer.alpha > 0);
+      const old = present.filter((layer) => layer.alpha === 1);
+      const entering = present.find((layer) => layer.alpha < 1);
+      const weight = lerp(0.53, 0.34, progressAt(time, timing.addNeurons[0], 1.8));
+      ctx.lineWidth = 1.16;
+
+      function drawConnections(from, to, opacity) {
+        const x1 = from.x + halfChip;
+        const x2 = to.x - halfChip;
+        if (x2 <= x1) return;
+        for (const a of from.nodes) {
+          for (const b of to.nodes) {
+            const brightness = Math.min(a.alpha, b.alpha) * opacity;
+            if (brightness <= 0) continue;
+            const rgb = colorForEdge(from.index, a.row, b.row);
+            const emphasis = Math.max(a.glow, b.glow) * 0.36;
+            ctx.strokeStyle = `rgba(${rgb}, ${(weight + emphasis) * brightness})`;
+            line(x1, a.y, x2, b.y);
+          }
+        }
+      }
+
+      for (let index = 1; index < old.length; index++) {
+        const from = old[index - 1];
+        const to = old[index];
+        if (entering && entering.index > from.index && entering.index < to.index) {
+          drawConnections(from, to, 1 - entering.alpha);
+          drawConnections(from, entering, 1);
+          drawConnections(entering, to, 1);
+        } else {
+          drawConnections(from, to, 1);
+        }
+      }
+
+      if (time < timing.firstSignal) return;
+      const signalTracks = [[0, -2, 1, 2, 0], [-1, 1, -2, -1, 1], [1, 0, 3, -2, -1]];
+      ctx.lineWidth = 1.6;
+      signalTracks.forEach((track, index) => {
+        const travel = (time - timing.firstSignal - index * 0.18) / 0.42;
+        const column = Math.floor(travel);
+        if (column < 0 || column >= present.length - 1) return;
+        const amount = travel - column;
+        const from = present[column];
+        const to = present[column + 1];
+        const a = from.nodes.find((node) => node.row === track[column]);
+        const b = to.nodes.find((node) => node.row === track[column + 1]);
+        const x1 = from.x + halfChip;
+        const x2 = to.x - halfChip;
+        const tail = Math.max(0, amount - 0.11);
+        const x = lerp(x1, x2, amount);
+        const y = lerp(a.y, b.y, amount);
+        const alpha = 0.75 * Math.sin(Math.PI * amount);
+        ctx.strokeStyle = `rgba(165, 238, 255, ${alpha})`;
+        ctx.fillStyle = `rgba(224, 252, 255, ${alpha})`;
+        ctx.shadowColor = '#65d6ff';
+        ctx.shadowBlur = 13;
+        line(lerp(x1, x2, tail), lerp(a.y, b.y, tail), x, y);
+        dot(x, y, 2.7);
+        ctx.shadowBlur = 0;
+      });
+    }
+
+    function drawTokenGroups(inputLayer) {
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = `500 25px ${cjk}`;
+      ctx.lineWidth = 1.2;
+      const bracketX = inputLayer.x - 79;
+      tokens.forEach((token, index) => {
+        const middleNode = inputLayer.nodes[index * 3 + 1];
+        const top = inputLayer.nodes[index * 3].y - 13;
+        const bottom = inputLayer.nodes[index * 3 + 2].y + 13;
+        ctx.strokeStyle = 'rgba(186, 194, 255, .55)';
+        ctx.beginPath();
+        ctx.moveTo(bracketX + 11, top);
+        ctx.lineTo(bracketX, top);
+        ctx.lineTo(bracketX, bottom);
+        ctx.lineTo(bracketX + 11, bottom);
+        ctx.stroke();
+        ctx.fillStyle = '#ced3ff';
+        ctx.fillText(token, bracketX - 22, middleNode.y);
+      });
+    }
+
+    function drawNodes(layers, time) {
+      const heightGlow = smooth(progressAt(time, timing.switchFocus, 0.4));
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      for (const layer of layers) {
+        if (layer.alpha <= 0) continue;
+        for (const node of layer.nodes) {
+          if (node.alpha <= 0) continue;
+          ctx.save();
+          ctx.globalAlpha = node.alpha;
+          ctx.translate(layer.x, node.y);
+          ctx.scale(node.scale, node.scale);
+
+          const fill = ctx.createLinearGradient(0, -18, 0, 18);
+          fill.addColorStop(0, '#323568');
+          fill.addColorStop(1, '#1b2046');
+          const rim = ctx.createLinearGradient(-halfChip, -12, halfChip, 12);
+          rim.addColorStop(0, `rgba(208, 224, 255, ${0.75 + node.glow * 0.23})`);
+          rim.addColorStop(0.53, 'rgba(154, 167, 237, .55)');
+          rim.addColorStop(1, 'rgba(104, 115, 191, .35)');
+
+          ctx.beginPath();
+          ctx.roundRect(-halfChip, -18, halfChip * 2, 36, 18);
+          ctx.fillStyle = fill;
+          ctx.shadowColor = node.glow > 0 ? '#77c5ff' : '#5d6cf5';
+          ctx.shadowBlur = 12 + node.glow * 27;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+          ctx.lineWidth = 1.35;
+          ctx.strokeStyle = rim;
+          ctx.stroke();
+
+          ctx.fillStyle = '#f1f5ff';
+          ctx.font = `19px ${mono}`;
+          ctx.fillText(node.value, 0, 1);
+          ctx.restore();
+        }
+
+        const hidden = layer.index > 0 && layer.index < 4;
+        ctx.globalAlpha = layer.alpha;
+        ctx.fillStyle = hidden && heightGlow > 0.5 ? '#bcd6ff' : '#a2add6';
+        ctx.font = `20px ${cjk}`;
+        ctx.fillText(layer.name, layer.x, 850);
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    function drawDepthGuide(layers, opacity) {
+      if (opacity <= 0) return;
+      ctx.save();
+      ctx.globalAlpha = opacity;
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(175, 194, 255, .42)';
+      const y = 222;
+      line(left, y, right, y);
+      for (const layer of layers) {
+        if (layer.alpha <= 0) continue;
+        ctx.globalAlpha = opacity * layer.alpha;
+        line(layer.x, y - 11, layer.x, y + 11);
+        ctx.fillStyle = '#cbd2ff';
+        dot(layer.x, y, 3.6);
+      }
+      ctx.restore();
+    }
+
+    function drawNeuronGuides(layers, opacity) {
+      if (opacity <= 0) return;
+      ctx.save();
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = '#9ac8ff';
+      for (const layer of layers.slice(1, -1)) {
+        const nodes = layer.nodes.filter((node) => node.alpha > 0.1);
+        if (nodes.length === 0) continue;
+        const top = nodes[0];
+        const bottom = nodes.at(-1);
+        const x = layer.x + 79;
+        ctx.globalAlpha = opacity * 0.32;
+        line(x, top.y, x, bottom.y);
+        for (const node of nodes) {
+          ctx.globalAlpha = opacity * node.alpha * 0.60;
+          line(x - (node === top || node === bottom ? 10 : 4), node.y, x + 3, node.y);
+        }
+      }
+      ctx.restore();
+    }
+
+    function drawCounter(label, unit, count, opacity, accent, shift) {
+      if (opacity <= 0) return;
+      ctx.save();
+      ctx.globalAlpha = opacity;
+      ctx.translate(230, shift);
+      ctx.fillStyle = accent;
+      ctx.fillRect(0, 75, 4, 24);
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.font = `500 25px ${cjk}`;
+      ctx.fillText(label, 16, 88);
+
+      ctx.font = `500 67px ${mono}`;
+      ctx.fillStyle = count === 3 ? '#f2f3ff' : '#9da9d2';
+      ctx.fillText('03', 14, 149);
+      let unitX = 114;
+      if (count > 3) {
+        ctx.fillStyle = '#aebbed';
+        ctx.font = `400 30px ${cjk}`;
+        ctx.fillText('→', 105, 147);
+        ctx.font = `500 67px ${mono}`;
+        ctx.fillStyle = '#f2f3ff';
+        ctx.fillText(String(count).padStart(2, '0'), 154, 149);
+        unitX = 247;
+      }
+      ctx.fillStyle = accent;
+      ctx.font = `500 23px ${cjk}`;
+      ctx.fillText(unit, unitX, 160);
+      ctx.restore();
+    }
+
+    function drawCaption(time, focus) {
+      const words = ['神经网络也会有', '更多层', '和', '更多神经元', '。'];
+      ctx.font = `700 50px ${cjk}`;
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      const widths = words.map((word) => ctx.measureText(word).width);
+      let x = (width - widths.reduce((sum, item) => sum + item, 0)) / 2;
+      const firstFocus = smooth(progressAt(time, 0.47, 0.45)) * (1 - focus);
+
+      words.forEach((word, index) => {
+        ctx.shadowColor = 'rgba(2, 3, 18, .65)';
+        ctx.shadowBlur = 9;
+        ctx.shadowOffsetY = 3;
+        ctx.fillStyle = '#f6f5ff';
+        ctx.fillText(word, x, 993);
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetY = 0;
+
+        const highlight = index === 1 ? firstFocus : index === 3 ? focus : 0;
+        if (highlight > 0) {
+          ctx.globalAlpha = highlight;
+          ctx.fillStyle = index === 1 ? '#b9bdff' : '#a8edff';
+          ctx.fillText(word, x, 993);
+          ctx.fillRect(x + 4, 1030, (widths[index] - 8) * highlight, 2);
+          ctx.globalAlpha = 1;
+        }
+        x += widths[index];
+      });
+    }
+
+    function drawFrame(time) {
+      const { layers, layerProgress, neuronProgress } = networkAt(time);
+      const focus = smooth(progressAt(time, timing.switchFocus, 0.42));
+      const visibleLayerCount = 3 + layerProgress.filter((amount) => amount >= 0.55).length;
+      const visibleNeuronCount = 3 + 2 * neuronProgress.filter((amount) => amount >= 0.56).length;
+
+      ctx.drawImage(background, 0, 0);
+      drawGrid(time);
+      drawDepthGuide(layers, 1 - focus);
+      drawEdges(layers, time);
+      drawNeuronGuides(layers, focus);
+      drawNodes(layers, time);
+      drawTokenGroups(layers[0]);
+      drawCounter('网络层数', '层', visibleLayerCount, 1 - focus, '#c5c5ff', -9 * focus);
+      drawCounter('每个隐藏层', '个神经元', visibleNeuronCount, focus, '#a8edff', 9 * (1 - focus));
+      drawCaption(time, focus);
+    }
+
+    const controls = document.querySelector('#controls');
+    const playButton = document.querySelector('#play');
+    const replayButton = document.querySelector('#replay');
+    const progress = document.querySelector('#progress');
+    const timeOutput = document.querySelector('#time');
+    const renderOnly = new URLSearchParams(location.search).has('render');
+    progress.max = timing.duration;
+
+    let currentTime = 0;
+    let start = 0;
+    let animation = 0;
+    function seek(seconds) {
+      currentTime = clamp(seconds / timing.duration) * timing.duration;
+      drawFrame(currentTime);
+      progress.value = currentTime;
+      const label = `${currentTime.toFixed(1)} / ${timing.duration.toFixed(1)} 秒`;
+      if (timeOutput.value !== label) {
+        timeOutput.value = label;
+        progress.setAttribute('aria-valuetext', label);
+      }
+    }
+
+    function pause() {
+      cancelAnimationFrame(animation);
+      animation = 0;
+      playButton.textContent = currentTime >= timing.duration ? '播放' : '继续';
+    }
+
+    function tick(now) {
+      seek((now - start) / 1000);
+      if (currentTime >= timing.duration) pause();
+      else animation = requestAnimationFrame(tick);
+    }
+
+    function play() {
+      if (currentTime >= timing.duration) seek(0);
+      start = performance.now() - currentTime * 1000;
+      playButton.textContent = '暂停';
+      animation = requestAnimationFrame(tick);
+    }
+
+    playButton.addEventListener('click', () => {
+      if (animation) pause();
+      else play();
+    });
+    replayButton.addEventListener('click', () => {
+      pause();
+      seek(0);
+      play();
+    });
+    progress.addEventListener('input', () => {
+      pause();
+      seek(progress.valueAsNumber);
+      if (currentTime >= timing.duration) playButton.textContent = '播放';
+    });
+
+    // 导出与浏览器预览共用同一套逐帧绘制逻辑。
+    window.neuralAnimation = { duration: timing.duration, seek };
+    seek(0);
+    controls.hidden = renderOnly;
+    if (renderOnly || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      playButton.textContent = '播放';
+    } else {
+      play();
+    }
+  </script>
+</body>
+</html>

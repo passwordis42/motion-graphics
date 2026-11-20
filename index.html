@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="在浏览器里播放动效，下载可用于剪辑的 MP4 成片。">
+  <title>动效合集</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #191834;
+      --muted: #5e596e;
+      --paper: #f7f6f2;
+      --line: #dbd8e1;
+      --accent: #4228aa;
+      --accent-dark: #301b88;
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    main { width: min(75rem, calc(100% - 3rem)); margin-inline: auto; }
+    header { padding-block: clamp(2.75rem, 7vw, 6.25rem) clamp(1.75rem, 4vw, 3.25rem); }
+    h1, h2, p { margin: 0; }
+
+    h1 {
+      display: flex;
+      align-items: center;
+      gap: clamp(0.85rem, 2vw, 1.3rem);
+      font-size: clamp(2.65rem, 6vw, 4.8rem);
+      font-weight: 800;
+      letter-spacing: -0.055em;
+      line-height: 1.2;
+    }
+
+    .mark {
+      display: inline-flex;
+      align-items: end;
+      gap: 0.09em;
+      height: 0.55em;
+      color: var(--accent);
+    }
+
+    .mark span { width: 0.095em; height: 100%; background: currentColor; }
+    .mark span:first-child { height: 42%; }
+    .mark span:nth-child(2) { height: 71%; }
+
+    .gallery { display: grid; gap: 2rem; padding-bottom: 3rem; }
+    .animation {
+      display: grid;
+      grid-template-columns: 1.62fr 1fr;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 0.85rem;
+      background: #fffefa;
+    }
+
+    .artwork { min-width: 0; background: #10143a; }
+    .artwork img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .detail {
+      align-self: center;
+      display: grid;
+      gap: 1rem;
+      min-width: 0;
+      padding: clamp(1.5rem, 3.65vw, 3.15rem);
+    }
+
+    h2 {
+      font-size: clamp(1.45rem, 3vw, 2.05rem);
+      line-height: 1.28;
+      letter-spacing: -0.035em;
+    }
+
+    .description { line-height: 1.75; color: var(--muted); }
+    .spec { font-size: 0.875rem; color: var(--muted); }
+    .actions { display: flex; flex-wrap: wrap; gap: 0.5rem 1.1rem; align-items: center; margin-top: 0.25rem; }
+    .actions a {
+      min-height: 2.75rem;
+      display: inline-flex;
+      align-items: center;
+      border-radius: 0.35rem;
+      font-weight: 700;
+      font-size: 0.9375rem;
+      color: var(--accent);
+      text-underline-offset: 0.22em;
+    }
+
+    .actions a:focus-visible { outline: 2px solid var(--accent); outline-offset: 0.25rem; }
+    .actions .play { padding-inline: 1.1rem; background: var(--accent); color: #fff; text-decoration: none; }
+    .actions .play:hover { background: var(--accent-dark); }
+    .actions .download:hover { color: var(--accent-dark); }
+
+    @media (max-width: 740px) {
+      main { width: calc(100% - 2rem); }
+      .animation { grid-template-columns: 1fr; }
+      .artwork img { height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>
+        <span class="mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        动效合集
+      </h1>
+    </header>
+
+    <section class="gallery" aria-label="全部动效">
+      <article class="animation" aria-labelledby="neural-network-title">
+        <div class="artwork">
+          <img src="./animations/neural-network/preview.webp" width="960" height="540"
+               alt="蓝紫色背景上的五层神经网络，左侧九个输入按猫、会、抓分组">
+        </div>
+        <div class="detail">
+          <h2 id="neural-network-title">神经网络的层与神经元</h2>
+          <p class="description">从「猫、会、抓」的九维输入出发，先增加隐藏层，再增加每个隐藏层里的神经元。</p>
+          <p class="spec">8.8 秒 · 1080p · 30 fps</p>
+          <div class="actions">
+            <a class="play" href="./animations/neural-network/">播放动效</a>
+            <a class="download" href="./animations/neural-network/neural-network-animation.mp4" download>下载 MP4</a>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
