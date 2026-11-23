@@ -36,9 +36,43 @@
     }
 
     .summary { margin-top: 0.8rem; color: var(--muted); }
-    .source-summary { line-height: 1.6; }
-    .source-summary a { color: var(--accent); font-weight: 700; text-underline-offset: 0.22em; }
-    .source-summary a:focus-visible { outline: 2px solid var(--accent); outline-offset: 0.25rem; }
+    .collection-nav {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.7rem 0 1rem;
+      background: var(--paper);
+    }
+    .collection-nav a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55em;
+      min-height: 2.95rem;
+      padding: 0.6rem 1.1rem;
+      border: 1px solid #a893e2;
+      border-radius: 0.55rem;
+      background: #eeebfb;
+      color: var(--accent-dark);
+      font-weight: 750;
+      text-decoration: none;
+    }
+    .collection-nav a:hover { border-color: var(--accent); background: #e6ddfa; }
+    .collection-nav a[aria-current="location"] { border-color: var(--accent); background: var(--accent); color: #fff; }
+    .collection-nav a:focus-visible { outline: 2px solid var(--accent); outline-offset: 0.2rem; }
+    .collection-nav span {
+      padding: 0.08rem 0.43rem;
+      border-radius: 1rem;
+      background: #21176218;
+      font-size: 0.8rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .collection-nav [aria-current="location"] span { background: #ffffff24; }
+    #original-reviews, #yueliu-new, .animation { scroll-margin-top: 5.3rem; }
+    #original-reviews[hidden], #yueliu-new[hidden] { display: none; }
 
     .mark {
       display: inline-flex;
@@ -60,7 +94,6 @@
       border: 1px solid var(--line);
       border-radius: 0.85rem;
       background: #fffefa;
-      scroll-margin-top: 1rem;
     }
     .animation:target { outline: 2px solid var(--accent); outline-offset: 3px; }
 
@@ -113,6 +146,7 @@
 
     .review-status { padding: 0.28rem 0.6rem; border-radius: 0.3rem; background: #f2eefb; color: #47278a; font-size: 0.875rem; font-weight: 700; }
     [data-review="recheck"] .review-status { background: #e2efff; color: #1d4d80; }
+    [data-review="demo"] .review-status { background: #e6f1e9; color: #265740; }
     .review-note { border-inline-start: 2px solid #c7b9ee; padding-inline-start: 0.65rem; color: var(--muted); line-height: 1.55; }
     .review-note strong { color: var(--ink); margin-inline-end: 0.5em; }
     .source-notes {
@@ -132,10 +166,10 @@
     .source-notes li { display: grid; grid-template-columns: 3.05em minmax(0, 1fr); gap: 0.45rem; }
     .source-notes time { color: var(--accent-dark); font-weight: 700; font-variant-numeric: tabular-nums; }
     .source-notes span { overflow-wrap: anywhere; }
-    .additional-reviews { border-top: 1px solid var(--line); padding-top: 1.75rem; scroll-margin-top: 1rem; }
+    .additional-reviews { padding-top: 0.35rem; }
     .additional-reviews h2 { font-size: clamp(1.55rem, 3vw, 2.15rem); }
     .additional-reviews > p { margin: 0.55rem 0 1.15rem; color: var(--muted); }
-    .additional-reviews .animation { grid-template-rows: 1fr; }
+    .additional-reviews .animation[data-review="clarify"] { grid-template-rows: 1fr; background: #f1f0f3; }
     .additional-reviews .review-status { margin-inline-start: auto; }
 
     .animation[data-review="unchanged"] {
@@ -172,6 +206,7 @@
     @media (max-width: 600px) {
       main { width: calc(100% - 2rem); }
       .gallery { grid-template-columns: 1fr; }
+      .collection-nav a { flex: 1; padding-inline: 0.55rem; }
     }
   </style>
 </head>
@@ -182,12 +217,16 @@
         <span class="mark" aria-hidden="true"><span></span><span></span><span></span></span>
         修改合集
       </h1>
-      <p class="summary">34 个片段 · 18 待改 · 13 不用改 · 3 待复核</p>
       <p class="summary">只是调整演示，非最终效果。</p>
-      <p class="summary source-summary">悦流 V9 共 34 条意见 · 14 条并入已有片段 · <a href="#yueliu-new">14 项新增意见</a></p>
+      <p class="summary">原有 34 个片段 · 18 待改 · 13 不用改 · 3 待复核</p>
     </header>
 
-    <section class="gallery" aria-label="修改片段">
+    <nav class="collection-nav" aria-label="修改合集分类">
+      <a href="#original-reviews" aria-current="location">原有修改 <span>34</span></a>
+      <a href="#yueliu-new">悦流新增 <span>14</span></a>
+    </nav>
+
+    <section class="gallery" id="original-reviews" aria-label="原有修改">
       <article class="animation" data-review="unchanged" id="t0144" aria-labelledby="t0144-title">
         <div class="artwork">
           <img src="./animations/0144-simple-network/original-preview.webp" width="960" height="540" alt="原片 01:44 画面" loading="lazy">
@@ -1033,7 +1072,7 @@
 
     <section class="additional-reviews" id="yueliu-new" aria-labelledby="yueliu-new-title">
       <h2 id="yueliu-new-title">悦流新增意见</h2>
-      <p>按原片时间排列 · 14 项 · 修改演示待制作</p>
+      <p>按原片时间排列 · 13 项可对比 · 1 项待确认</p>
       <div class="gallery">
         <article class="animation" data-review="clarify" id="yueliu-1311" aria-labelledby="yueliu-1311-title">
           <div class="detail">
@@ -1049,16 +1088,19 @@
                 <li><time datetime="PT13M11S">13:11</time><span>修改</span></li>
               </ul>
             </div>
-            <p class="spec">这条意见未写明具体修改内容。</p>
+            <p class="spec">先跳过，待补充具体修改内容。</p>
           </div>
         </article>
 
-        <article class="animation" data-review="pending" id="yueliu-1436" aria-labelledby="yueliu-1436-title">
+        <article class="animation" data-review="demo" id="yueliu-1436" aria-labelledby="yueliu-1436-title">
+          <div class="artwork">
+            <img src="./animations/yueliu-1436/original-preview.webp" width="960" height="540" alt="原片 14:36 画面" loading="lazy">
+          </div>
           <div class="detail">
             <div class="metadata">
               <span class="number">36</span>
               <p class="timestamp">原片 <time datetime="PT14M36S">14:36</time></p>
-              <span class="review-status">待改</span>
+              <span class="review-status">可对比</span>
             </div>
             <h3 id="yueliu-1436-title">更换神经网络示意素材</h3>
             <div class="source-notes">
@@ -1067,15 +1109,22 @@
                 <li><time datetime="PT14M36S">14:36</time><span>这个素材怎么一直没有换</span></li>
               </ul>
             </div>
+            <p class="spec">14:34.8–14:38.0 · 3.2 秒</p>
+            <div class="actions">
+              <a class="play" href="./animations/yueliu-1436/" aria-label="对比悦流 14:36 片段">对比片段</a>
+            </div>
           </div>
         </article>
 
-        <article class="animation" data-review="pending" id="yueliu-1445" aria-labelledby="yueliu-1445-title">
+        <article class="animation" data-review="demo" id="yueliu-1445" aria-labelledby="yueliu-1445-title">
+          <div class="artwork">
+            <img src="./animations/yueliu-1445/original-preview.webp" width="960" height="540" alt="原片 14:45 画面" loading="lazy">
+          </div>
           <div class="detail">
             <div class="metadata">
               <span class="number">37</span>
               <p class="timestamp">原片 <time datetime="PT14M45S">14:45</time></p>
-              <span class="review-status">待改</span>
+              <span class="review-status">可对比</span>
             </div>
             <h3 id="yueliu-1445-title">连线权重数字与口播对齐</h3>
             <div class="source-notes">
@@ -1084,15 +1133,22 @@
                 <li><time datetime="PT14M45S">14:45</time><span>动画没有踩点 应该是念到每条线上的权重的时候出每条线上的数字</span></li>
               </ul>
             </div>
+            <p class="spec">14:38.2–14:43.6 · 5.4 秒</p>
+            <div class="actions">
+              <a class="play" href="./animations/yueliu-1445/" aria-label="对比悦流 14:45 片段">对比片段</a>
+            </div>
           </div>
         </article>
 
-        <article class="animation" data-review="pending" id="yueliu-1550" aria-labelledby="yueliu-1550-title">
+        <article class="animation" data-review="demo" id="yueliu-1550" aria-labelledby="yueliu-1550-title">
+          <div class="artwork">
+            <img src="./animations/yueliu-1550/original-preview.webp" width="960" height="540" alt="原片 15:50 画面" loading="lazy">
+          </div>
           <div class="detail">
             <div class="metadata">
               <span class="number">38</span>
               <p class="timestamp">原片 <time datetime="PT15M50S">15:50</time></p>
-              <span class="review-status">待改</span>
+              <span class="review-status">可对比</span>
             </div>
             <h3 id="yueliu-1550-title">网络中的数字漂移</h3>
             <div class="source-notes">
@@ -1101,15 +1157,22 @@
                 <li><time datetime="PT15M50S">15:50</time><span>数字漂移</span></li>
               </ul>
             </div>
+            <p class="spec">15:48.6–15:52.6 · 4.0 秒</p>
+            <div class="actions">
+              <a class="play" href="./animations/yueliu-1550/" aria-label="对比悦流 15:50 片段">对比片段</a>
+            </div>
           </div>
         </article>
 
-        <article class="animation" data-review="pending" id="yueliu-1557" aria-labelledby="yueliu-1557-title">
+        <article class="animation" data-review="demo" id="yueliu-1557" aria-labelledby="yueliu-1557-title">
+          <div class="artwork">
+            <img src="./animations/yueliu-1557/original-preview.webp" width="960" height="540" alt="原片 15:57 画面" loading="lazy">
+          </div>
           <div class="detail">
             <div class="metadata">
               <span class="number">39</span>
               <p class="timestamp">原片 <time datetime="PT15M57S">15:57</time></p>
-              <span class="review-status">待改</span>
+              <span class="review-status">可对比</span>
             </div>
             <h3 id="yueliu-1557-title">概率与损失画面的卡点</h3>
             <div class="source-notes">
@@ -1118,15 +1181,22 @@
                 <li><time datetime="PT15M57S">15:57</time><span>没有踩点</span></li>
               </ul>
             </div>
+            <p class="spec">15:55.6–16:00.0 · 4.4 秒</p>
+            <div class="actions">
+              <a class="play" href="./animations/yueliu-1557/" aria-label="对比悦流 15:57 片段">对比片段</a>
+            </div>
           </div>
         </article>
 
-        <article class="animation" data-review="pending" id="yueliu-1700" aria-labelledby="yueliu-1700-title">
+        <article class="animation" data-review="demo" id="yueliu-1700" aria-labelledby="yueliu-1700-title">
+          <div class="artwork">
+            <img src="./animations/yueliu-1700/original-preview.webp" width="960" height="540" alt="原片 17:00 画面" loading="lazy">
+          </div>
           <div class="detail">
             <div class="metadata">
               <span class="number">40</span>
               <p class="timestamp">原片 <time datetime="PT17M0S">17:00</time></p>
-              <span class="review-status">待改</span>
+              <span class="review-status">可对比</span>
             </div>
             <h3 id="yueliu-1700-title">放大整句并调整「它」的字号</h3>
             <div class="source-notes">
@@ -1136,15 +1206,22 @@
                 <li><time datetime="PT17M0S">17:00</time><span>它字太大了</span></li>
               </ul>
             </div>
+            <p class="spec">16:58.80–17:02.80 · 4.0 秒</p>
+            <div class="actions">
+              <a class="play" href="./animations/yueliu-1700/" aria-label="对比悦流 17:00 片段">对比片段</a>
+            </div>
           </div>
         </article>
 
-        <article class="animation" data-review="pending" id="yueliu-2002" aria-labelledby="yueliu-2002-title">
+        <article class="animation" data-review="demo" id="yueliu-2002" aria-labelledby="yueliu-2002-title">
+          <div class="artwork">
+            <img src="./animations/yueliu-2002/original-preview.webp" width="960" height="540" alt="原片 20:02 画面" loading="lazy">
+          </div>
           <div class="detail">
             <div class="metadata">
               <span class="number">41</span>
               <p class="timestamp">原片 <time datetime="PT20M2S">20:02</time>–<time datetime="PT20M9S">20:09</time></p>
-              <span class="review-status">待改</span>
+              <span class="review-status">可对比</span>
             </div>
             <h3 id="yueliu-2002-title">三维示意中叠加的词</h3>
             <div class="source-notes">
@@ -1156,15 +1233,22 @@
                 <li><time datetime="PT20M9S">20:09</time><span>这个地方应该叠加“朵”</span></li>
               </ul>
             </div>
+            <p class="spec">20:02、20:04、20:07、20:09 · 4 个短片段</p>
+            <div class="actions">
+              <a class="play" href="./animations/yueliu-2002/" aria-label="对比悦流 20:02 片段">对比 4 个片段</a>
+            </div>
           </div>
         </article>
 
-        <article class="animation" data-review="pending" id="yueliu-2019" aria-labelledby="yueliu-2019-title">
+        <article class="animation" data-review="demo" id="yueliu-2019" aria-labelledby="yueliu-2019-title">
+          <div class="artwork">
+            <img src="./animations/yueliu-2019/original-preview.webp" width="960" height="540" alt="原片 20:19 画面" loading="lazy">
+          </div>
           <div class="detail">
             <div class="metadata">
               <span class="number">42</span>
               <p class="timestamp">原片 <time datetime="PT20M19S">20:19</time>–<time datetime="PT20M20S">20:20</time></p>
-              <span class="review-status">待改</span>
+              <span class="review-status">可对比</span>
             </div>
             <h3 id="yueliu-2019-title">词向量维度与新增旁白</h3>
             <div class="source-notes">
@@ -1174,15 +1258,23 @@
                 <li><time datetime="PT20M20S">20:20</time><span>旁白加了两句话</span></li>
               </ul>
             </div>
+            <p class="spec">20:18.80–20:23.60 · 4.8 秒</p>
+            <p class="spec">新增两句旁白的正文待补。当前演示在五维结果处留出停顿。</p>
+            <div class="actions">
+              <a class="play" href="./animations/yueliu-2019/" aria-label="对比悦流 20:19 片段">对比片段</a>
+            </div>
           </div>
         </article>
 
-        <article class="animation" data-review="pending" id="yueliu-2120" aria-labelledby="yueliu-2120-title">
+        <article class="animation" data-review="demo" id="yueliu-2120" aria-labelledby="yueliu-2120-title">
+          <div class="artwork">
+            <img src="./animations/yueliu-2120/original-preview.webp" width="960" height="540" alt="原片 21:20 画面" loading="lazy">
+          </div>
           <div class="detail">
             <div class="metadata">
               <span class="number">43</span>
               <p class="timestamp">原片 <time datetime="PT21M20S">21:20</time></p>
-              <span class="review-status">待改</span>
+              <span class="review-status">可对比</span>
             </div>
             <h3 id="yueliu-2120-title">放大例句的手机端文字</h3>
             <div class="source-notes">
@@ -1191,15 +1283,22 @@
                 <li><time datetime="PT21M20S">21:20</time><span>字还是得大一些 因为在手机里看太小了</span></li>
               </ul>
             </div>
+            <p class="spec">21:18.56–21:22.80 · 4.24 秒</p>
+            <div class="actions">
+              <a class="play" href="./animations/yueliu-2120/" aria-label="对比悦流 21:20 片段">对比片段</a>
+            </div>
           </div>
         </article>
 
-        <article class="animation" data-review="pending" id="yueliu-2230" aria-labelledby="yueliu-2230-title">
+        <article class="animation" data-review="demo" id="yueliu-2230" aria-labelledby="yueliu-2230-title">
+          <div class="artwork">
+            <img src="./animations/yueliu-2230/original-preview.webp" width="960" height="540" alt="原片 22:30 画面" loading="lazy">
+          </div>
           <div class="detail">
             <div class="metadata">
               <span class="number">44</span>
               <p class="timestamp">原片 <time datetime="PT22M30S">22:30</time></p>
-              <span class="review-status">待改</span>
+              <span class="review-status">可对比</span>
             </div>
             <h3 id="yueliu-2230-title">检查「老鼠」出现的时机</h3>
             <div class="source-notes">
@@ -1208,15 +1307,22 @@
                 <li><time datetime="PT22M30S">22:30</time><span>这个时候画面里应该还没有老鼠吧</span></li>
               </ul>
             </div>
+            <p class="spec">22:29.76–22:33.16 · 3.4 秒</p>
+            <div class="actions">
+              <a class="play" href="./animations/yueliu-2230/" aria-label="对比悦流 22:30 片段">对比片段</a>
+            </div>
           </div>
         </article>
 
-        <article class="animation" data-review="pending" id="yueliu-2327" aria-labelledby="yueliu-2327-title">
+        <article class="animation" data-review="demo" id="yueliu-2327" aria-labelledby="yueliu-2327-title">
+          <div class="artwork">
+            <img src="./animations/yueliu-2327/original-preview.webp" width="960" height="540" alt="原片 23:27 画面" loading="lazy">
+          </div>
           <div class="detail">
             <div class="metadata">
               <span class="number">45</span>
               <p class="timestamp">原片 <time datetime="PT23M27S">23:27</time></p>
-              <span class="review-status">待改</span>
+              <span class="review-status">可对比</span>
             </div>
             <h3 id="yueliu-2327-title">拉长得分比例示例的旁白</h3>
             <div class="source-notes">
@@ -1225,15 +1331,22 @@
                 <li><time datetime="PT23M27S">23:27</time><span>这个地方节奏太快了 旁白得拉长一些</span></li>
               </ul>
             </div>
+            <p class="spec">23:26.16–23:29.36 · 原片 3.2 秒 · 修改后 4.8 秒</p>
+            <div class="actions">
+              <a class="play" href="./animations/yueliu-2327/" aria-label="对比悦流 23:27 片段">对比片段</a>
+            </div>
           </div>
         </article>
 
-        <article class="animation" data-review="pending" id="yueliu-2358" aria-labelledby="yueliu-2358-title">
+        <article class="animation" data-review="demo" id="yueliu-2358" aria-labelledby="yueliu-2358-title">
+          <div class="artwork">
+            <img src="./animations/yueliu-2358/original-preview.webp" width="960" height="540" alt="原片 23:58 画面" loading="lazy">
+          </div>
           <div class="detail">
             <div class="metadata">
               <span class="number">46</span>
               <p class="timestamp">原片 <time datetime="PT23M58S">23:58</time>–<time datetime="PT23M59S">23:59</time></p>
-              <span class="review-status">待改</span>
+              <span class="review-status">可对比</span>
             </div>
             <h3 id="yueliu-2358-title">讲清 Q、K 到权重的过程</h3>
             <div class="source-notes">
@@ -1243,15 +1356,22 @@
                 <li><time datetime="PT23M59S">23:59</time><span>这个地方有点乱</span></li>
               </ul>
             </div>
+            <p class="spec">23:57.20–24:01.60 · 4.4 秒</p>
+            <div class="actions">
+              <a class="play" href="./animations/yueliu-2358/" aria-label="对比悦流 23:58 片段">对比片段</a>
+            </div>
           </div>
         </article>
 
-        <article class="animation" data-review="pending" id="yueliu-2729" aria-labelledby="yueliu-2729-title">
+        <article class="animation" data-review="demo" id="yueliu-2729" aria-labelledby="yueliu-2729-title">
+          <div class="artwork">
+            <img src="./animations/yueliu-2729/original-preview.webp" width="960" height="540" alt="原片 27:29 画面" loading="lazy">
+          </div>
           <div class="detail">
             <div class="metadata">
               <span class="number">47</span>
               <p class="timestamp">原片 <time datetime="PT27M29S">27:29</time></p>
-              <span class="review-status">待改</span>
+              <span class="review-status">可对比</span>
             </div>
             <h3 id="yueliu-2729-title">调整二维和三维镜头的衔接</h3>
             <div class="source-notes">
@@ -1260,15 +1380,22 @@
                 <li><time datetime="PT27M29S">27:29</time><span>转场很突兀哇 这附近的几个二维和三维镜头的衔接都很不顺</span></li>
               </ul>
             </div>
+            <p class="spec">27:27.48–27:31.48 · 4.0 秒</p>
+            <div class="actions">
+              <a class="play" href="./animations/yueliu-2729/" aria-label="对比悦流 27:29 片段">对比片段</a>
+            </div>
           </div>
         </article>
 
-        <article class="animation" data-review="pending" id="yueliu-2740" aria-labelledby="yueliu-2740-title">
+        <article class="animation" data-review="demo" id="yueliu-2740" aria-labelledby="yueliu-2740-title">
+          <div class="artwork">
+            <img src="./animations/yueliu-2740/original-preview.webp" width="960" height="540" alt="原片 27:40 画面" loading="lazy">
+          </div>
           <div class="detail">
             <div class="metadata">
               <span class="number">48</span>
               <p class="timestamp">原片 <time datetime="PT27M40S">27:40</time></p>
-              <span class="review-status">待改</span>
+              <span class="review-status">可对比</span>
             </div>
             <h3 id="yueliu-2740-title">统一相邻镜头的风格</h3>
             <div class="source-notes">
@@ -1277,10 +1404,33 @@
                 <li><time datetime="PT27M40S">27:40</time><span>这个镜头接下个镜头的风格有些乱了</span></li>
               </ul>
             </div>
+            <p class="spec">27:39.52–27:44.00 · 4.48 秒</p>
+            <div class="actions">
+              <a class="play" href="./animations/yueliu-2740/" aria-label="对比悦流 27:40 片段">对比片段</a>
+            </div>
           </div>
         </article>
       </div>
     </section>
   </main>
+  <script>
+    const collectionLinks = [...document.querySelectorAll('.collection-nav a')];
+
+    function showCurrentCollection() {
+      const hash = location.hash;
+      const activeHref = hash.startsWith('#yueliu-') ? '#yueliu-new' : '#original-reviews';
+      for (const link of collectionLinks) {
+        const active = link.hash === activeHref;
+        document.getElementById(link.hash.slice(1)).hidden = !active;
+        if (active) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      }
+      const target = document.getElementById(hash.slice(1));
+      if (target) requestAnimationFrame(() => target.scrollIntoView());
+    }
+
+    window.addEventListener('hashchange', showCurrentCollection);
+    showCurrentCollection();
+  </script>
 </body>
 </html>

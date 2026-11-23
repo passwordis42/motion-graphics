@@ -12,7 +12,7 @@ function mountRevisionClip(clip) {
 
   player.innerHTML = `
     <header class="clip-header">
-      <a href="../../#t${clip.marker.replace(':', '')}">返回修改合集</a>
+      <a>返回修改合集</a>
       <h1></h1>
       <p></p>
     </header>
@@ -37,6 +37,7 @@ function mountRevisionClip(clip) {
     </div>`;
 
   const header = player.querySelector('header');
+  header.querySelector('a').href = clip.backHref ?? `../../#t${clip.marker.replace(':', '')}`;
   header.querySelector('h1').textContent = clip.title;
   header.querySelector('p').textContent = `原片 ${clip.marker} · ${originalOnly ? '' : '替换范围 '}${clip.range}`;
   header.hidden = renderOnly;
