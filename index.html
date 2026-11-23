@@ -94,7 +94,7 @@
     }
     .collection-nav [aria-current="location"] span { background: #ffffff24; }
     #original-reviews, #yueliu-new, .animation, .source-notes[id] { scroll-margin-top: 5.3rem; }
-    #original-reviews[hidden], #yueliu-new[hidden] { display: none; }
+    #original-reviews[hidden], #yueliu-new[hidden], .animation[hidden] { display: none; }
 
     .mark {
       display: inline-flex;
@@ -255,7 +255,7 @@
         修改合集
       </h1>
       <p class="summary">只是调整演示，非最终效果。</p>
-      <p class="summary">原有 34 个片段 · 18 待改 · 13 不用改 · 3 待复核</p>
+      <p class="summary">原有 20 个片段 · 17 待改 · 3 待复核</p>
       <p class="summary">阅流的 <strong>14 条意见</strong>已并入 <strong>13 张原有卡片</strong>。点下方编号可直接查看原文和时间戳。</p>
       <nav class="merged-opinion-links" aria-label="并入阅流意见的原有卡片">
         <a href="#t1416-review" aria-label="查看原有第 05 条的阅流意见">05</a>
@@ -275,12 +275,12 @@
     </header>
 
     <nav class="collection-nav" aria-label="修改合集分类">
-      <a href="#original-reviews" aria-current="location">原有修改 <span>34</span></a>
+      <a href="#original-reviews" aria-current="location">原有修改 <span>20</span></a>
       <a href="#yueliu-new">阅流新增 <span>14</span></a>
     </nav>
 
     <section class="gallery" id="original-reviews" aria-label="原有修改">
-      <article class="animation" data-review="unchanged" id="t0144" aria-labelledby="t0144-title">
+      <article class="animation" data-review="unchanged" id="t0144" aria-labelledby="t0144-title" hidden>
         <div class="artwork">
           <img src="./animations/0144-simple-network/original-preview.webp" width="960" height="540" alt="原片 01:44 画面" loading="lazy">
           <span class="review-watermark">不用改</span>
@@ -304,7 +304,7 @@
         </div>
       </article>
 
-      <article class="animation" data-review="unchanged" id="t0514" aria-labelledby="t0514-title">
+      <article class="animation" data-review="unchanged" id="t0514" aria-labelledby="t0514-title" hidden>
         <div class="artwork">
           <img src="./animations/0514-scribble/original-preview.webp" width="960" height="540" alt="原片 05:14 画面" loading="lazy">
           <span class="review-watermark">不用改</span>
@@ -326,7 +326,7 @@
         </div>
       </article>
 
-      <article class="animation" data-review="unchanged" id="t1205" aria-labelledby="t1205-title">
+      <article class="animation" data-review="unchanged" id="t1205" aria-labelledby="t1205-title" hidden>
         <div class="artwork">
           <img src="./animations/1205-tokenization/original-preview.webp" width="960" height="540" alt="原片 12:05 画面" loading="lazy">
           <span class="review-watermark">不用改</span>
@@ -348,7 +348,7 @@
         </div>
       </article>
 
-      <article class="animation" data-review="unchanged" id="t1229" aria-labelledby="t1229-title">
+      <article class="animation" data-review="unchanged" id="t1229" aria-labelledby="t1229-title" hidden>
         <div class="artwork">
           <img src="./animations/1229-vector-animation/original-preview.webp" width="960" height="540" alt="原片 12:29 画面" loading="lazy">
           <span class="review-watermark">不用改</span>
@@ -504,7 +504,7 @@
         </div>
       </article>
 
-      <article class="animation" data-review="unchanged" id="t1616" aria-labelledby="neural-network-title">
+      <article class="animation" data-review="unchanged" id="t1616" aria-labelledby="neural-network-title" hidden>
         <div class="artwork">
           <img src="./animations/neural-network/original-preview.webp" width="960" height="540" alt="原片 16:16 画面" loading="lazy">
           <span class="review-watermark">不用改</span>
@@ -627,7 +627,7 @@
         </div>
       </article>
 
-      <article class="animation" data-review="unchanged" id="t1720" aria-labelledby="t1720-title">
+      <article class="animation" data-review="unchanged" id="t1720" aria-labelledby="t1720-title" hidden>
         <div class="artwork">
           <img src="./animations/1720-memory-vector/original-preview.webp" width="960" height="540" alt="原片 17:20 画面" loading="lazy">
           <span class="review-watermark">不用改</span>
@@ -700,7 +700,7 @@
         </div>
       </article>
 
-      <article class="animation" data-review="unchanged" id="t2015" aria-labelledby="t2015-title">
+      <article class="animation" data-review="unchanged" id="t2015" aria-labelledby="t2015-title" hidden>
         <div class="artwork">
           <img src="./animations/2015-attention-overview/original-preview.webp" width="960" height="540" alt="原片 20:15 画面" loading="lazy">
           <span class="review-watermark">不用改</span>
@@ -773,7 +773,7 @@
         </div>
       </article>
 
-      <article class="animation" data-review="unchanged" id="t2309" aria-labelledby="t2309-title">
+      <article class="animation" data-review="unchanged" id="t2309" aria-labelledby="t2309-title" hidden>
         <div class="artwork">
           <img src="./animations/2309-skip-flash/original-preview.webp" width="960" height="540" alt="原片 23:09 画面" loading="lazy">
           <span class="review-watermark">不用改</span>
@@ -818,7 +818,7 @@
         </div>
       </article>
 
-      <article class="animation" data-review="unchanged" id="t2323" aria-labelledby="t2323-title">
+      <article class="animation" data-review="unchanged" id="t2323" aria-labelledby="t2323-title" hidden>
         <div class="artwork">
           <img src="./animations/2323-score-bars/original-preview.webp" width="960" height="540" alt="原片 23:23 画面" loading="lazy">
           <span class="review-watermark">不用改</span>
@@ -869,7 +869,7 @@
         </div>
       </article>
 
-      <article class="animation" data-review="unchanged" id="t2342" aria-labelledby="t2342-title">
+      <article class="animation" data-review="unchanged" id="t2342" aria-labelledby="t2342-title" hidden>
         <div class="artwork">
           <img src="./animations/2342-three-dimensions/original-preview.webp" width="960" height="540" alt="原片 23:42 画面" loading="lazy">
           <span class="review-watermark">不用改</span>
@@ -891,7 +891,7 @@
         </div>
       </article>
 
-      <article class="animation" data-review="unchanged" id="t2359" aria-labelledby="t2359-title">
+      <article class="animation" data-review="unchanged" id="t2359" aria-labelledby="t2359-title" hidden>
         <div class="artwork">
           <img src="./animations/2359-consistent-three-dimensions/original-preview.webp" width="960" height="540" alt="原片 23:59 画面" loading="lazy">
           <span class="review-watermark">不用改</span>
@@ -998,31 +998,6 @@
         </div>
       </article>
 
-      <article class="animation" data-review="pending" id="t2441" aria-labelledby="t2441-title">
-        <div class="artwork">
-          <img src="./animations/2441-random-a/preview.webp" width="960" height="540" alt="随机初始化与训练" loading="lazy">
-          <span class="generated-badge">自动生成，非参考</span>
-        </div>
-        <div class="detail">
-          <div class="metadata">
-            <span class="number">30</span>
-            <p class="timestamp">原片 <time datetime="PT24M41S">约24:41—25:03</time></p>
-            <span class="review-status">待改</span>
-          </div>
-          <h2 id="t2441-title">随机初始化与训练</h2>
-          <dl class="revision">
-            <div><dt>问题</dt><dd>此段随机初始化与训练过程的演示需重做。</dd></div>
-            <div><dt>修改方案</dt><dd>约24:41—25:03整段重做，使用真实随机数，并展示真实的网络结构。涉及文案：
-和之前提到的神经网络一样，刚开始训练时，所有参数都是随机数，所以最后的得分也是随机的。输入这句话，模型可能认为下一个词是“桌子”。但训练数据会告诉它：正确答案是“老鼠”，然后通过反向传播调整模型里的所有参数，增大这种情况下“老鼠”的得分。而因为在训练语料里，“猫抓”后面跟“老鼠”这个组合出现了无数次，所以模型就在一次次的训练中，把这个规律编进了自己的参数里。</dd></div>
-          </dl>
-          <p class="review-note"><strong>复核意见</strong>这个地方原片的节奏太快了 需要改慢一些</p>
-          <p class="spec">24:40.3–25:03.0 · 4 个短片段</p>
-          <div class="actions">
-            <a class="play" href="./animations/2441-random-a/" aria-label="对比 24:41 随机初始化与训练">对比片段</a>
-          </div>
-        </div>
-      </article>
-
       <article class="animation" data-review="pending" id="t2518" aria-labelledby="t2518-title">
         <div class="artwork">
           <img src="./animations/2518-mobile-type/preview.webp" width="960" height="540" alt="放大手机端文字" loading="lazy">
@@ -1079,7 +1054,7 @@
         </div>
       </article>
 
-      <article class="animation" data-review="unchanged" id="t2701" aria-labelledby="t2701-title">
+      <article class="animation" data-review="unchanged" id="t2701" aria-labelledby="t2701-title" hidden>
         <div class="artwork">
           <img src="./animations/2701-new-architecture/original-preview.webp" width="960" height="540" alt="原片 27:01 画面" loading="lazy">
           <span class="review-watermark">不用改</span>
@@ -1101,7 +1076,7 @@
         </div>
       </article>
 
-      <article class="animation" data-review="unchanged" id="t2728" aria-labelledby="t2728-title">
+      <article class="animation" data-review="unchanged" id="t2728" aria-labelledby="t2728-title" hidden>
         <div class="artwork">
           <img src="./animations/2728-training-data/original-preview.webp" width="960" height="540" alt="原片 27:28 画面" loading="lazy">
           <span class="review-watermark">不用改</span>
