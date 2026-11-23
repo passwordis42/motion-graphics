@@ -4,9 +4,11 @@ function mountRevisionClip(clip) {
   const player = document.querySelector('#player');
   const renderOnly = new URLSearchParams(location.search).has('render');
   const originalOnly = !renderOnly && document.documentElement.dataset.review === 'no-change';
+  const generated = !renderOnly && document.documentElement.hasAttribute('data-generated');
   const originalDuration = clip.originalDuration ?? clip.duration;
   const duration = originalOnly ? originalDuration : clip.duration;
   const originalStage = '<video class="stage original" muted playsinline preload="auto" aria-label="原片画面"></video>';
+  const modifiedTitle = '<h2 id="modified-heading">修改后</h2>';
   document.title = `${clip.marker} ${clip.title} · 修改合集`;
   document.documentElement.classList.toggle('render-only', renderOnly);
 
@@ -21,8 +23,11 @@ function mountRevisionClip(clip) {
         <h2 id="original-heading">原片</h2>
         ${originalOnly ? `<div class="review-stage">${originalStage}<span class="review-watermark">不用改</span></div>` : originalStage}
       </section>
-      ${originalOnly ? '' : `<section class="comparison-pane modified-pane" aria-labelledby="modified-heading">
-        <h2 id="modified-heading">修改后</h2>
+      ${originalOnly ? '' : `<section class="comparison-pane modified-pane" aria-labelledby="modified-heading"${generated ? ' aria-describedby="generated-badge"' : ''}>
+        ${generated ? `<div class="comparison-pane-title">
+          ${modifiedTitle}
+          <span id="generated-badge" class="comparison-badge">自动生成，非参考</span>
+        </div>` : modifiedTitle}
         ${clip.modifiedVideo
           ? '<video class="stage modified" muted playsinline preload="auto"></video>'
           : '<canvas class="stage modified" width="1920" height="1080" role="img"></canvas>'}

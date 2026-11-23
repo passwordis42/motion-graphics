@@ -15,6 +15,18 @@ main { width: min(86rem, 100% - 2rem); margin-inline: auto; }
 .comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; align-items: start; }
 .comparison.single { grid-template-columns: minmax(0, 1fr); }
 .comparison-pane h2 { margin: 0 0 0.4rem; color: #dbdef1; font-size: 0.95rem; font-weight: 600; }
+.comparison-pane-title { display: flex; align-items: center; flex-wrap: wrap; gap: 0.25rem 0.55rem; margin-bottom: 0.4rem; }
+.comparison-pane-title h2 { margin: 0; }
+.comparison-badge {
+  padding: 0.15rem 0.45rem;
+  border: 1px solid #af874e;
+  border-radius: 0.32rem;
+  background: #39291c;
+  color: #ffe0a3;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
 .stage { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: contain; background: #080b21; }
 .review-stage { position: relative; }
 .review-stage .stage { filter: grayscale(1) brightness(0.77); background: #242424; }
