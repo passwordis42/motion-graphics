@@ -4,111 +4,153 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>在坐标轴上标注更新后的概率 · 修改合集</title>
-  <link rel="stylesheet" href="../shared/player.css?v=4">
+  <link rel="stylesheet" href="../shared/player.css?v=7">
 </head>
 <body>
   <main id="player"></main>
-  <script src="../shared/player.js?v=4"></script>
-  <script src="../shared/nnlm.js"></script>
+  <script src="../shared/player.js?v=7"></script>
   <script>
-    const origin = { x: 958, y: 539 };
-    const target = { x: 1300, y: 717 };
-    const targetAngle = Math.atan2(target.y - origin.y, target.x - origin.x);
-    const initialAngle = -54 * Math.PI / 180;
-    const finalGap = 3.07 * Math.PI / 180;
-    const rayLength = 254;
-    const vectors = [
-      { x: 1397, y: 494, lx: 1504, ly: 468, vx: 1607, hue: '#cf77d3' },
-      { x: 1328, y: 310, lx: 1437, ly: 282, vx: 1538, hue: '#78b5f1' },
-      { x: 469, y: 401, lx: 458, ly: 365, vx: 352, hue: '#e9d890' },
-      { hue: '#c3f89b' },
-      { x: 887, y: 870, lx: 925, ly: 868, vx: 1026, hue: '#a6a4f7' },
+    const width = 1280;
+    const height = 720;
+    const origin = { x: 640, y: 359 };
+    const oldTip = { x: 806, y: 437 };
+    const targetAngle = Math.atan2(503 - origin.y, 884 - origin.x);
+    const finalAngle = Math.atan2(oldTip.y - origin.y, oldTip.x - origin.x);
+    const startAngle = -54 * Math.PI / 180;
+    const radius = Math.hypot(oldTip.x - origin.x, oldTip.y - origin.y);
+    const chances = [
+      { x: 995, y: 319, from: 23.8, to: 18.9, tint: '#e9a6e9' },
+      { x: 953, y: 194, from: 13.9, to: 17.1, tint: '#bfdcfa' },
+      { x: 364, y: 248, from: 19.9, to: 16.8, tint: '#ede3a9' },
+      { x: 650, y: 605, from: 26.4, to: 22.0, tint: '#c3b8ff' },
     ];
+    const chinese = '"Microsoft YaHei", "PingFang SC", sans-serif';
+    const numeric = 'Consolas, "Courier New", monospace';
 
-    function probabilityAxisState(time) {
-      const progress = nnlm.easing(time, 0.22, 1.72);
-      const angle = initialAngle + (targetAngle - finalGap - initialAngle) * progress;
-      return {
-        progress, angle,
-        probabilities: nnlm.words.map(({ probability, trained }) => (probability + (trained - probability) * progress).toFixed(1)),
-      };
+    const interpolate = (a, b, t) => a + (b - a) * t;
+    function ease(t, start, end) {
+      const amount = Math.min(1, Math.max(0, (t - start) / (end - start)));
+      return amount * amount * (3 - 2 * amount);
     }
 
-    mountRevisionClip({
-      title: '在坐标轴上标注更新后的概率',
-      description: '保留原坐标轴，展示“老”的词向量从较远的位置转向计算结果，最终夹角为 3.07 度。五个候选词的预测概率一起变化，“老”从 16.0% 升到 25.2%。',
-      marker: '16:07',
-      range: '16:05.5–16:07.8',
-      duration: 2.3,
-      previewTime: 1.95,
-      draw(ctx, t) {
-        const { words, line, box, pill, label, background, subtitle, arrow } = nnlm;
-        const { progress, angle, probabilities } = probabilityAxisState(t);
-        const oldX = origin.x + rayLength * Math.cos(angle);
-        const oldY = origin.y + rayLength * Math.sin(angle);
-        const positions = vectors.map((vector, index) => index === 3
-          ? { ...vector, x: oldX, y: oldY, lx: oldX + 49, ly: oldY - 22, vx: oldX + 169 }
-          : vector);
-        background(ctx, true);
+    function loadImage(url) {
+      const image = new Image();
+      image.src = url;
+      return image.decode().then(() => image);
+    }
 
-        line(ctx, origin.x, 73, origin.x, 936, 'rgba(94, 190, 150, .38)', 2);
-        arrow(ctx, 144, 487, 1800, 610, 'rgba(88, 112, 179, .46)', 2.4, 26);
-        arrow(ctx, 1264, 420, 544, 734, 'rgba(174, 101, 114, .64)', 2.25, 23);
+    function writeText(ctx, text, x, y, { font, fill, align = 'left', shadow = 4 }) {
+      ctx.save();
+      ctx.font = font;
+      ctx.fillStyle = fill;
+      ctx.textAlign = align;
+      ctx.textBaseline = 'middle';
+      ctx.shadowBlur = shadow;
+      ctx.shadowColor = '#030312';
+      ctx.fillText(text, x, y);
+      ctx.restore();
+    }
 
+    function writeProbability(ctx, x, y, from, to, progress, color, focus = false) {
+      const number = interpolate(from, to, progress).toFixed(1) + '%';
+      writeText(ctx, number, x, y, {
+        font: (focus ? '700 28px ' : '600 24px ') + numeric,
+        fill: color,
+      });
+    }
+
+    function drawOldVector(ctx, head, angle) {
+      ctx.save();
+      ctx.translate(origin.x, origin.y);
+      ctx.rotate(angle);
+
+      const shade = ctx.createLinearGradient(0, -4.2, 0, 4.2);
+      shade.addColorStop(0, '#82b65f');
+      shade.addColorStop(0.32, '#c1e9a4');
+      shade.addColorStop(0.6, '#b4de94');
+      shade.addColorStop(1, '#65944e');
+      ctx.fillStyle = shade;
+      ctx.shadowColor = 'rgba(180,240,147,.48)';
+      ctx.shadowBlur = 9;
+      ctx.beginPath();
+      ctx.moveTo(8, -3.2);
+      ctx.lineTo(radius - 17, -4.2);
+      ctx.lineTo(radius - 17, 4.2);
+      ctx.lineTo(8, 3.2);
+      ctx.closePath();
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // The arrowhead is the original shaded artwork, rotated with the shaft.
+      ctx.rotate(-finalAngle);
+      ctx.drawImage(head, 772 - origin.x, 412 - origin.y);
+      ctx.restore();
+    }
+
+    function draw(frame, head, ctx, time) {
+      const progress = ease(time, 0.19, 1.61);
+      const angle = interpolate(startAngle, finalAngle, progress);
+      const x = origin.x + Math.cos(angle) * radius;
+      const y = origin.y + Math.sin(angle) * radius;
+
+      ctx.save();
+      ctx.scale(ctx.canvas.width / width, ctx.canvas.height / height);
+      ctx.drawImage(frame, 0, 0);
+
+      ctx.save();
+      ctx.strokeStyle = 'rgba(207,239,170,.52)';
+      ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      ctx.arc(origin.x, origin.y, 60, angle, targetAngle);
+      ctx.stroke();
+      ctx.restore();
+      drawOldVector(ctx, head, angle);
+
+      chances.forEach(({ x, y, from, to, tint }) =>
+        writeProbability(ctx, x, y, from, to, progress, tint));
+      const clearance = 1 - ease(y, 232, 267);
+      const labelX = x + 19 - 26 * clearance;
+      const labelY = y - 10 - 9 * clearance;
+      writeText(ctx, '老', labelX, labelY, {
+        font: '600 30px ' + chinese,
+        fill: '#daf6bc',
+      });
+      writeProbability(ctx, labelX + 36, labelY + 1, 16, 25.2, progress, '#e4ffba', true);
+
+      // Keep the source's measured angle for the settled vectors only.
+      const angleOpacity = ease(time, 1.55, 1.76);
+      if (angleOpacity > 0) {
         ctx.save();
-        ctx.beginPath();
-        ctx.moveTo(origin.x, origin.y);
-        ctx.arc(origin.x, origin.y, 155, angle, targetAngle);
-        ctx.closePath();
-        ctx.fillStyle = 'rgba(181, 231, 147, .13)';
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(origin.x, origin.y, 155, angle, targetAngle);
-        ctx.lineWidth = 2.5;
-        ctx.strokeStyle = '#dff6be';
-        ctx.stroke();
-        if (progress > 0) {
-          ctx.globalAlpha = progress * .48;
-          ctx.setLineDash([9, 10]);
-          line(ctx, origin.x, origin.y, origin.x + rayLength * Math.cos(initialAngle),
-            origin.y + rayLength * Math.sin(initialAngle), '#c3f89b', 2.3);
-        }
+        ctx.globalAlpha = angleOpacity;
+        writeText(ctx, '3.07°', 690, 369, { font: '600 23px ' + numeric, fill: '#dcecc9' });
         ctx.restore();
+      }
 
-        positions.forEach(({ x, y, hue }, index) => {
-          ctx.save();
-          ctx.shadowBlur = index === 3 ? 24 : 9;
-          ctx.shadowColor = hue;
-          arrow(ctx, origin.x, origin.y, x, y, hue, index === 3 ? 8 : 5.5, 29);
-          ctx.restore();
+      const finished = time >= 1.71;
+      const caption = finished
+        ? '“老”最接近计算结果，预测概率由 16.0% 升至 25.2%'
+        : '调整参数后，“老”的词向量逐渐靠近计算结果';
+      writeText(ctx, caption, 640, 674, {
+        font: '700 29px ' + chinese, fill: '#fff', align: 'center', shadow: 6,
+      });
+      ctx.restore();
+    }
+
+    Promise.all([loadImage('./axis-source.webp'), loadImage('./axis-arrowhead.png')])
+      .then(([frame, head]) => {
+        mountRevisionClip({
+          title: '在坐标轴上标注更新后的概率',
+          description: '原片坐标和其他向量保持固定，“老”的向量转向计算结果，预测概率由 16.0% 升至 25.2%。',
+          marker: '16:07',
+          range: '16:05.5–16:07.8',
+          duration: 2.3,
+          previewTime: 2.14,
+          draw(ctx, t) { draw(frame, head, ctx, t); },
         });
-
-        arrow(ctx, origin.x, origin.y, target.x, target.y, '#e1ed9e', 5, 28);
-        label(ctx, '计算结果', 1340, 733, { size: 37, color: '#e0efac', align: 'left' });
-        if (progress >= 1) label(ctx, '3.07°', 1100, 555, { size: 33, color: '#d8e9cb', numeric: true, weight: 700 });
-
-        ctx.beginPath();
-        ctx.arc(origin.x, origin.y, 11, 0, 2 * Math.PI);
-        ctx.fillStyle = '#d7dfc7';
-        ctx.fill();
-
-        positions.forEach(({ lx, ly, vx, hue }, index) => {
-          const word = words[index];
-          const correct = word.name === '老';
-
-          if (correct) {
-            box(ctx, lx - 31, ly - 37, 237, 74, 18, 'rgba(75, 119, 77, .3)', 'rgba(188, 236, 148, .75)');
-          }
-
-          label(ctx, word.name, lx, ly, { size: 38, color: hue, weight: correct ? 700 : 500 });
-          pill(ctx, `${probabilities[index]}%`, vx, ly, 143, 51, {
-            size: 32, color: hue, weight: 700, numeric: true,
-          });
-        });
-
-        subtitle(ctx, progress < 1 ? '调整参数后，「老」的词向量逐渐靠近计算结果' : '更新后，「老」的出现概率升到 25.2%');
-      },
-    });
+      })
+      .catch(() => {
+        document.querySelector('#player').textContent = '暂时无法加载修改后的画面。';
+      });
   </script>
 </body>
 </html>
