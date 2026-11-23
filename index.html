@@ -61,7 +61,7 @@
     }
     .animation:target { outline: 2px solid var(--accent); outline-offset: 3px; }
 
-    .artwork { min-width: 0; background: #10143a; }
+    .artwork { position: relative; min-width: 0; background: #10143a; }
     .artwork img {
       display: block;
       width: 100%;
@@ -108,6 +108,39 @@
     .actions .play { padding-inline: 1.1rem; background: var(--accent); color: #fff; text-decoration: none; }
     .actions .play:hover { background: var(--accent-dark); }
 
+    .review-status { padding: 0.28rem 0.6rem; border-radius: 0.3rem; background: #f2eefb; color: #47278a; font-size: 0.875rem; font-weight: 700; }
+    [data-review="skipped"] .review-status { background: #fff0d7; color: #754a13; }
+    .review-note { border-inline-start: 2px solid #c7b9ee; padding-inline-start: 0.65rem; color: var(--muted); line-height: 1.55; }
+    .review-note strong { color: var(--ink); margin-inline-end: 0.5em; }
+
+    .animation[data-review="unchanged"] {
+      --ink: #2c2d31;
+      --muted: #57595f;
+      --accent: #484a51;
+      --accent-dark: #34363d;
+      border-color: #cbcccf;
+      background: #ededef;
+      color: var(--ink);
+    }
+    [data-review="unchanged"] .artwork { background: #292a2e; }
+    [data-review="unchanged"] .artwork img { filter: grayscale(1) brightness(0.72); }
+    [data-review="unchanged"] .timestamp { background: #d8d9dd; }
+    .review-watermark {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      transform: translate(-50%, -50%) rotate(-9deg);
+      padding: 0.23em 0.56em;
+      border: 2px solid #f2f2f2;
+      border-radius: 0.25em;
+      background: #191a1ddd;
+      color: #fff;
+      font-size: clamp(1.55rem, 3vw, 2.15rem);
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
     @media (max-width: 960px) {
       .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
@@ -124,14 +157,15 @@
         <span class="mark" aria-hidden="true"><span></span><span></span><span></span></span>
         修改合集
       </h1>
-      <p class="summary">34 条修改 · 原片与修改后逐条对比</p>
+      <p class="summary">34 个片段 · 18 待改 · 13 不用改 · 3 跳过</p>
       <p class="summary">只是调整演示，非最终效果。</p>
     </header>
 
     <section class="gallery" aria-label="修改片段">
-      <article class="animation" id="t0144" aria-labelledby="t0144-title">
+      <article class="animation" data-review="unchanged" id="t0144" aria-labelledby="t0144-title">
         <div class="artwork">
-          <img src="./animations/0144-simple-network/preview.webp" width="960" height="540" alt="原画面配上“简单的神经网络”的字幕" loading="lazy">
+          <img src="./animations/0144-simple-network/original-preview.webp" width="960" height="540" alt="原片 01:44 画面" loading="lazy">
+          <span class="review-watermark">不用改</span>
         </div>
         <div class="detail">
           <div class="metadata">
@@ -145,16 +179,17 @@
 ① 将画面替换为单层神经网络抽象概念图。
 ② 去掉文案“最简单”中的“最”字，改为“简单的神经网络”。</dd></div>
           </dl>
-          <p class="spec">采用方案② · 替换 01:43.0–01:47.1 · 4.1 秒</p>
+          <p class="spec">原片 01:43.0–01:47.1 · 4.1 秒</p>
           <div class="actions">
-            <a class="play" href="./animations/0144-simple-network/" aria-label="对比 01:44 简单的神经网络">对比片段</a>
+            <a class="play" href="./animations/0144-simple-network/" aria-label="查看 01:44 原片">查看原片</a>
           </div>
         </div>
       </article>
 
-      <article class="animation" id="t0514" aria-labelledby="t0514-title">
+      <article class="animation" data-review="unchanged" id="t0514" aria-labelledby="t0514-title">
         <div class="artwork">
-          <img src="./animations/0514-scribble/preview.webp" width="960" height="540" alt="像素网格中从正方形变出的涂鸦" loading="lazy">
+          <img src="./animations/0514-scribble/original-preview.webp" width="960" height="540" alt="原片 05:14 画面" loading="lazy">
+          <span class="review-watermark">不用改</span>
         </div>
         <div class="detail">
           <div class="metadata">
@@ -166,16 +201,17 @@
             <div><dt>问题</dt><dd>画面不准确</dd></div>
             <div><dt>修改方案</dt><dd>念到“一些乱涂的图案”时，画面应先呈现正方形，然后再变成乱涂的形状。</dd></div>
           </dl>
-          <p class="spec">替换 05:13.7–05:18.4 · 4.7 秒</p>
+          <p class="spec">原片 05:13.7–05:18.4 · 4.7 秒</p>
           <div class="actions">
-            <a class="play" href="./animations/0514-scribble/" aria-label="对比 05:14 正方形变成涂鸦">对比片段</a>
+            <a class="play" href="./animations/0514-scribble/" aria-label="查看 05:14 原片">查看原片</a>
           </div>
         </div>
       </article>
 
-      <article class="animation" id="t1205" aria-labelledby="t1205-title">
+      <article class="animation" data-review="unchanged" id="t1205" aria-labelledby="t1205-title">
         <div class="artwork">
-          <img src="./animations/1205-tokenization/preview.webp" width="960" height="540" alt="老和鼠分开与合并时的 Token 编号" loading="lazy">
+          <img src="./animations/1205-tokenization/original-preview.webp" width="960" height="540" alt="原片 12:05 画面" loading="lazy">
+          <span class="review-watermark">不用改</span>
         </div>
         <div class="detail">
           <div class="metadata">
@@ -187,16 +223,17 @@
             <div><dt>问题</dt><dd>内容描述不准确</dd></div>
             <div><dt>修改方案</dt><dd>在“有些频繁一起出现的字”这处前面加一句“有些算法把”。</dd></div>
           </dl>
-          <p class="spec">替换 12:04.7–12:08.0 · 3.3 秒</p>
+          <p class="spec">原片 12:04.7–12:08.0 · 3.3 秒</p>
           <div class="actions">
-            <a class="play" href="./animations/1205-tokenization/" aria-label="对比 12:05 常见字组合并成一个 Token">对比片段</a>
+            <a class="play" href="./animations/1205-tokenization/" aria-label="查看 12:05 原片">查看原片</a>
           </div>
         </div>
       </article>
 
-      <article class="animation" id="t1229" aria-labelledby="t1229-title">
+      <article class="animation" data-review="unchanged" id="t1229" aria-labelledby="t1229-title">
         <div class="artwork">
-          <img src="./animations/1229-vector-animation/preview.webp" width="960" height="540" alt="Cat、Dog 和 Eat 的三个词元编号" loading="lazy">
+          <img src="./animations/1229-vector-animation/original-preview.webp" width="960" height="540" alt="原片 12:29 画面" loading="lazy">
+          <span class="review-watermark">不用改</span>
         </div>
         <div class="detail">
           <div class="metadata">
@@ -208,14 +245,14 @@
             <div><dt>问题</dt><dd>三个数字因为数字大小不一样，所以它们的动画不一样。</dd></div>
             <div><dt>修改方案</dt><dd>把它们的动画时长都调整到一致。</dd></div>
           </dl>
-          <p class="spec">替换 12:27.5–12:31.5 · 4 秒</p>
+          <p class="spec">原片 12:27.5–12:31.5 · 4 秒</p>
           <div class="actions">
-            <a class="play" href="./animations/1229-vector-animation/" aria-label="对比 12:29 三个词元编号同步停止">对比片段</a>
+            <a class="play" href="./animations/1229-vector-animation/" aria-label="查看 12:29 原片">查看原片</a>
           </div>
         </div>
       </article>
 
-      <article class="animation" id="t1416" aria-labelledby="t1416-title">
+      <article class="animation" data-review="pending" id="t1416" aria-labelledby="t1416-title">
         <div class="artwork">
           <img src="./animations/1416-word-vectors/preview.webp" width="960" height="540" alt="加大并横排的猫、会、抓、老、鼠五张词元卡片" loading="lazy">
         </div>
@@ -223,6 +260,7 @@
           <div class="metadata">
             <span class="number">05</span>
             <p class="timestamp">原片 <time datetime="PT14M16S">14:16</time></p>
+            <span class="review-status">待改</span>
           </div>
           <h2 id="t1416-title">放大「猫会抓老鼠」的词元</h2>
           <dl class="revision">
@@ -236,7 +274,7 @@
         </div>
       </article>
 
-      <article class="animation" id="t1438" aria-labelledby="t1438-title">
+      <article class="animation" data-review="pending" id="t1438" aria-labelledby="t1438-title">
         <div class="artwork">
           <img src="./animations/1438-input-weights/preview.webp" width="960" height="540" alt="输入层中高亮与底框对齐的神经元" loading="lazy">
         </div>
@@ -244,6 +282,7 @@
           <div class="metadata">
             <span class="number">06</span>
             <p class="timestamp">原片 <time datetime="PT14M38S">14:38</time></p>
+            <span class="review-status">待改</span>
           </div>
           <h2 id="t1438-title">输入层方框避免重叠</h2>
           <dl class="revision">
@@ -257,7 +296,7 @@
         </div>
       </article>
 
-      <article class="animation" id="t1518" aria-labelledby="t1518-title">
+      <article class="animation" data-review="skipped" id="t1518" aria-labelledby="t1518-title">
         <div class="artwork">
           <img src="./animations/1518-probabilities/preview.webp" width="960" height="540" alt="猫、会、抓、老、鼠的五项预测概率" loading="lazy">
         </div>
@@ -265,6 +304,7 @@
           <div class="metadata">
             <span class="number">07</span>
             <p class="timestamp">原片 <time datetime="PT15M18S">15:18</time></p>
+            <span class="review-status">跳过</span>
           </div>
           <h2 id="t1518-title">给出下一个词的概率</h2>
           <dl class="revision">
@@ -278,7 +318,7 @@
         </div>
       </article>
 
-      <article class="animation" id="t1546" aria-labelledby="t1546-title">
+      <article class="animation" data-review="skipped" id="t1546" aria-labelledby="t1546-title">
         <div class="artwork">
           <img src="./animations/1546-cross-entropy/preview.webp" width="960" height="540" alt="16%预测概率和交叉熵公式" loading="lazy">
         </div>
@@ -286,6 +326,7 @@
           <div class="metadata">
             <span class="number">08</span>
             <p class="timestamp">原片 <time datetime="PT15M46S">15:46</time></p>
+            <span class="review-status">跳过</span>
           </div>
           <h2 id="t1546-title">概率差与交叉熵损失</h2>
           <dl class="revision">
@@ -299,7 +340,7 @@
         </div>
       </article>
 
-      <article class="animation" id="t1607" aria-labelledby="t1607-title">
+      <article class="animation" data-review="skipped" id="t1607" aria-labelledby="t1607-title">
         <div class="artwork">
           <img src="./animations/1607-probability-axis/preview.webp" width="960" height="540" alt="固定坐标轴上标出五项更新后的概率" loading="lazy">
         </div>
@@ -307,6 +348,7 @@
           <div class="metadata">
             <span class="number">09</span>
             <p class="timestamp">原片 <time datetime="PT16M7S">16:07</time></p>
+            <span class="review-status">跳过</span>
           </div>
           <h2 id="t1607-title">在坐标轴上标注更新后的概率</h2>
           <dl class="revision">
@@ -320,9 +362,10 @@
         </div>
       </article>
 
-      <article class="animation" id="t1616" aria-labelledby="neural-network-title">
+      <article class="animation" data-review="unchanged" id="t1616" aria-labelledby="neural-network-title">
         <div class="artwork">
-          <img src="./animations/neural-network/preview.webp" width="960" height="540" alt="五层神经网络的动效" loading="lazy">
+          <img src="./animations/neural-network/original-preview.webp" width="960" height="540" alt="原片 16:16 画面" loading="lazy">
+          <span class="review-watermark">不用改</span>
         </div>
         <div class="detail">
           <div class="metadata">
@@ -334,15 +377,14 @@
             <div><dt>问题</dt><dd>和口播的节奏没有对上。</dd></div>
             <div><dt>修改方案</dt><dd>内容先展示层数，然后再出现更多神经元。</dd></div>
           </dl>
-          <p class="spec">原片 16:13.7–16:17.2 · 两侧均为 3.5 秒</p>
+          <p class="spec">原片 16:13.7–16:17.2 · 3.5 秒</p>
           <div class="actions">
-            <a class="play" href="./animations/neural-network/compare.html" aria-label="对比 16:16 神经网络的层与神经元">对比片段</a>
-            <a href="./animations/neural-network/neural-network-animation.mp4?v=4" download>下载 MP4</a>
+            <a class="play" href="./animations/neural-network/compare.html" aria-label="查看 16:16 原片">查看原片</a>
           </div>
         </div>
       </article>
 
-      <article class="animation" id="t1620" aria-labelledby="training-title">
+      <article class="animation" data-review="pending" id="t1620" aria-labelledby="training-title">
         <div class="artwork">
           <img src="./animations/1620-training-a/preview.webp" width="960" height="540" alt="高亮的三个 Token 从训练语料输入神经网络" loading="lazy">
         </div>
@@ -350,6 +392,7 @@
           <div class="metadata">
             <span class="number">11</span>
             <p class="timestamp">原片 <time datetime="PT16M20S">16:20</time></p>
+            <span class="review-status">待改</span>
           </div>
           <h2 id="training-title">训练流程逐句对齐</h2>
           <dl class="revision">
@@ -364,7 +407,7 @@
         </div>
       </article>
 
-      <article class="animation" id="t1640" aria-labelledby="inference-title">
+      <article class="animation" data-review="pending" id="t1640" aria-labelledby="inference-title">
         <div class="artwork">
           <img src="./animations/1640-inference-cut/preview.webp" width="960" height="540" alt="提前切到词向量和神经网络的推理场景" loading="lazy">
         </div>
@@ -372,6 +415,7 @@
           <div class="metadata">
             <span class="number">12</span>
             <p class="timestamp">原片 <time datetime="PT16M40S">16:40</time></p>
+            <span class="review-status">待改</span>
           </div>
           <h2 id="inference-title">提前切到推理场景</h2>
           <dl class="revision">
@@ -385,7 +429,7 @@
         </div>
       </article>
 
-      <article class="animation" id="t1645" aria-labelledby="t1645-title">
+      <article class="animation" data-review="pending" id="t1645" aria-labelledby="t1645-title">
         <div class="artwork">
           <img src="./animations/1645-right-text/preview.webp" width="960" height="540" alt="放大右侧接词" loading="lazy">
         </div>
@@ -393,6 +437,7 @@
           <div class="metadata">
             <span class="number">13</span>
             <p class="timestamp">原片 <time datetime="PT16M45S">16:45</time></p>
+            <span class="review-status">待改</span>
           </div>
           <h2 id="t1645-title">放大右侧接词</h2>
           <dl class="revision">
@@ -406,7 +451,7 @@
         </div>
       </article>
 
-      <article class="animation" id="t1708" aria-labelledby="t1708-title">
+      <article class="animation" data-review="pending" id="t1708" aria-labelledby="t1708-title">
         <div class="artwork">
           <img src="./animations/1708-box-fit/preview.webp" width="960" height="540" alt="方框与文字对齐" loading="lazy">
         </div>
@@ -414,6 +459,7 @@
           <div class="metadata">
             <span class="number">14</span>
             <p class="timestamp">原片 <time datetime="PT17M8S">17:08</time></p>
+            <span class="review-status">待改</span>
           </div>
           <h2 id="t1708-title">方框与文字对齐</h2>
           <dl class="revision">
@@ -427,9 +473,10 @@
         </div>
       </article>
 
-      <article class="animation" id="t1720" aria-labelledby="t1720-title">
+      <article class="animation" data-review="unchanged" id="t1720" aria-labelledby="t1720-title">
         <div class="artwork">
-          <img src="./animations/1720-memory-vector/preview.webp" width="960" height="540" alt="突出记忆向量" loading="lazy">
+          <img src="./animations/1720-memory-vector/original-preview.webp" width="960" height="540" alt="原片 17:20 画面" loading="lazy">
+          <span class="review-watermark">不用改</span>
         </div>
         <div class="detail">
           <div class="metadata">
@@ -441,14 +488,14 @@
             <div><dt>问题</dt><dd>“记忆向量”是重点，但画面未充分突出其特殊性；文字太小，手机端看不清。</dd></div>
             <div><dt>修改方案</dt><dd>念到“记忆向量”时，突出其视觉重点，并放大文字。统一字号标准：以1920×1080画面为基准，手机端需要读清的文字字号不小于48px；“记忆向量”等重点词使用64px及以上。</dd></div>
           </dl>
-          <p class="spec">替换 17:18.8–17:22.1 · 3.3 秒</p>
+          <p class="spec">原片 17:18.8–17:22.1 · 3.3 秒</p>
           <div class="actions">
-            <a class="play" href="./animations/1720-memory-vector/" aria-label="对比 17:20 突出记忆向量">对比片段</a>
+            <a class="play" href="./animations/1720-memory-vector/" aria-label="查看 17:20 原片">查看原片</a>
           </div>
         </div>
       </article>
 
-      <article class="animation" id="t1743" aria-labelledby="t1743-title">
+      <article class="animation" data-review="pending" id="t1743" aria-labelledby="t1743-title">
         <div class="artwork">
           <img src="./animations/1743-i-raise/preview.webp" width="960" height="540" alt="放大「我养」" loading="lazy">
         </div>
@@ -456,6 +503,7 @@
           <div class="metadata">
             <span class="number">16</span>
             <p class="timestamp">原片 <time datetime="PT17M43S">17:43</time></p>
+            <span class="review-status">待改</span>
           </div>
           <h2 id="t1743-title">放大「我养」</h2>
           <dl class="revision">
@@ -469,7 +517,7 @@
         </div>
       </article>
 
-      <article class="animation" id="t1820" aria-labelledby="t1820-title">
+      <article class="animation" data-review="pending" id="t1820" aria-labelledby="t1820-title">
         <div class="artwork">
           <img src="./animations/1820-memory-weight/preview.webp" width="960" height="540" alt="记忆向量乘以权重" loading="lazy">
         </div>
@@ -477,12 +525,14 @@
           <div class="metadata">
             <span class="number">17</span>
             <p class="timestamp">原片 <time datetime="PT18M20S">18:20</time></p>
+            <span class="review-status">待改</span>
           </div>
           <h2 id="t1820-title">记忆向量乘以权重</h2>
           <dl class="revision">
             <div><dt>问题</dt><dd>旧信息乘以权重后保留的过程未展示，数字变化缺少计算说明。</dd></div>
             <div><dt>修改方案</dt><dd>在上方“记忆向量t2”处展示乘以权重的动效，下方数字在乘以权重后相应变化。说到“假设这个权重是0.5”时，展示原数值乘以0.5得到新数值的计算过程，明确数字如何变化。</dd></div>
           </dl>
+          <p class="review-note"><strong>复核意见</strong>得改但是不能用现在的方式改</p>
           <p class="spec">替换 18:19.4–18:24.5 · 5.1 秒</p>
           <div class="actions">
             <a class="play" href="./animations/1820-memory-weight/" aria-label="对比 18:20 记忆向量乘以权重">对比片段</a>
@@ -490,9 +540,10 @@
         </div>
       </article>
 
-      <article class="animation" id="t2015" aria-labelledby="t2015-title">
+      <article class="animation" data-review="unchanged" id="t2015" aria-labelledby="t2015-title">
         <div class="artwork">
-          <img src="./animations/2015-attention-overview/preview.webp" width="960" height="540" alt="看清相关度与按比例叠加" loading="lazy">
+          <img src="./animations/2015-attention-overview/original-preview.webp" width="960" height="540" alt="原片 20:15 画面" loading="lazy">
+          <span class="review-watermark">不用改</span>
         </div>
         <div class="detail">
           <div class="metadata">
@@ -504,14 +555,14 @@
             <div><dt>问题</dt><dd>数字过多，画面杂乱、缺少视觉中心；六维数字只是示意，无需详细展示。相关度高低需要对比数字才能判断，叠加及按比例叠加的过程不直观。</dd></div>
             <div><dt>修改方案</dt><dd>减少详细数字，用指代词向量的字母或可识别为词向量的符号代替；相关度采用百分比进度条或能一眼分辨高低的进度标识；为叠加过程增加直观的视觉展示，明确呈现按比例叠加的过程，突出视觉中心。</dd></div>
           </dl>
-          <p class="spec">替换 20:14.3–20:20.3 · 6 秒</p>
+          <p class="spec">原片 20:14.3–20:20.3 · 6 秒</p>
           <div class="actions">
-            <a class="play" href="./animations/2015-attention-overview/" aria-label="对比 20:15 看清相关度与按比例叠加">对比片段</a>
+            <a class="play" href="./animations/2015-attention-overview/" aria-label="查看 20:15 原片">查看原片</a>
           </div>
         </div>
       </article>
 
-      <article class="animation" id="t2156" aria-labelledby="t2156-title">
+      <article class="animation" data-review="pending" id="t2156" aria-labelledby="t2156-title">
         <div class="artwork">
           <img src="./animations/2156-qkv-layout/preview.webp" width="960" height="540" alt="统一 Q、K、V 方向和维度" loading="lazy">
         </div>
@@ -519,6 +570,7 @@
           <div class="metadata">
             <span class="number">19</span>
             <p class="timestamp">原片 <time datetime="PT21M56S">21:56</time></p>
+            <span class="review-status">待改</span>
           </div>
           <h2 id="t2156-title">统一 Q、K、V 方向和维度</h2>
           <dl class="revision">
@@ -532,7 +584,7 @@
         </div>
       </article>
 
-      <article class="animation" id="t2234" aria-labelledby="t2234-title">
+      <article class="animation" data-review="pending" id="t2234" aria-labelledby="t2234-title">
         <div class="artwork">
           <img src="./animations/2234-direct-cuts/preview.webp" width="960" height="540" alt="直接切到对应词" loading="lazy">
         </div>
@@ -540,12 +592,14 @@
           <div class="metadata">
             <span class="number">20</span>
             <p class="timestamp">原片 <time datetime="PT22M34S">22:34</time></p>
+            <span class="review-status">待改</span>
           </div>
           <h2 id="t2234-title">直接切到对应词</h2>
           <dl class="revision">
             <div><dt>问题</dt><dd>此处及后续到“五岁”的部分，静音停顿显得突兀，拉长时长。</dd></div>
             <div><dt>修改方案</dt><dd>画面直接跳到“猫”；后续直到“五岁”的部分同样直接切到对应内容，不要用静音拉长时长。</dd></div>
           </dl>
+          <p class="review-note"><strong>复核意见</strong>得改 但不是用现在的方法改</p>
           <p class="spec">原片 22:34.0–22:38.8 · 4.8 秒，修改后 2.12 秒</p>
           <div class="actions">
             <a class="play" href="./animations/2234-direct-cuts/" aria-label="对比 22:34 直接切到对应词">对比片段</a>
@@ -553,9 +607,10 @@
         </div>
       </article>
 
-      <article class="animation" id="t2309" aria-labelledby="t2309-title">
+      <article class="animation" data-review="unchanged" id="t2309" aria-labelledby="t2309-title">
         <div class="artwork">
-          <img src="./animations/2309-skip-flash/preview.webp" width="960" height="540" alt="跳过乱闪的画面" loading="lazy">
+          <img src="./animations/2309-skip-flash/original-preview.webp" width="960" height="540" alt="原片 23:09 画面" loading="lazy">
+          <span class="review-watermark">不用改</span>
         </div>
         <div class="detail">
           <div class="metadata">
@@ -567,14 +622,14 @@
             <div><dt>问题</dt><dd>这一段画面乱闪，表达意图不清。</dd></div>
             <div><dt>修改方案</dt><dd>直接跳过这一段画面。</dd></div>
           </dl>
-          <p class="spec">原片 23:08.2–23:10.8 · 2.6 秒，修改后 1.68 秒</p>
+          <p class="spec">原片 23:08.2–23:10.8 · 2.6 秒</p>
           <div class="actions">
-            <a class="play" href="./animations/2309-skip-flash/" aria-label="对比 23:09 跳过乱闪的画面">对比片段</a>
+            <a class="play" href="./animations/2309-skip-flash/" aria-label="查看 23:09 原片">查看原片</a>
           </div>
         </div>
       </article>
 
-      <article class="animation" id="t2312" aria-labelledby="t2312-title">
+      <article class="animation" data-review="pending" id="t2312" aria-labelledby="t2312-title">
         <div class="artwork">
           <img src="./animations/2312-show-v/preview.webp" width="960" height="540" alt="在同一画面呈现 V" loading="lazy">
         </div>
@@ -582,12 +637,14 @@
           <div class="metadata">
             <span class="number">22</span>
             <p class="timestamp">原片 <time datetime="PT23M12S">23:12</time></p>
+            <span class="review-status">待改</span>
           </div>
           <h2 id="t2312-title">在同一画面呈现 V</h2>
           <dl class="revision">
             <div><dt>问题</dt><dd>23:12之后这部分画面频繁跳切，没有必要。</dd></div>
             <div><dt>修改方案</dt><dd>讲到“我们刚才拿Q和K算出来的”之后，保持同一画面；提到“真正拿来存储词向量信息的是第三个词向量V”时，让V直接在同一画面中出现，不再跳切。</dd></div>
           </dl>
+          <p class="review-note"><strong>复核意见</strong>得改 但是改的是文案的节奏</p>
           <p class="spec">替换 23:12.6–23:18.8 · 6.2 秒</p>
           <div class="actions">
             <a class="play" href="./animations/2312-show-v/" aria-label="对比 23:12 在同一画面呈现 V">对比片段</a>
@@ -595,9 +652,10 @@
         </div>
       </article>
 
-      <article class="animation" id="t2323" aria-labelledby="t2323-title">
+      <article class="animation" data-review="unchanged" id="t2323" aria-labelledby="t2323-title">
         <div class="artwork">
-          <img src="./animations/2323-score-bars/preview.webp" width="960" height="540" alt="用柱状图标识得分" loading="lazy">
+          <img src="./animations/2323-score-bars/original-preview.webp" width="960" height="540" alt="原片 23:23 画面" loading="lazy">
+          <span class="review-watermark">不用改</span>
         </div>
         <div class="detail">
           <div class="metadata">
@@ -609,14 +667,14 @@
             <div><dt>问题</dt><dd>前面没有词向量，后面又出现词向量，画面前后不统一；不同得分的比例不直观。</dd></div>
             <div><dt>修改方案</dt><dd>统一前后画面的词向量展示；用明显的柱状图或能体现比例的图示标识不同得分，让比例和高低一眼可见。</dd></div>
           </dl>
-          <p class="spec">替换 23:21.4–23:26.6 · 5.2 秒</p>
+          <p class="spec">原片 23:21.4–23:26.6 · 5.2 秒</p>
           <div class="actions">
-            <a class="play" href="./animations/2323-score-bars/" aria-label="对比 23:23 用柱状图标识得分">对比片段</a>
+            <a class="play" href="./animations/2323-score-bars/" aria-label="查看 23:23 原片">查看原片</a>
           </div>
         </div>
       </article>
 
-      <article class="animation" id="t2338" aria-labelledby="t2338-title">
+      <article class="animation" data-review="pending" id="t2338" aria-labelledby="t2338-title">
         <div class="artwork">
           <img src="./animations/2338-merge-v/preview.webp" width="960" height="540" alt="按比例合并成新的 V" loading="lazy">
         </div>
@@ -624,6 +682,7 @@
           <div class="metadata">
             <span class="number">24</span>
             <p class="timestamp">原片 <time datetime="PT23M38S">23:38</time></p>
+            <span class="review-status">待改</span>
           </div>
           <h2 id="t2338-title">按比例合并成新的 V</h2>
           <dl class="revision">
@@ -637,9 +696,10 @@
         </div>
       </article>
 
-      <article class="animation" id="t2342" aria-labelledby="t2342-title">
+      <article class="animation" data-review="unchanged" id="t2342" aria-labelledby="t2342-title">
         <div class="artwork">
-          <img src="./animations/2342-three-dimensions/preview.webp" width="960" height="540" alt="坐标轴与词向量统一为三维" loading="lazy">
+          <img src="./animations/2342-three-dimensions/original-preview.webp" width="960" height="540" alt="原片 23:42 画面" loading="lazy">
+          <span class="review-watermark">不用改</span>
         </div>
         <div class="detail">
           <div class="metadata">
@@ -651,16 +711,17 @@
             <div><dt>问题</dt><dd>左侧三维坐标轴与右侧五维词向量不一致。</dd></div>
             <div><dt>修改方案</dt><dd>将词向量统一改成三维，与坐标轴维度保持一致。</dd></div>
           </dl>
-          <p class="spec">替换 23:41.6–23:45.6 · 4 秒</p>
+          <p class="spec">原片 23:41.6–23:45.6 · 4 秒</p>
           <div class="actions">
-            <a class="play" href="./animations/2342-three-dimensions/" aria-label="对比 23:42 坐标轴与词向量统一为三维">对比片段</a>
+            <a class="play" href="./animations/2342-three-dimensions/" aria-label="查看 23:42 原片">查看原片</a>
           </div>
         </div>
       </article>
 
-      <article class="animation" id="t2359" aria-labelledby="t2359-title">
+      <article class="animation" data-review="unchanged" id="t2359" aria-labelledby="t2359-title">
         <div class="artwork">
-          <img src="./animations/2359-consistent-three-dimensions/preview.webp" width="960" height="540" alt="延续三维词向量" loading="lazy">
+          <img src="./animations/2359-consistent-three-dimensions/original-preview.webp" width="960" height="540" alt="原片 23:59 画面" loading="lazy">
+          <span class="review-watermark">不用改</span>
         </div>
         <div class="detail">
           <div class="metadata">
@@ -672,14 +733,14 @@
             <div><dt>问题</dt><dd>前面的词向量展示修改后，后续对应画面也需同步调整，避免前后不一致。</dd></div>
             <div><dt>修改方案</dt><dd>前面词向量统一改为三维后，同步修改23:59及后续对应画面，保持前后一致。</dd></div>
           </dl>
-          <p class="spec">替换 23:58.0–24:03.2 · 5.2 秒</p>
+          <p class="spec">原片 23:58.0–24:03.2 · 5.2 秒</p>
           <div class="actions">
-            <a class="play" href="./animations/2359-consistent-three-dimensions/" aria-label="对比 23:59 延续三维词向量">对比片段</a>
+            <a class="play" href="./animations/2359-consistent-three-dimensions/" aria-label="查看 23:59 原片">查看原片</a>
           </div>
         </div>
       </article>
 
-      <article class="animation" id="t2421" aria-labelledby="t2421-title">
+      <article class="animation" data-review="pending" id="t2421" aria-labelledby="t2421-title">
         <div class="artwork">
           <img src="./animations/2421-last-position/preview.webp" width="960" height="540" alt="改写最后一个位置的讲解" loading="lazy">
         </div>
@@ -687,6 +748,7 @@
           <div class="metadata">
             <span class="number">27</span>
             <p class="timestamp">原片 <time datetime="PT24M21S">24:21</time></p>
+            <span class="review-status">待改</span>
           </div>
           <h2 id="t2421-title">改写最后一个位置的讲解</h2>
           <dl class="revision">
@@ -701,7 +763,7 @@
         </div>
       </article>
 
-      <article class="animation" id="t2423" aria-labelledby="t2423-title">
+      <article class="animation" data-review="pending" id="t2423" aria-labelledby="t2423-title">
         <div class="artwork">
           <img src="./animations/2423-ffn-a/preview.webp" width="960" height="540" alt="前馈网络升维再降维" loading="lazy">
         </div>
@@ -709,6 +771,7 @@
           <div class="metadata">
             <span class="number">28</span>
             <p class="timestamp">原片 <time datetime="PT24M23S">24:23</time></p>
+            <span class="review-status">待改</span>
           </div>
           <h2 id="t2423-title">前馈网络升维再降维</h2>
           <dl class="revision">
@@ -725,7 +788,7 @@
         </div>
       </article>
 
-      <article class="animation" id="t2427" aria-labelledby="t2427-title">
+      <article class="animation" data-review="pending" id="t2427" aria-labelledby="t2427-title">
         <div class="artwork">
           <img src="./animations/2427-next-token/preview.webp" width="960" height="540" alt="从最后一个向量到词表得分" loading="lazy">
         </div>
@@ -733,12 +796,14 @@
           <div class="metadata">
             <span class="number">29</span>
             <p class="timestamp">原片 <time datetime="PT24M27S">24:27</time></p>
+            <span class="review-status">待改</span>
           </div>
           <h2 id="t2427-title">从最后一个向量到词表得分</h2>
           <dl class="revision">
             <div><dt>问题</dt><dd>讲到“拿最后一个词的词向量”时，现有结构无法清楚展示这个词向量如何输出。得分最高的结果也需直观标识。</dd></div>
             <div><dt>修改方案</dt><dd>延续前面的三维词向量示意，用真实的GPT3网络结构演示；最后从神经网络输出一个三维词向量，再与词表进行计算。计算得分后，用图示明确标出得分最高的词。</dd></div>
           </dl>
+          <p class="review-note"><strong>复核意见</strong>这个地方原片的节奏太快了 需要改慢一些</p>
           <p class="spec">替换 24:24.4–24:29.8 · 5.4 秒</p>
           <div class="actions">
             <a class="play" href="./animations/2427-next-token/" aria-label="对比 24:27 从最后一个向量到词表得分">对比片段</a>
@@ -746,7 +811,7 @@
         </div>
       </article>
 
-      <article class="animation" id="t2441" aria-labelledby="t2441-title">
+      <article class="animation" data-review="pending" id="t2441" aria-labelledby="t2441-title">
         <div class="artwork">
           <img src="./animations/2441-random-a/preview.webp" width="960" height="540" alt="随机初始化与训练" loading="lazy">
         </div>
@@ -754,6 +819,7 @@
           <div class="metadata">
             <span class="number">30</span>
             <p class="timestamp">原片 <time datetime="PT24M41S">约24:41—25:03</time></p>
+            <span class="review-status">待改</span>
           </div>
           <h2 id="t2441-title">随机初始化与训练</h2>
           <dl class="revision">
@@ -761,6 +827,7 @@
             <div><dt>修改方案</dt><dd>约24:41—25:03整段重做，使用真实随机数，并展示真实的网络结构。涉及文案：
 和之前提到的神经网络一样，刚开始训练时，所有参数都是随机数，所以最后的得分也是随机的。输入这句话，模型可能认为下一个词是“桌子”。但训练数据会告诉它：正确答案是“老鼠”，然后通过反向传播调整模型里的所有参数，增大这种情况下“老鼠”的得分。而因为在训练语料里，“猫抓”后面跟“老鼠”这个组合出现了无数次，所以模型就在一次次的训练中，把这个规律编进了自己的参数里。</dd></div>
           </dl>
+          <p class="review-note"><strong>复核意见</strong>这个地方原片的节奏太快了 需要改慢一些</p>
           <p class="spec">24:40.3–25:03.0 · 4 个短片段</p>
           <div class="actions">
             <a class="play" href="./animations/2441-random-a/" aria-label="对比 24:41 随机初始化与训练">对比片段</a>
@@ -768,7 +835,7 @@
         </div>
       </article>
 
-      <article class="animation" id="t2518" aria-labelledby="t2518-title">
+      <article class="animation" data-review="pending" id="t2518" aria-labelledby="t2518-title">
         <div class="artwork">
           <img src="./animations/2518-mobile-type/preview.webp" width="960" height="540" alt="放大手机端文字" loading="lazy">
         </div>
@@ -776,6 +843,7 @@
           <div class="metadata">
             <span class="number">31</span>
             <p class="timestamp">原片 <time datetime="PT25M18S">25:18</time></p>
+            <span class="review-status">待改</span>
           </div>
           <h2 id="t2518-title">放大手机端文字</h2>
           <dl class="revision">
@@ -789,7 +857,7 @@
         </div>
       </article>
 
-      <article class="animation" id="t2602" aria-labelledby="t2602-title">
+      <article class="animation" data-review="pending" id="t2602" aria-labelledby="t2602-title">
         <div class="artwork">
           <img src="./animations/2602-text-contrast/preview.webp" width="960" height="540" alt="提高文字与背景对比" loading="lazy">
         </div>
@@ -797,6 +865,7 @@
           <div class="metadata">
             <span class="number">32</span>
             <p class="timestamp">原片 <time datetime="PT26M2S">26:02</time></p>
+            <span class="review-status">待改</span>
           </div>
           <h2 id="t2602-title">提高文字与背景对比</h2>
           <dl class="revision">
@@ -810,9 +879,10 @@
         </div>
       </article>
 
-      <article class="animation" id="t2701" aria-labelledby="t2701-title">
+      <article class="animation" data-review="unchanged" id="t2701" aria-labelledby="t2701-title">
         <div class="artwork">
-          <img src="./animations/2701-new-architecture/preview.webp" width="960" height="540" alt="换用新结构示意图" loading="lazy">
+          <img src="./animations/2701-new-architecture/original-preview.webp" width="960" height="540" alt="原片 27:01 画面" loading="lazy">
+          <span class="review-watermark">不用改</span>
         </div>
         <div class="detail">
           <div class="metadata">
@@ -824,16 +894,17 @@
             <div><dt>问题</dt><dd>此处素材重复使用。</dd></div>
             <div><dt>修改方案</dt><dd>换用新素材，或使用论文中结构图的美化版本。</dd></div>
           </dl>
-          <p class="spec">替换 26:59.00–27:03.60 · 4.6 秒</p>
+          <p class="spec">原片 26:59.00–27:03.60 · 4.6 秒</p>
           <div class="actions">
-            <a class="play" href="./animations/2701-new-architecture/" aria-label="对比 27:01 换用新结构示意图">对比片段</a>
+            <a class="play" href="./animations/2701-new-architecture/" aria-label="查看 27:01 原片">查看原片</a>
           </div>
         </div>
       </article>
 
-      <article class="animation" id="t2728" aria-labelledby="t2728-title">
+      <article class="animation" data-review="unchanged" id="t2728" aria-labelledby="t2728-title">
         <div class="artwork">
-          <img src="./animations/2728-training-data/preview.webp" width="960" height="540" alt="把重复讲解缩短到训练数据" loading="lazy">
+          <img src="./animations/2728-training-data/original-preview.webp" width="960" height="540" alt="原片 27:28 画面" loading="lazy">
+          <span class="review-watermark">不用改</span>
         </div>
         <div class="detail">
           <div class="metadata">
@@ -847,9 +918,9 @@
             <div><dt>修改方案</dt><dd>将此段删减为：
 有了Transformer这样的架构，我们就可以开始训练语言模型了。首先，我们需要准备训练数据，也就是大量的文本。</dd></div>
           </dl>
-          <p class="spec">替换 27:26.20–27:31.80 · 5.6 秒</p>
+          <p class="spec">原片 27:26.20–27:31.80 · 5.6 秒</p>
           <div class="actions">
-            <a class="play" href="./animations/2728-training-data/" aria-label="对比 27:28 把重复讲解缩短到训练数据">对比片段</a>
+            <a class="play" href="./animations/2728-training-data/" aria-label="查看 27:28 原片">查看原片</a>
           </div>
         </div>
       </article>

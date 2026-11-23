@@ -3,6 +3,10 @@
 function mountRevisionClip(clip) {
   const player = document.querySelector('#player');
   const renderOnly = new URLSearchParams(location.search).has('render');
+  const originalOnly = !renderOnly && document.documentElement.dataset.review === 'no-change';
+  const originalDuration = clip.originalDuration ?? clip.duration;
+  const duration = originalOnly ? originalDuration : clip.duration;
+  const originalStage = '<video class="stage original" muted playsinline preload="auto" aria-label="原片画面"></video>';
   document.title = `${clip.marker} ${clip.title} · 修改合集`;
   document.documentElement.classList.toggle('render-only', renderOnly);
 
@@ -15,14 +19,14 @@ function mountRevisionClip(clip) {
     <div class="comparison">
       <section class="comparison-pane original-pane" aria-labelledby="original-heading">
         <h2 id="original-heading">原片</h2>
-        <video class="stage original" muted playsinline preload="auto" aria-label="原片画面"></video>
+        ${originalOnly ? `<div class="review-stage">${originalStage}<span class="review-watermark">不用改</span></div>` : originalStage}
       </section>
-      <section class="comparison-pane modified-pane" aria-labelledby="modified-heading">
+      ${originalOnly ? '' : `<section class="comparison-pane modified-pane" aria-labelledby="modified-heading">
         <h2 id="modified-heading">修改后</h2>
         ${clip.modifiedVideo
           ? '<video class="stage modified" muted playsinline preload="auto"></video>'
           : '<canvas class="stage modified" width="1920" height="1080" role="img"></canvas>'}
-      </section>
+      </section>`}
     </div>
     <p class="clip-status" role="status" hidden></p>
     <div class="transport">
@@ -34,7 +38,7 @@ function mountRevisionClip(clip) {
 
   const header = player.querySelector('header');
   header.querySelector('h1').textContent = clip.title;
-  header.querySelector('p').textContent = `原片 ${clip.marker} · 替换范围 ${clip.range}`;
+  header.querySelector('p').textContent = `原片 ${clip.marker} · ${originalOnly ? '' : '替换范围 '}${clip.range}`;
   header.hidden = renderOnly;
 
   const comparison = player.querySelector('.comparison');
@@ -42,16 +46,16 @@ function mountRevisionClip(clip) {
   const original = renderOnly ? null : player.querySelector('.original');
   const modified = player.querySelector('.modified');
   const modifiedVideo = clip.modifiedVideo ? modified : null;
-  const originalDuration = clip.originalDuration ?? clip.duration;
-  const differentDurations = originalDuration !== clip.duration;
-  const ctx = modifiedVideo ? null : modified.getContext('2d', { alpha: false });
-  modified.setAttribute('aria-label', clip.description || clip.title);
+  const differentDurations = originalDuration !== duration;
+  const ctx = modifiedVideo ? null : modified?.getContext('2d', { alpha: false });
+  modified?.setAttribute('aria-label', clip.description || clip.title);
   originalPane.hidden = renderOnly;
-  comparison.classList.toggle('single', renderOnly);
-  player.querySelector('#modified-heading').hidden = renderOnly;
-  if (differentDurations) {
+  comparison.classList.toggle('single', renderOnly || originalOnly);
+  const modifiedHeading = player.querySelector('#modified-heading');
+  if (modifiedHeading) modifiedHeading.hidden = renderOnly;
+  if (differentDurations && modifiedHeading) {
     player.querySelector('#original-heading').textContent = `原片 · ${originalDuration.toFixed(1)} 秒`;
-    player.querySelector('#modified-heading').textContent = `修改后 · ${clip.duration.toFixed(1)} 秒`;
+    modifiedHeading.textContent = `修改后 · ${duration.toFixed(1)} 秒`;
   }
   player.querySelector('.transport').hidden = renderOnly;
 
@@ -60,7 +64,7 @@ function mountRevisionClip(clip) {
   const replay = player.querySelector('.replay');
   const slider = player.querySelector('input[type="range"]');
   const elapsed = player.querySelector('output');
-  slider.max = clip.duration;
+  slider.max = duration;
 
   const videos = [original, modifiedVideo].filter(Boolean);
   const unavailable = new Set();
@@ -75,7 +79,7 @@ function mountRevisionClip(clip) {
   }
 
   function videoLimit(video) {
-    const planned = video === original ? originalDuration : clip.duration;
+    const planned = video === original ? originalDuration : duration;
     return Number.isFinite(video.duration) ? Math.min(video.duration, planned) : planned;
   }
 
@@ -86,7 +90,7 @@ function mountRevisionClip(clip) {
   }
 
   function paint(seconds) {
-    currentTime = Math.min(clip.duration, Math.max(0, seconds));
+    currentTime = Math.min(duration, Math.max(0, seconds));
     if (ctx) {
       ctx.save();
       ctx.fillStyle = '#080b21';
@@ -98,7 +102,7 @@ function mountRevisionClip(clip) {
       }
     }
     slider.value = currentTime;
-    const display = `${currentTime.toFixed(1)} / ${clip.duration.toFixed(1)} 秒`;
+    const display = `${currentTime.toFixed(1)} / ${duration.toFixed(1)} 秒`;
     if (elapsed.value !== display) {
       elapsed.value = display;
       slider.setAttribute('aria-valuetext', display);
@@ -124,6 +128,10 @@ function mountRevisionClip(clip) {
     if (video === original) {
       originalPane.hidden = true;
       comparison.classList.add('single');
+      if (originalOnly) {
+        pause();
+        toggle.disabled = replay.disabled = slider.disabled = true;
+      }
     }
     const messages = [];
     if (unavailable.has(original)) messages.push('原片暂时无法加载。');
@@ -137,14 +145,14 @@ function mountRevisionClip(clip) {
     frame = 0;
     playAttempt++;
     videos.forEach(video => video.pause());
-    toggle.textContent = currentTime > 0 && currentTime < clip.duration ? '继续' : '播放';
+    toggle.textContent = currentTime > 0 && currentTime < duration ? '继续' : '播放';
   }
 
   function tick(now) {
     const active = clock();
     const seconds = active ? active.currentTime : (now - startedAt) / 1000;
-    if (active?.ended || seconds >= clip.duration) {
-      seek(clip.duration);
+    if (active?.ended || seconds >= duration) {
+      seek(duration);
       pause();
       return;
     }
@@ -165,7 +173,7 @@ function mountRevisionClip(clip) {
   }
 
   function play() {
-    if (currentTime >= clip.duration) seek(0);
+    if (currentTime >= duration) seek(0);
     startedAt = performance.now() - currentTime * 1000;
     toggle.textContent = '暂停';
     const attempt = ++playAttempt;
@@ -201,10 +209,10 @@ function mountRevisionClip(clip) {
     marker: clip.marker,
     range: clip.range,
     originalDuration,
-    duration: clip.duration,
+    duration,
     previewTime: clip.previewTime,
     seek,
   });
   seek(clip.startTime ?? 0);
-  if (!renderOnly && clip.autoplay) play();
+  if (!renderOnly && !originalOnly && clip.autoplay) play();
 }

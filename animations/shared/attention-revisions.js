@@ -130,8 +130,9 @@
   const config = revisions[id];
   mountRevisionClip(config);
 
-  if (config.revisedDuration) {
+  const modifiedHeading = document.querySelector('#modified-heading');
+  if (config.revisedDuration && modifiedHeading) {
     document.querySelector('#original-heading').textContent = '原片 · ' + config.duration.toFixed(1) + ' 秒';
-    document.querySelector('#modified-heading').textContent = '修改后 · ' + config.revisedDuration.toFixed(2) + ' 秒';
+    modifiedHeading.textContent = '修改后 · ' + config.revisedDuration.toFixed(2) + ' 秒';
   }
 })();

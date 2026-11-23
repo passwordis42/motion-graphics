@@ -4,6 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>神经网络也会有更多层和更多神经元</title>
+  <script>
+    if (!new URLSearchParams(location.search).has('render')) {
+      location.replace('./compare.html' + location.search + location.hash);
+    }
+  </script>
   <style>
     :root { color-scheme: dark; font-family: "Microsoft YaHei", system-ui, sans-serif; }
     * { box-sizing: border-box; }
