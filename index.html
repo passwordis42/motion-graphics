@@ -36,6 +36,28 @@
     }
 
     .summary { margin-top: 0.8rem; color: var(--muted); }
+    .merged-opinion-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.6rem;
+    }
+    .merged-opinion-links a {
+      display: inline-grid;
+      min-width: 2.2rem;
+      min-height: 2rem;
+      place-items: center;
+      border: 1px solid #c5b8e8;
+      border-radius: 0.35rem;
+      background: #f1edf9;
+      color: var(--accent-dark);
+      font-size: 0.875rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      text-decoration: none;
+    }
+    .merged-opinion-links a:hover { border-color: var(--accent); background: #e6ddfa; }
+    .merged-opinion-links a:focus-visible { outline: 2px solid var(--accent); outline-offset: 0.16rem; }
     .collection-nav {
       position: sticky;
       top: 0;
@@ -71,7 +93,7 @@
       font-variant-numeric: tabular-nums;
     }
     .collection-nav [aria-current="location"] span { background: #ffffff24; }
-    #original-reviews, #yueliu-new, .animation { scroll-margin-top: 5.3rem; }
+    #original-reviews, #yueliu-new, .animation, .source-notes[id] { scroll-margin-top: 5.3rem; }
     #original-reviews[hidden], #yueliu-new[hidden] { display: none; }
 
     .mark {
@@ -95,7 +117,7 @@
       border-radius: 0.85rem;
       background: #fffefa;
     }
-    .animation:target { outline: 2px solid var(--accent); outline-offset: 3px; }
+    :is(.animation, .source-notes):target { outline: 2px solid var(--accent); outline-offset: 3px; }
 
     .artwork { position: relative; min-width: 0; background: #10143a; }
     .artwork img {
@@ -234,6 +256,22 @@
       </h1>
       <p class="summary">只是调整演示，非最终效果。</p>
       <p class="summary">原有 34 个片段 · 18 待改 · 13 不用改 · 3 待复核</p>
+      <p class="summary">阅流的 <strong>14 条意见</strong>已并入 <strong>13 张原有卡片</strong>。点下方编号可直接查看原文和时间戳。</p>
+      <nav class="merged-opinion-links" aria-label="并入阅流意见的原有卡片">
+        <a href="#t1416-review" aria-label="查看原有第 05 条的阅流意见">05</a>
+        <a href="#t1438-review" aria-label="查看原有第 06 条的阅流意见">06</a>
+        <a href="#t1518-review" aria-label="查看原有第 07 条的阅流意见">07</a>
+        <a href="#t1607-review" aria-label="查看原有第 09 条的阅流意见">09</a>
+        <a href="#t1640-review" aria-label="查看原有第 12 条的阅流意见">12</a>
+        <a href="#t1645-review" aria-label="查看原有第 13 条的阅流意见">13</a>
+        <a href="#t1820-review" aria-label="查看原有第 17 条的阅流意见">17</a>
+        <a href="#t2234-review" aria-label="查看原有第 20 条的阅流意见">20</a>
+        <a href="#t2338-review" aria-label="查看原有第 24 条的阅流意见">24</a>
+        <a href="#t2423-review" aria-label="查看原有第 28 条的阅流意见">28</a>
+        <a href="#t2427-review" aria-label="查看原有第 29 条的阅流意见">29</a>
+        <a href="#t2518-review" aria-label="查看原有第 31 条的阅流意见">31</a>
+        <a href="#t2602-review" aria-label="查看原有第 32 条的阅流意见">32</a>
+      </nav>
     </header>
 
     <nav class="collection-nav" aria-label="修改合集分类">
@@ -347,7 +385,7 @@
             <div><dt>问题</dt><dd>文字太小、画面偏空，手机端不易看清。</dd></div>
             <div><dt>修改方案</dt><dd>把文字放大一点。</dd></div>
           </dl>
-          <div class="source-notes">
+          <div class="source-notes" id="t1416-review">
             <p>阅流意见</p>
             <ul role="list">
               <li><time datetime="PT14M19S">14:19</time><span>猫会抓老鼠几个字太小了 竖屏不好看</span></li>
@@ -375,7 +413,7 @@
             <div><dt>问题</dt><dd>念到“输入层的数字也会乘以每条线上的权重”时，对应画面中输入层的动效图标重叠。</dd></div>
             <div><dt>修改方案</dt><dd>调整避免重叠。</dd></div>
           </dl>
-          <div class="source-notes">
+          <div class="source-notes" id="t1438-review">
             <p>阅流意见</p>
             <ul role="list">
               <li><time datetime="PT14M39S">14:39</time><span>排版出错</span></li>
@@ -403,7 +441,7 @@
             <div><dt>问题</dt><dd>文案“这个就是我们预测的下一个词”表述不准确。</dd></div>
             <div><dt>修改方案</dt><dd>将文案改为“最后给出不同词出现的概率”。</dd></div>
           </dl>
-          <div class="source-notes">
+          <div class="source-notes" id="t1518-review">
             <p>阅流意见</p>
             <ul role="list">
               <li><time datetime="PT15M18S">15:18</time><span>文案的顺序得改</span></li>
@@ -453,7 +491,7 @@
             <div><dt>问题</dt><dd>画面从坐标轴突然切到神经网络，镜头切换突兀。</dd></div>
             <div><dt>修改方案</dt><dd>不切镜头；如需展示概率，直接在原坐标轴上标出不同的概率。</dd></div>
           </dl>
-          <div class="source-notes">
+          <div class="source-notes" id="t1607-review">
             <p>阅流意见</p>
             <ul role="list">
               <li><time datetime="PT16M8S">16:08</time><span>刚才最后闪的那一下画面可以不要</span></li>
@@ -526,7 +564,7 @@
             <div><dt>问题</dt><dd>说到“得到的这套词向量和神经网络”时，画面尚未切到后面的推理场景。</dd></div>
             <div><dt>修改方案</dt><dd>说到“得到的这套词向量和神经网络”时，将画面切到后面的推理场景。</dd></div>
           </dl>
-          <div class="source-notes">
+          <div class="source-notes" id="t1640-review">
             <p>阅流意见</p>
             <ul role="list">
               <li><time datetime="PT16M43S">16:43</time><span>念到这句旁白的时候就切走了</span></li>
@@ -554,7 +592,7 @@
             <div><dt>问题</dt><dd>右侧接词文字太小，手机端看不清。</dd></div>
             <div><dt>修改方案</dt><dd>放大右侧接词的文字。</dd></div>
           </dl>
-          <div class="source-notes">
+          <div class="source-notes" id="t1645-review">
             <p>阅流意见</p>
             <ul role="list">
               <li><time datetime="PT16M45S">16:45</time><span>这个画面太难理解了 就延续上文的情节 给一个神经网络输入“猫会抓”，然后网络输出“老鼠”，就可以了，不要一直闪了</span></li>
@@ -649,7 +687,7 @@
             <div><dt>修改方案</dt><dd>在上方“记忆向量t2”处展示乘以权重的动效，下方数字在乘以权重后相应变化。说到“假设这个权重是0.5”时，展示原数值乘以0.5得到新数值的计算过程，明确数字如何变化。</dd></div>
           </dl>
           <p class="review-note"><strong>复核意见</strong>得改但是不能用现在的方式改</p>
-          <div class="source-notes">
+          <div class="source-notes" id="t1820-review">
             <p>阅流意见</p>
             <ul role="list">
               <li><time datetime="PT18M21S">18:21</time><span>有没有办法视觉化呈现 乘一个权重这个过程</span></li>
@@ -722,7 +760,7 @@
             <div><dt>修改方案</dt><dd>画面直接跳到“猫”；后续直到“五岁”的部分同样直接切到对应内容，不要用静音拉长时长。</dd></div>
           </dl>
           <p class="review-note"><strong>复核意见</strong>得改 但不是用现在的方法改</p>
-          <div class="source-notes">
+          <div class="source-notes" id="t2234-review">
             <p>阅流意见</p>
             <ul role="list">
               <li><time datetime="PT22M39S">22:39</time><span>节奏很怪</span></li>
@@ -817,7 +855,7 @@
             <div><dt>问题</dt><dd>合并新V时，没有展示“它”的V。</dd></div>
             <div><dt>修改方案</dt><dd>展示“它”的V，并呈现这些词向量按比例叠加到“它”的V上的过程。</dd></div>
           </dl>
-          <div class="source-notes">
+          <div class="source-notes" id="t2338-review">
             <p>阅流意见</p>
             <ul role="list">
               <li><time datetime="PT23M36S">23:36</time><span>这个时候句子里应该没有老鼠吧</span></li>
@@ -917,7 +955,7 @@
 它其实就是再接一个小神经网络：在GPT3中，每个词向量是 12288 维，经过前馈网络，词向量会升维四倍，占用49152 个神经元，算完再回到 12288 维。
 为什么要加这么一层？还记 得前面识别正方形吗：单层的神经元不够用，就在中间再加一层、多放一些神经元，网络的学习能力就会变强。语言比正方形复杂得多，所以每个词在注意力里汇完上下文之后，也会再过这样一种结构，这些多出的神经元提供了更多的权重和参数，好把词向量里的特征提得更深，去承载更复杂的语义信息。</dd></div>
           </dl>
-          <div class="source-notes">
+          <div class="source-notes" id="t2423-review">
             <p>阅流意见</p>
             <ul role="list">
               <li><time datetime="PT24M16S">24:16</time><span>这个地方缺一段有关前馈网络的文案</span></li>
@@ -947,7 +985,7 @@
             <div><dt>修改方案</dt><dd>延续前面的三维词向量示意，用真实的GPT3网络结构演示；最后从神经网络输出一个三维词向量，再与词表进行计算。计算得分后，用图示明确标出得分最高的词。</dd></div>
           </dl>
           <p class="review-note"><strong>复核意见</strong>这个地方原片的节奏太快了 需要改慢一些</p>
-          <div class="source-notes">
+          <div class="source-notes" id="t2427-review">
             <p>阅流意见</p>
             <ul role="list">
               <li><time datetime="PT24M27S">24:27</time><span>这个地方的节奏太快了 得加旁白把节奏改慢</span></li>
@@ -1000,7 +1038,7 @@
             <div><dt>问题</dt><dd>文字太小，手机端难以看清。</dd></div>
             <div><dt>修改方案</dt><dd>放大文字，按已定的1080p字号标准执行：以1920×1080画面为基准，需读清的文字不小于48px，重点词64px及以上。</dd></div>
           </dl>
-          <div class="source-notes">
+          <div class="source-notes" id="t2518-review">
             <p>阅流意见</p>
             <ul role="list">
               <li><time datetime="PT25M18S">25:18</time><span>还是字有点小</span></li>
@@ -1028,7 +1066,7 @@
             <div><dt>问题</dt><dd>文字与背景对比不足，屏幕缩小后看不清。</dd></div>
             <div><dt>修改方案</dt><dd>提高文字与背景的区分度，确保屏幕缩小后仍能看清文字。</dd></div>
           </dl>
-          <div class="source-notes">
+          <div class="source-notes" id="t2602-review">
             <p>阅流意见</p>
             <ul role="list">
               <li><time datetime="PT26M1S">26:01</time><span>字的颜色和背景融合得太厉害了 不好看</span></li>
