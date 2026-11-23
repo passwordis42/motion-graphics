@@ -103,6 +103,21 @@
       width: 100%;
       height: auto;
     }
+    .generated-badge {
+      position: absolute;
+      inset-block-start: 0.65rem;
+      inset-inline-end: 0.65rem;
+      padding: 0.3rem 0.55rem;
+      border: 1px solid #4e3500;
+      border-radius: 0.35rem;
+      background: #ffdb32;
+      box-shadow: 0 2px 8px #15121b80;
+      color: #281900;
+      font-size: clamp(0.84rem, 1.5vw, 0.98rem);
+      font-weight: 800;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
 
     .detail {
       display: flex;
@@ -117,19 +132,6 @@
       font-size: clamp(1.2rem, 2.2vw, 1.52rem);
       line-height: 1.3;
       letter-spacing: -0.025em;
-    }
-
-    .card-heading { display: flex; flex-wrap: wrap; align-items: center; gap: 0.38rem 0.6rem; }
-    .generated-badge {
-      padding: 0.15rem 0.45rem;
-      border: 1px solid #d5ab72;
-      border-radius: 0.32rem;
-      background: #fff0d4;
-      color: #674216;
-      font-size: 0.78rem;
-      font-weight: 700;
-      line-height: 1.2;
-      white-space: nowrap;
     }
 
     .revision { display: grid; flex: 1; align-content: start; gap: 0.55rem; margin: 0; line-height: 1.6; }
@@ -182,7 +184,7 @@
     .additional-reviews { padding-top: 0.35rem; }
     .additional-reviews h2 { font-size: clamp(1.55rem, 3vw, 2.15rem); }
     .additional-reviews > p { margin: 0.55rem 0 1.15rem; color: var(--muted); }
-    .additional-reviews .animation[data-review="clarify"] { grid-template-rows: 1fr; background: #f1f0f3; }
+    .additional-reviews .animation[data-review="clarify"] { background: #f1f0f3; }
     .additional-reviews .review-status { margin-inline-start: auto; }
 
     .animation[data-review="unchanged"] {
@@ -899,6 +901,7 @@
       <article class="animation" data-review="pending" id="t2423" aria-labelledby="t2423-title">
         <div class="artwork">
           <img src="./animations/2423-ffn-a/preview.webp" width="960" height="540" alt="前馈网络升维再降维" loading="lazy">
+          <span class="generated-badge">自动生成，非参考</span>
         </div>
         <div class="detail">
           <div class="metadata">
@@ -906,10 +909,7 @@
             <p class="timestamp">原片 <time datetime="PT24M23S">24:23</time></p>
             <span class="review-status">待改</span>
           </div>
-          <div class="card-heading">
-            <h2 id="t2423-title">前馈网络升维再降维</h2>
-            <span class="generated-badge">自动生成，非参考</span>
-          </div>
+          <h2 id="t2423-title">前馈网络升维再降维</h2>
           <dl class="revision">
             <div><dt>问题</dt><dd>右侧数字过多，表达不直观。此处缺少前馈网络的讲解段落。</dd></div>
             <div><dt>修改方案</dt><dd>将右侧大量数字展示改为网络结构演示。
@@ -933,6 +933,7 @@
       <article class="animation" data-review="pending" id="t2427" aria-labelledby="t2427-title">
         <div class="artwork">
           <img src="./animations/2427-next-token/preview.webp" width="960" height="540" alt="从最后一个向量到词表得分" loading="lazy">
+          <span class="generated-badge">自动生成，非参考</span>
         </div>
         <div class="detail">
           <div class="metadata">
@@ -940,10 +941,7 @@
             <p class="timestamp">原片 <time datetime="PT24M27S">24:27</time></p>
             <span class="review-status">待改</span>
           </div>
-          <div class="card-heading">
-            <h2 id="t2427-title">从最后一个向量到词表得分</h2>
-            <span class="generated-badge">自动生成，非参考</span>
-          </div>
+          <h2 id="t2427-title">从最后一个向量到词表得分</h2>
           <dl class="revision">
             <div><dt>问题</dt><dd>讲到“拿最后一个词的词向量”时，现有结构无法清楚展示这个词向量如何输出。得分最高的结果也需直观标识。</dd></div>
             <div><dt>修改方案</dt><dd>延续前面的三维词向量示意，用真实的GPT3网络结构演示；最后从神经网络输出一个三维词向量，再与词表进行计算。计算得分后，用图示明确标出得分最高的词。</dd></div>
@@ -965,6 +963,7 @@
       <article class="animation" data-review="pending" id="t2441" aria-labelledby="t2441-title">
         <div class="artwork">
           <img src="./animations/2441-random-a/preview.webp" width="960" height="540" alt="随机初始化与训练" loading="lazy">
+          <span class="generated-badge">自动生成，非参考</span>
         </div>
         <div class="detail">
           <div class="metadata">
@@ -972,10 +971,7 @@
             <p class="timestamp">原片 <time datetime="PT24M41S">约24:41—25:03</time></p>
             <span class="review-status">待改</span>
           </div>
-          <div class="card-heading">
-            <h2 id="t2441-title">随机初始化与训练</h2>
-            <span class="generated-badge">自动生成，非参考</span>
-          </div>
+          <h2 id="t2441-title">随机初始化与训练</h2>
           <dl class="revision">
             <div><dt>问题</dt><dd>此段随机初始化与训练过程的演示需重做。</dd></div>
             <div><dt>修改方案</dt><dd>约24:41—25:03整段重做，使用真实随机数，并展示真实的网络结构。涉及文案：
@@ -1097,6 +1093,9 @@
       <p>按原片时间排列 · 13 项可对比 · 1 项待确认</p>
       <div class="gallery">
         <article class="animation" data-review="clarify" id="yueliu-1311" aria-labelledby="yueliu-1311-title">
+          <div class="artwork">
+            <img src="./animations/yueliu-1311/original-preview.webp" width="960" height="540" alt="原片 13:11 的词向量坐标示意" loading="lazy">
+          </div>
           <div class="detail">
             <div class="metadata">
               <span class="number">35</span>
@@ -1111,12 +1110,17 @@
               </ul>
             </div>
             <p class="spec">先跳过，待补充具体修改内容。</p>
+            <p class="spec">截图 13:11.00 · 原片 13:09.80–13:12.80 · 3 秒</p>
+            <div class="actions">
+              <a class="play" href="./animations/yueliu-1311/" aria-label="查看 13:11 原片片段">查看原片</a>
+            </div>
           </div>
         </article>
 
         <article class="animation" data-review="demo" id="yueliu-1436" aria-labelledby="yueliu-1436-title">
           <div class="artwork">
             <img src="./animations/yueliu-1436/original-preview.webp" width="960" height="540" alt="原片 14:36 画面" loading="lazy">
+            <span class="generated-badge">自动生成，非参考</span>
           </div>
           <div class="detail">
             <div class="metadata">
@@ -1124,10 +1128,7 @@
               <p class="timestamp">原片 <time datetime="PT14M36S">14:36</time></p>
               <span class="review-status">可对比</span>
             </div>
-            <div class="card-heading">
-              <h3 id="yueliu-1436-title">更换神经网络示意素材</h3>
-              <span class="generated-badge">自动生成，非参考</span>
-            </div>
+            <h3 id="yueliu-1436-title">更换神经网络示意素材</h3>
             <div class="source-notes">
               <p>悦流原文</p>
               <ul role="list">
@@ -1144,6 +1145,7 @@
         <article class="animation" data-review="demo" id="yueliu-1445" aria-labelledby="yueliu-1445-title">
           <div class="artwork">
             <img src="./animations/yueliu-1445/original-preview.webp" width="960" height="540" alt="原片 14:45 画面" loading="lazy">
+            <span class="generated-badge">自动生成，非参考</span>
           </div>
           <div class="detail">
             <div class="metadata">
@@ -1151,10 +1153,7 @@
               <p class="timestamp">原片 <time datetime="PT14M45S">14:45</time></p>
               <span class="review-status">可对比</span>
             </div>
-            <div class="card-heading">
-              <h3 id="yueliu-1445-title">连线权重数字与口播对齐</h3>
-              <span class="generated-badge">自动生成，非参考</span>
-            </div>
+            <h3 id="yueliu-1445-title">连线权重数字与口播对齐</h3>
             <div class="source-notes">
               <p>悦流原文</p>
               <ul role="list">
@@ -1171,6 +1170,7 @@
         <article class="animation" data-review="demo" id="yueliu-1550" aria-labelledby="yueliu-1550-title">
           <div class="artwork">
             <img src="./animations/yueliu-1550/original-preview.webp" width="960" height="540" alt="原片 15:50 画面" loading="lazy">
+            <span class="generated-badge">自动生成，非参考</span>
           </div>
           <div class="detail">
             <div class="metadata">
@@ -1178,10 +1178,7 @@
               <p class="timestamp">原片 <time datetime="PT15M50S">15:50</time></p>
               <span class="review-status">可对比</span>
             </div>
-            <div class="card-heading">
-              <h3 id="yueliu-1550-title">网络中的数字漂移</h3>
-              <span class="generated-badge">自动生成，非参考</span>
-            </div>
+            <h3 id="yueliu-1550-title">网络中的数字漂移</h3>
             <div class="source-notes">
               <p>悦流原文</p>
               <ul role="list">
@@ -1198,6 +1195,7 @@
         <article class="animation" data-review="demo" id="yueliu-1557" aria-labelledby="yueliu-1557-title">
           <div class="artwork">
             <img src="./animations/yueliu-1557/original-preview.webp" width="960" height="540" alt="原片 15:57 画面" loading="lazy">
+            <span class="generated-badge">自动生成，非参考</span>
           </div>
           <div class="detail">
             <div class="metadata">
@@ -1205,10 +1203,7 @@
               <p class="timestamp">原片 <time datetime="PT15M57S">15:57</time></p>
               <span class="review-status">可对比</span>
             </div>
-            <div class="card-heading">
-              <h3 id="yueliu-1557-title">概率与损失画面的卡点</h3>
-              <span class="generated-badge">自动生成，非参考</span>
-            </div>
+            <h3 id="yueliu-1557-title">概率与损失画面的卡点</h3>
             <div class="source-notes">
               <p>悦流原文</p>
               <ul role="list">
@@ -1225,6 +1220,7 @@
         <article class="animation" data-review="demo" id="yueliu-1700" aria-labelledby="yueliu-1700-title">
           <div class="artwork">
             <img src="./animations/yueliu-1700/original-preview.webp" width="960" height="540" alt="原片 17:00 画面" loading="lazy">
+            <span class="generated-badge">自动生成，非参考</span>
           </div>
           <div class="detail">
             <div class="metadata">
@@ -1232,10 +1228,7 @@
               <p class="timestamp">原片 <time datetime="PT17M0S">17:00</time></p>
               <span class="review-status">可对比</span>
             </div>
-            <div class="card-heading">
-              <h3 id="yueliu-1700-title">放大整句并调整「它」的字号</h3>
-              <span class="generated-badge">自动生成，非参考</span>
-            </div>
+            <h3 id="yueliu-1700-title">放大整句并调整「它」的字号</h3>
             <div class="source-notes">
               <p>悦流原文</p>
               <ul role="list">
@@ -1253,6 +1246,7 @@
         <article class="animation" data-review="demo" id="yueliu-2002" aria-labelledby="yueliu-2002-title">
           <div class="artwork">
             <img src="./animations/yueliu-2002/original-preview.webp" width="960" height="540" alt="原片 20:02 画面" loading="lazy">
+            <span class="generated-badge">自动生成，非参考</span>
           </div>
           <div class="detail">
             <div class="metadata">
@@ -1260,10 +1254,7 @@
               <p class="timestamp">原片 <time datetime="PT20M2S">20:02</time>–<time datetime="PT20M9S">20:09</time></p>
               <span class="review-status">可对比</span>
             </div>
-            <div class="card-heading">
-              <h3 id="yueliu-2002-title">三维示意中叠加的词</h3>
-              <span class="generated-badge">自动生成，非参考</span>
-            </div>
+            <h3 id="yueliu-2002-title">三维示意中叠加的词</h3>
             <div class="source-notes">
               <p>悦流原文</p>
               <ul role="list">
@@ -1283,6 +1274,7 @@
         <article class="animation" data-review="demo" id="yueliu-2019" aria-labelledby="yueliu-2019-title">
           <div class="artwork">
             <img src="./animations/yueliu-2019/original-preview.webp" width="960" height="540" alt="原片 20:19 画面" loading="lazy">
+            <span class="generated-badge">自动生成，非参考</span>
           </div>
           <div class="detail">
             <div class="metadata">
@@ -1290,10 +1282,7 @@
               <p class="timestamp">原片 <time datetime="PT20M19S">20:19</time>–<time datetime="PT20M20S">20:20</time></p>
               <span class="review-status">可对比</span>
             </div>
-            <div class="card-heading">
-              <h3 id="yueliu-2019-title">词向量维度与新增旁白</h3>
-              <span class="generated-badge">自动生成，非参考</span>
-            </div>
+            <h3 id="yueliu-2019-title">词向量维度与新增旁白</h3>
             <div class="source-notes">
               <p>悦流原文</p>
               <ul role="list">
@@ -1312,6 +1301,7 @@
         <article class="animation" data-review="demo" id="yueliu-2120" aria-labelledby="yueliu-2120-title">
           <div class="artwork">
             <img src="./animations/yueliu-2120/original-preview.webp" width="960" height="540" alt="原片 21:20 画面" loading="lazy">
+            <span class="generated-badge">自动生成，非参考</span>
           </div>
           <div class="detail">
             <div class="metadata">
@@ -1319,10 +1309,7 @@
               <p class="timestamp">原片 <time datetime="PT21M20S">21:20</time></p>
               <span class="review-status">可对比</span>
             </div>
-            <div class="card-heading">
-              <h3 id="yueliu-2120-title">放大例句的手机端文字</h3>
-              <span class="generated-badge">自动生成，非参考</span>
-            </div>
+            <h3 id="yueliu-2120-title">放大例句的手机端文字</h3>
             <div class="source-notes">
               <p>悦流原文</p>
               <ul role="list">
@@ -1339,6 +1326,7 @@
         <article class="animation" data-review="demo" id="yueliu-2230" aria-labelledby="yueliu-2230-title">
           <div class="artwork">
             <img src="./animations/yueliu-2230/original-preview.webp" width="960" height="540" alt="原片 22:30 画面" loading="lazy">
+            <span class="generated-badge">自动生成，非参考</span>
           </div>
           <div class="detail">
             <div class="metadata">
@@ -1346,10 +1334,7 @@
               <p class="timestamp">原片 <time datetime="PT22M30S">22:30</time></p>
               <span class="review-status">可对比</span>
             </div>
-            <div class="card-heading">
-              <h3 id="yueliu-2230-title">检查「老鼠」出现的时机</h3>
-              <span class="generated-badge">自动生成，非参考</span>
-            </div>
+            <h3 id="yueliu-2230-title">检查「老鼠」出现的时机</h3>
             <div class="source-notes">
               <p>悦流原文</p>
               <ul role="list">
@@ -1366,6 +1351,7 @@
         <article class="animation" data-review="demo" id="yueliu-2327" aria-labelledby="yueliu-2327-title">
           <div class="artwork">
             <img src="./animations/yueliu-2327/original-preview.webp" width="960" height="540" alt="原片 23:27 画面" loading="lazy">
+            <span class="generated-badge">自动生成，非参考</span>
           </div>
           <div class="detail">
             <div class="metadata">
@@ -1373,10 +1359,7 @@
               <p class="timestamp">原片 <time datetime="PT23M27S">23:27</time></p>
               <span class="review-status">可对比</span>
             </div>
-            <div class="card-heading">
-              <h3 id="yueliu-2327-title">拉长得分比例示例的旁白</h3>
-              <span class="generated-badge">自动生成，非参考</span>
-            </div>
+            <h3 id="yueliu-2327-title">拉长得分比例示例的旁白</h3>
             <div class="source-notes">
               <p>悦流原文</p>
               <ul role="list">
@@ -1393,6 +1376,7 @@
         <article class="animation" data-review="demo" id="yueliu-2358" aria-labelledby="yueliu-2358-title">
           <div class="artwork">
             <img src="./animations/yueliu-2358/original-preview.webp" width="960" height="540" alt="原片 23:58 画面" loading="lazy">
+            <span class="generated-badge">自动生成，非参考</span>
           </div>
           <div class="detail">
             <div class="metadata">
@@ -1400,10 +1384,7 @@
               <p class="timestamp">原片 <time datetime="PT23M58S">23:58</time>–<time datetime="PT23M59S">23:59</time></p>
               <span class="review-status">可对比</span>
             </div>
-            <div class="card-heading">
-              <h3 id="yueliu-2358-title">讲清 Q、K 到权重的过程</h3>
-              <span class="generated-badge">自动生成，非参考</span>
-            </div>
+            <h3 id="yueliu-2358-title">讲清 Q、K 到权重的过程</h3>
             <div class="source-notes">
               <p>悦流原文</p>
               <ul role="list">
@@ -1421,6 +1402,7 @@
         <article class="animation" data-review="demo" id="yueliu-2729" aria-labelledby="yueliu-2729-title">
           <div class="artwork">
             <img src="./animations/yueliu-2729/original-preview.webp" width="960" height="540" alt="原片 27:29 画面" loading="lazy">
+            <span class="generated-badge">自动生成，非参考</span>
           </div>
           <div class="detail">
             <div class="metadata">
@@ -1428,10 +1410,7 @@
               <p class="timestamp">原片 <time datetime="PT27M29S">27:29</time></p>
               <span class="review-status">可对比</span>
             </div>
-            <div class="card-heading">
-              <h3 id="yueliu-2729-title">调整二维和三维镜头的衔接</h3>
-              <span class="generated-badge">自动生成，非参考</span>
-            </div>
+            <h3 id="yueliu-2729-title">调整二维和三维镜头的衔接</h3>
             <div class="source-notes">
               <p>悦流原文</p>
               <ul role="list">
@@ -1448,6 +1427,7 @@
         <article class="animation" data-review="demo" id="yueliu-2740" aria-labelledby="yueliu-2740-title">
           <div class="artwork">
             <img src="./animations/yueliu-2740/original-preview.webp" width="960" height="540" alt="原片 27:40 画面" loading="lazy">
+            <span class="generated-badge">自动生成，非参考</span>
           </div>
           <div class="detail">
             <div class="metadata">
@@ -1455,10 +1435,7 @@
               <p class="timestamp">原片 <time datetime="PT27M40S">27:40</time></p>
               <span class="review-status">可对比</span>
             </div>
-            <div class="card-heading">
-              <h3 id="yueliu-2740-title">统一相邻镜头的风格</h3>
-              <span class="generated-badge">自动生成，非参考</span>
-            </div>
+            <h3 id="yueliu-2740-title">统一相邻镜头的风格</h3>
             <div class="source-notes">
               <p>悦流原文</p>
               <ul role="list">

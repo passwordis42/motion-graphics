@@ -2,8 +2,10 @@
 
 function mountRevisionClip(clip) {
   const player = document.querySelector('#player');
-  const renderOnly = new URLSearchParams(location.search).has('render');
-  const originalOnly = !renderOnly && document.documentElement.dataset.review === 'no-change';
+  const referenceOnly = clip.originalOnly === true;
+  const renderOnly = !referenceOnly && new URLSearchParams(location.search).has('render');
+  const unchanged = !renderOnly && document.documentElement.dataset.review === 'no-change';
+  const originalOnly = unchanged || referenceOnly;
   const generated = !renderOnly && document.documentElement.hasAttribute('data-generated');
   const originalDuration = clip.originalDuration ?? clip.duration;
   const duration = originalOnly ? originalDuration : clip.duration;
@@ -21,7 +23,7 @@ function mountRevisionClip(clip) {
     <div class="comparison">
       <section class="comparison-pane original-pane" aria-labelledby="original-heading">
         <h2 id="original-heading">原片</h2>
-        ${originalOnly ? `<div class="review-stage">${originalStage}<span class="review-watermark">不用改</span></div>` : originalStage}
+        ${unchanged ? `<div class="review-stage">${originalStage}<span class="review-watermark">不用改</span></div>` : originalStage}
       </section>
       ${originalOnly ? '' : `<section class="comparison-pane modified-pane" aria-labelledby="modified-heading"${generated ? ' aria-describedby="generated-badge"' : ''}>
         ${generated ? `<div class="comparison-pane-title">
